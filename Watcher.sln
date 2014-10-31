@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web.UI", "Web.UI", "{74414738-AE3A-415F-B4E7-1F0A0901AF9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend.csproj", "{AA0DA67A-FEE1-4A01-8F32-0F60B0ACAD53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resources", "Resources\Resources.csproj", "{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA0DA67A-FEE1-4A01-8F32-0F60B0ACAD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA0DA67A-FEE1-4A01-8F32-0F60B0ACAD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA0DA67A-FEE1-4A01-8F32-0F60B0ACAD53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA0DA67A-FEE1-4A01-8F32-0F60B0ACAD53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AA0DA67A-FEE1-4A01-8F32-0F60B0ACAD53} = {74414738-AE3A-415F-B4E7-1F0A0901AF9F}
+		{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C} = {74414738-AE3A-415F-B4E7-1F0A0901AF9F}
+	EndGlobalSection
+EndGlobal
