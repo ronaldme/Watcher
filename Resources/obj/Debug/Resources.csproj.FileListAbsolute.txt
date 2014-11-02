@@ -1,0 +1,10 @@
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\bin\Debug\Resources.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\bin\Debug\Resources.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\bin\Debug\nl\Resources.resources.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\obj\Debug\Resources.csprojResolveAssemblyReference.cache
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\obj\Debug\Resources.Translations.Resources.resources
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\obj\Debug\Resources.Translations.Resources.nl.resources
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\obj\Debug\Resources.csproj.GenerateResource.Cache
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\obj\Debug\nl\Resources.resources.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\obj\Debug\Resources.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Resources\obj\Debug\Resources.pdb

@@ -53,3 +53,6 @@ C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Microsoft.Owin.Security.Mi
 C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\obj\Debug\Frontend.csprojResolveAssemblyReference.cache
 C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\obj\Debug\Frontend.dll
 C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\obj\Debug\Frontend.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Resources.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Resources.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\nl\Resources.resources.dll
