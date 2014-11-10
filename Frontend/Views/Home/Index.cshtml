@@ -13,9 +13,9 @@
             <ul id="searchList"></ul>
         </div>
         
-        <h2>Airing Today</h2>
+        <h2>Top rated TV-shows</h2>
         <div style="margin-top: 10px; margin-bottom: 10px;">
-            <ul id="airToday"></ul>
+            <ul id="topRated"></ul>
         </div>
     </div>
 </div>
@@ -25,13 +25,13 @@
         $.ajax({
             dataType: "json",
             type: 'POST',
-            url: '@Url.Action("AiringToday", "Home")',
-            success: airingToday,
+            url: '@Url.Action("TopRated", "Home")',
+            success: displayTopRated,
         });
     });
 
     $('#search').on('input', function() {
-        if ($('#search').val().length > 0) {
+        if ($('#search').val().length >= 3) {
             $.ajax({
                 dataType: "json",
                 type: 'POST',
@@ -39,24 +39,24 @@
                 data: {
                     input: $('#search').val()
                 },
-                success: updateView,
+                success: displaySearchResults,
             });
         }
     });
 
-    function airingToday(data) {
-        $('#airToday').empty();
+    function displayTopRated(data) {
+        $('#topRated').empty();
 
-        for (var i = 0; i < data.shows.length; i++) {
-            $('#showList').append('<li>+ ' + data.shows[i].Name + '</li>');
+        for (var i = 0; i < data.result.length; i++) {
+            $('#topRated').append('<li id=' + data.result[i].Id + 'class="test"' + '><a href="">' + data.result[i].Name + '</a></li>');
         }
     }
 
-    function updateView(data) {
+    function displaySearchResults(data) {
         $('#searchList').empty();
 
-        for (var i = 0; i < data.shows.length; i++) {
-            $('#searchList').append('<li>+ ' + data.shows[i].Name + '</li>');
+        for (var i = 0; i < data.result.length; i++) {
+            $('#searchList').append('<li id=' + data.result[i].Id + 'class="test"' + '><a href="">' + data.result[i].Name + '</a></li>');
         }
     }
 </script>

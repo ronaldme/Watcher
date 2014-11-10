@@ -39,6 +39,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -160,6 +166,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DI\WindsorControllerFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -230,9 +237,17 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{d90c9087-3334-48a2-a498-a625535c19b5}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Resources\Resources.csproj">
       <Project>{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C}</Project>
       <Name>Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Project>{E62689B8-39E1-47DB-B96D-21432900A35C}</Project>
+      <Name>Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

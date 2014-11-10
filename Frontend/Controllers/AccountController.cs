@@ -13,10 +13,6 @@ namespace Frontend.Controllers
     {
         private ApplicationUserManager userManager;
 
-        public AccountController()
-        {
-        }
-
         public AccountController(ApplicationUserManager userManager)
         {
             UserManager = userManager;

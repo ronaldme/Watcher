@@ -1,0 +1,11 @@
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Services.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Services.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Backend.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Models.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Backend.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Models.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\obj\Debug\Services.csprojResolveAssemblyReference.cache
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\obj\Debug\Services.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\obj\Debug\Services.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Services\bin\Debug\Newtonsoft.Json.xml

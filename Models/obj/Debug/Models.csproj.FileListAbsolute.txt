@@ -1,5 +1,4 @@
 C:\Users\Ronald\Documents\GitHub\Watcher\Models\bin\Debug\Models.dll
 C:\Users\Ronald\Documents\GitHub\Watcher\Models\bin\Debug\Models.pdb
-C:\Users\Ronald\Documents\GitHub\Watcher\Models\obj\Debug\Models.csprojResolveAssemblyReference.cache
 C:\Users\Ronald\Documents\GitHub\Watcher\Models\obj\Debug\Models.dll
 C:\Users\Ronald\Documents\GitHub\Watcher\Models\obj\Debug\Models.pdb

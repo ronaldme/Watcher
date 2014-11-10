@@ -1,58 +1,42 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-using System.Net;
-using System.Web.Mvc;
-using System.Web.Script.Serialization;
+﻿using System.Web.Mvc;
+using Services;
 
 namespace Frontend.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly string apiKey = ConfigurationManager.AppSettings.Get("apiKey");
+        private readonly ITvShows tvShows;
+        private readonly ISearchTv searchTv;
+
+        public HomeController()
+        {
+            // TODO: Dependecy injection here
+            searchTv = new SearchTv();
+            tvShows = new TvShows();
+        }
 
         public ActionResult Index()
         {
             return View();
         }
 
-        public JsonResult AiringToday()
+        public JsonResult TopRated()
         {
-            string response = GetResponse("http://api.themoviedb.org/3/tv/airing_today");
+            var result = tvShows.TopRated();
 
-            return Json(new { response }, JsonRequestBehavior.AllowGet);
+            return Json(new { result }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Search(string input)
         {
-            string response = GetResponse("http://api.themoviedb.org/3/search/tv?query=" + GetInput(input) + "&sort_by=popularity.desc");
+            var result = searchTv.Search(input);
 
-            return Json(new { response }, JsonRequestBehavior.AllowGet);
+            return Json(new { result }, JsonRequestBehavior.AllowGet);
         }
 
-        public string GetInput(string input)
+        public JsonResult Get(int id)
         {
-            return input.Replace(' ', '+');
-        }
-
-        public string GetResponse(string url)
-        {
-            var request = (HttpWebRequest)WebRequest.Create(url + "&api_key=" + apiKey);
-            request.KeepAlive = true;
-            request.Method = "GET";
-            request.Accept = "application/json";
-            request.ContentLength = 0;
-
-            string content;
-
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                using (var reader = new System.IO.StreamReader(response.GetResponseStream()))
-                {
-                    content = reader.ReadToEnd();
-                }
-            }
-
-            return content;
+            return null;
         }
     }
 }

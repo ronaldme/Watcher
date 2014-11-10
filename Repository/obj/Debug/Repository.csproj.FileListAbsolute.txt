@@ -1,0 +1,5 @@
+C:\Users\Ronald\Documents\GitHub\Watcher\Repository\bin\Debug\Repository.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Repository\bin\Debug\Repository.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Repository\obj\Debug\Repository.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Repository\obj\Debug\Repository.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Repository\obj\Debug\Repository.csprojResolveAssemblyReference.cache

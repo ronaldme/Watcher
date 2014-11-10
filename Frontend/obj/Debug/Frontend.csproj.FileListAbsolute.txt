@@ -56,3 +56,13 @@ C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\obj\Debug\Frontend.pdb
 C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Resources.dll
 C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Resources.pdb
 C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\nl\Resources.resources.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Castle.Core.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Castle.Windsor.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Models.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Services.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Backend.dll
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Models.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Services.pdb
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Castle.Core.xml
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Castle.Windsor.xml
+C:\Users\Ronald\Documents\GitHub\Watcher\Frontend\bin\Backend.pdb
