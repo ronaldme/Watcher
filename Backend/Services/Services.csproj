@@ -52,7 +52,7 @@
       <Project>{647A6A80-1314-44F7-9618-DB1B7F2977B6}</Project>
       <Name>BLL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Models\Models.csproj">
+    <ProjectReference Include="..\..\Frontend\Models\Models.csproj">
       <Project>{D90C9087-3334-48A2-A498-A625535C19B5}</Project>
       <Name>Models</Name>
     </ProjectReference>
