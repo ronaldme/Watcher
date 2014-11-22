@@ -1,5 +1,0 @@
-C:\Users\Ronald\Documents\GitHub\Watcher\Entities\bin\Debug\Entities.dll
-C:\Users\Ronald\Documents\GitHub\Watcher\Entities\bin\Debug\Entities.pdb
-C:\Users\Ronald\Documents\GitHub\Watcher\Entities\obj\Debug\Entities.csprojResolveAssemblyReference.cache
-C:\Users\Ronald\Documents\GitHub\Watcher\Entities\obj\Debug\Entities.dll
-C:\Users\Ronald\Documents\GitHub\Watcher\Entities\obj\Debug\Entities.pdb
