@@ -1,4 +1,7 @@
-﻿using Services;
+﻿using Castle.Core.Internal;
+using Castle.Windsor;
+using Services.Interfaces;
+using Startup.Console.DependencyInjection;
 
 namespace Startup.Console
 {
@@ -6,13 +9,11 @@ namespace Startup.Console
     {
         public static void Main(string[] args)
         {
-            var tvShows = new TvShows();
-            tvShows.TopRated();
+            var container = new WindsorContainer();
+            container.Install(new BackendDependencyInstaller());
 
-            var searchTv = new SearchTv();
-            searchTv.Search();
-            searchTv.SearchById();
-
+            container.ResolveAll<IMqResponder>().ForEach(x => x.Start());
+            
             System.Console.WriteLine("Services started!");
             System.Console.ReadLine();
         }

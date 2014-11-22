@@ -4,6 +4,7 @@ using EasyNetQ;
 using Messages;
 using Messages.DTO;
 using Messages.Request;
+using Messages.Response;
 
 namespace Web.UI.Controllers
 {
@@ -53,7 +54,12 @@ namespace Web.UI.Controllers
 
         public JsonResult Subscribe(int id)
         {
-            return null;
+            var response = bus.Request<TvSubscription, Subscription>(new TvSubscription
+            {
+                Id = Convert.ToInt32(id)
+            });
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }

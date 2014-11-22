@@ -1,15 +1,37 @@
-﻿namespace Services
+﻿using EasyNetQ;
+using Messages.Request;
+using Messages.Response;
+using Services.Interfaces;
+
+namespace Services
 {
-    public class Subscribe : ISubscribe
+    public class Subscribe : ISubscribe, IMqResponder
     {
-        public bool SubscribeTv(int id)
+        private readonly IBus bus;
+
+        public Subscribe(IBus bus)
         {
-            throw new System.NotImplementedException();
+            this.bus = bus;
         }
 
-        public bool SubscribeMovie(int id)
+        public void SubscribeTv(int id)
         {
-            throw new System.NotImplementedException();
+            bus.Respond<TvSubscription, Subscription>(request => new Subscription
+            {
+                
+            });
+        }
+
+        public void SubscribeMovie(int id)
+        {
+        }
+
+        public void Start()
+        {
+        }
+
+        public void Stop()
+        {
         }
     }
 }

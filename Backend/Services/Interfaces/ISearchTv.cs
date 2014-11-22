@@ -1,4 +1,4 @@
-﻿namespace Services
+﻿namespace Services.Interfaces
 {
     public interface ISearchTv
     {

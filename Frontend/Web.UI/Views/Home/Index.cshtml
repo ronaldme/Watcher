@@ -67,7 +67,7 @@
         $('#topRated').empty();
 
         for (var i = 0; i < data.length; i++) {
-            $('#topRated').append('<li id=' + data[i].Id + '><a>' + data[i].Name + '</a></li>');
+            $('#topRated').append('<li id=' + data[i].Id + '><a href="javascript:void(0)">' + data[i].Name + '</a></li>');
         }
     }
 
@@ -75,7 +75,7 @@
         $('#searchList').empty();
 
         for (var i = 0; i < data.length; i++) {
-            $('#searchList').append('<li id=' + data[i].Id + 'class="test"' + '><a href="">' + data[i].Name + '</a></li>');
+            $('#searchList').append('<li id=' + data[i].Id + '><a href="javascript:void(0)">' + data[i].Name + '</a></li>');
         }
     }
 
@@ -101,6 +101,18 @@
     });
 
     $('#topRated').on('click', 'li', function () {
+        $.ajax({
+            dataType: "json",
+            type: 'POST',
+            url: '@Url.Action("Get", "Home")',
+            data: {
+                id: this.id
+            },
+            success: displayInfo,
+        });
+    });
+
+    $('#searchList').on('click', 'li', function () {
         $.ajax({
             dataType: "json",
             type: 'POST',

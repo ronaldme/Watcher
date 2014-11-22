@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Implementation\Subscribe.cs" />
+    <Compile Include="Interfaces\IMqResponder.cs" />
     <Compile Include="Interfaces\ISearchTv.cs" />
     <Compile Include="Interfaces\ISubscribe.cs" />
     <Compile Include="Interfaces\ITvShows.cs" />

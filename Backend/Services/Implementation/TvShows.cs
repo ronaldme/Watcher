@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BLL;
 using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
+using Services.Interfaces;
 
 namespace Services
 {
-    public class TvShows : ITvShows
+    public class TvShows : ITvShows, IMqResponder
     {
-        private readonly TheMovieDb movieDb;
+        private List<IDisposable> disposables;
         private readonly IBus bus;
+        private readonly TheMovieDb movieDb;
 
-        public TvShows()
+        public TvShows(IBus bus)
         {
             movieDb = new TheMovieDb();
-            bus = RabbitHutch.CreateBus("host=localhost;username=watcher;password=watcher");
+            this.bus = bus;
         }
 
-        public List<TvShowDTO> AiringToday()
+        public void AiringToday()
         {
-            throw new NotImplementedException();
         }
 
         public void TopRated()
@@ -31,9 +33,21 @@ namespace Services
             });
         }
 
-        public List<TvShowDTO> New(int ageInWeeks)
+        public void New()
         {
-            throw new NotImplementedException();
+        }
+
+        public void Start()
+        {
+            disposables = new List<IDisposable>();
+
+            // Run all methods implemented from the ISearchTV interface
+            typeof(ITvShows).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
+        }
+
+        public void Stop()
+        {
+            disposables.ForEach(x => x.Dispose());
         }
     }
 }

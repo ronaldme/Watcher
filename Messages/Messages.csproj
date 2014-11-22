@@ -46,7 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\TvShowSearch.cs" />
     <Compile Include="Request\TvShow.cs" />
+    <Compile Include="Request\TvShowSearchByActor.cs" />
     <Compile Include="Request\TvShowSearchById.cs" />
+    <Compile Include="Request\TvSubscription.cs" />
+    <Compile Include="Response\Subscription.cs" />
     <Compile Include="Types\ShowRequest.cs" />
   </ItemGroup>
   <ItemGroup />

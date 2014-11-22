@@ -1,4 +1,4 @@
-﻿namespace Services
+﻿namespace Services.Interfaces
 {
     public interface ISubscribe
     {
@@ -7,13 +7,13 @@
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        bool SubscribeTv(int id);
+        void SubscribeTv(int id);
 
         /// <summary>
         /// Subscribes on a Movie
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        bool SubscribeMovie(int id);
+        void SubscribeMovie(int id);
     }
 }
