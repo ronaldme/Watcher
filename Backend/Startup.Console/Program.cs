@@ -1,7 +1,7 @@
 ﻿using Castle.Core.Internal;
 using Castle.Windsor;
+using Services.DependencyInjection;
 using Services.Interfaces;
-using Startup.Console.DependencyInjection;
 
 namespace Startup.Console
 {

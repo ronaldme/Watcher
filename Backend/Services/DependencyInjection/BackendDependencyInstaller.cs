@@ -3,9 +3,8 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using EasyNetQ;
-using Services;
 
-namespace Startup.Console.DependencyInjection
+namespace Services.DependencyInjection
 {
     public class BackendDependencyInstaller : IWindsorInstaller
     {
@@ -14,13 +13,12 @@ namespace Startup.Console.DependencyInjection
             IBus bus = RabbitHutch.CreateBus(ConfigurationManager.AppSettings["rabbitMq"]);
             container.Register(Component.For<IBus>().Instance(bus));
 
-
             container.Register(
                 Classes.FromAssemblyContaining<TvShows>()
                     .Where(type => true)
                     .WithServiceAllInterfaces()
                     .LifestyleSingleton()
                 );
-        }
+        } 
     }
 }

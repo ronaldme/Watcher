@@ -8,7 +8,7 @@ namespace Startup
         {
             var servicesToRun = new ServiceBase[] 
             { 
-                new Service1() 
+                new Service() 
             };
             ServiceBase.Run(servicesToRun);
         }
