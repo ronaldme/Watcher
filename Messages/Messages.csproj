@@ -41,13 +41,15 @@
   <ItemGroup>
     <Compile Include="DTO\Actor.cs" />
     <Compile Include="DTO\Movie.cs" />
-    <Compile Include="DTO\Show.cs" />
+    <Compile Include="DTO\TvShowDTO.cs" />
+    <Compile Include="DTO\TvShowListDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\TvShowSearch.cs" />
+    <Compile Include="Request\TvShow.cs" />
+    <Compile Include="Request\TvShowSearchById.cs" />
+    <Compile Include="Types\ShowRequest.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Request\" />
-    <Folder Include="Response\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

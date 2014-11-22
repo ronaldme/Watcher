@@ -244,6 +244,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Messages\Messages.csproj">
+      <Project>{254AA977-2887-4AF8-BF66-F7A51C7C4B61}</Project>
+      <Name>Messages</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Resources\Resources.csproj">
       <Project>{84A7BAF6-5A4D-4BEC-90B7-B6A94EF27B3C}</Project>
       <Name>Resources</Name>

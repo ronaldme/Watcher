@@ -1,6 +1,6 @@
 ﻿namespace Messages.DTO
 {
-    public class Show
+    public class TvShowDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

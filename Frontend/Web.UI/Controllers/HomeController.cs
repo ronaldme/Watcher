@@ -1,5 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using EasyNetQ;
+using Messages;
+using Messages.DTO;
+using Messages.Request;
 
 namespace Web.UI.Controllers
 {
@@ -19,31 +23,37 @@ namespace Web.UI.Controllers
 
         public JsonResult TopRated()
         {
-            //var result = tvShows.TopRated();
-            return null;
-            //return Json(result, JsonRequestBehavior.AllowGet);
+            var response = bus.Request<TvShow, TvShowListDTO>(new TvShow
+            {
+                ShowRequest = ShowRequest.TopRated
+            });
+            
+            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Search(string input)
         {
-            //var result = searchTv.Search(input);
-            return null;
-            //return Json(result, JsonRequestBehavior.AllowGet);
+            var response = bus.Request<TvShowSearch, TvShowListDTO>(new TvShowSearch
+            {
+                Search = input
+            });
+            
+            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Get(int id)
         {
-            //var result = searchTv.SearchById(id);
-            return null;
-            //return Json(result, JsonRequestBehavior.AllowGet);
+            var response = bus.Request<TvShowSearchById, TvShowDTO>(new TvShowSearchById
+            {
+                Id = Convert.ToInt32(id)
+            });
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Subscribe(int id)
         {
             return null;
-            //var subscribeResult = subscribe.SubscribeTv(id);
-
-            //return Json(subscribeResult, JsonRequestBehavior.AllowGet);
         }
     }
 }
