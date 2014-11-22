@@ -1,31 +1,37 @@
-﻿using System.Collections.Generic;
-using BLL;
-using Models;
+﻿using BLL;
+using EasyNetQ;
+using Messages.DTO;
+using Messages.Request;
 
 namespace Services
 {
     public class SearchTv : ISearchTv
     {
         private readonly TheMovieDb movieDb;
+        private readonly IBus bus;
 
         public SearchTv()
         {
-            movieDb = new TheMovieDb();    
+            movieDb = new TheMovieDb();
+            bus = RabbitHutch.CreateBus("host=localhost;username=watcher;password=watcher");
         }
 
-        public List<Show> Search(string input)
+        public void Search()
         {
-            return movieDb.SearchTv(input);
+            bus.Respond<TvShowSearch, TvShowListDTO>(request => new TvShowListDTO
+            {
+                TvShows = movieDb.SearchTv(request.Search)
+            });
         }
 
-        public List<Show> SearchByActor(string actorName)
+        public void SearchByActor()
         {
             throw new System.NotImplementedException();
         }
 
-        public Show SearchById(int id)
+        public void SearchById()
         {
-            return movieDb.GetBy(id);
+            bus.Respond<TvShowSearchById, TvShowDTO>(request => movieDb.GetBy(request.Id));
         }
     }
 }

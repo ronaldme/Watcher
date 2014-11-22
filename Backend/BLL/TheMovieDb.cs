@@ -11,7 +11,7 @@ namespace BLL
     {
         private readonly string apiKey = ConfigurationManager.AppSettings.Get("apiKey");
 
-        public List<Show> SearchTv(string search)
+        public List<TvShowDTO> SearchTv(string search)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.searchTv + "?api_key=" + apiKey + "&query=" + ReplaceSpaces(search) + "&vote_count.gte=10" + "&sort_by=popularity.desc");
             string json = GetResponse(request);
@@ -19,7 +19,7 @@ namespace BLL
             return Convert.ToShows(json);
         }
         
-        public List<Show> GetTopRated()
+        public List<TvShowDTO> GetTopRated()
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.topRated + "?api_key=" + apiKey);
             string json = GetResponse(request);
@@ -54,7 +54,7 @@ namespace BLL
 
         public string searchId = "http://api.themoviedb.org/3/tv/";
         
-        public Show GetBy(int id)
+        public TvShowDTO GetBy(int id)
         {
             var request = (HttpWebRequest)WebRequest.Create(searchId + id + "?api_key=" + apiKey);
             string json = GetResponse(request);

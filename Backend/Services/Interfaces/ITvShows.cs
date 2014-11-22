@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Models;
+using Messages.DTO;
 
 namespace Services
 {
     public interface ITvShows
     {
-        List<Show> AiringToday();
-        List<Show> TopRated();
-        List<Show> New(int ageInWeeks);
+        List<TvShowDTO> AiringToday();
+        void TopRated();
+        List<TvShowDTO> New(int ageInWeeks);
     }
 }

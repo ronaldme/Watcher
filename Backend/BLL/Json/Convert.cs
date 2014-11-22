@@ -7,18 +7,18 @@ namespace BLL.Json
 {
     public class Convert
     {
-        public static List<Show> ToShows(string json)
+        public static List<TvShowDTO> ToShows(string json)
         {
             var v = JsonConvert.DeserializeObject<Root>(json);
             
             return Map(v);
         }
 
-        public static Show ToShow(string json)
+        public static TvShowDTO ToShow(string json)
         {
             var v = JsonConvert.DeserializeObject<Item>(json);
 
-            return new Show
+            return new TvShowDTO
             {
                 Id = v.id,
                 Name = v.name,
@@ -29,10 +29,10 @@ namespace BLL.Json
             };
         }
 
-        private static List<Show> Map(Root rootObject2)
+        private static List<TvShowDTO> Map(Root rootObject2)
         {
             // ToDO: Use automapper
-            return rootObject2.results.Select(result2 => new Show
+            return rootObject2.results.Select(result2 => new TvShowDTO
             {
                 Id = result2.id,
                 Name = result2.name,

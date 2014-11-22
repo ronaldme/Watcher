@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E62689B8-39E1-47DB-B96D-21432900A35C}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{92FC223D-0E62-4A64-82E5-6CCC6077AFD3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Services</RootNamespace>
-    <AssemblyName>Services</AssemblyName>
+    <RootNamespace>Startup.Console</RootNamespace>
+    <AssemblyName>Startup.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,12 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EasyNetQ">
-      <HintPath>..\..\packages\EasyNetQ.0.38.0.325\lib\net40\EasyNetQ.dll</HintPath>
-    </Reference>
-    <Reference Include="RabbitMQ.Client">
-      <HintPath>..\..\packages\RabbitMQ.Client.3.4.0\lib\net35\RabbitMQ.Client.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,26 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementation\Subscribe.cs" />
-    <Compile Include="Interfaces\ISearchTv.cs" />
-    <Compile Include="Interfaces\ISubscribe.cs" />
-    <Compile Include="Interfaces\ITvShows.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Implementation\SearchTv.cs" />
-    <Compile Include="Implementation\TvShows.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Messages\Messages.csproj">
-      <Project>{254AA977-2887-4AF8-BF66-F7A51C7C4B61}</Project>
-      <Name>Messages</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BLL\BLL.csproj">
-      <Project>{647A6A80-1314-44F7-9618-DB1B7F2977B6}</Project>
-      <Name>BLL</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Project>{E62689B8-39E1-47DB-B96D-21432900A35C}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

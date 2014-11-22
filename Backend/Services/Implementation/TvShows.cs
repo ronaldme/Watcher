@@ -1,30 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using BLL;
-using Models;
+using EasyNetQ;
+using Messages.DTO;
+using Messages.Request;
 
 namespace Services
 {
     public class TvShows : ITvShows
     {
         private readonly TheMovieDb movieDb;
+        private readonly IBus bus;
 
         public TvShows()
         {
-            movieDb = new TheMovieDb();    
+            movieDb = new TheMovieDb();
+            bus = RabbitHutch.CreateBus("host=localhost;username=watcher;password=watcher");
         }
 
-        public List<Show> AiringToday()
+        public List<TvShowDTO> AiringToday()
         {
             throw new NotImplementedException();
         }
 
-        public List<Show> TopRated()
+        public void TopRated()
         {
-            return movieDb.GetTopRated();
+            bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO
+            {
+                TvShows = movieDb.GetTopRated()
+            });
         }
 
-        public List<Show> New(int ageInWeeks)
+        public List<TvShowDTO> New(int ageInWeeks)
         {
             throw new NotImplementedException();
         }
