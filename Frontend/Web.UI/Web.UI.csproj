@@ -173,7 +173,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActorsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Controllers\TvShowsController.cs" />
     <Compile Include="DI\WebInstaller.cs" />
     <Compile Include="DI\WindsorFactory.cs" />
@@ -190,7 +192,17 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\1.jpg" />
     <Content Include="Content\images\10.jpg" />
+    <Content Include="Content\images\11.jpg" />
+    <Content Include="Content\images\12.jpg" />
+    <Content Include="Content\images\13.jpg" />
+    <Content Include="Content\images\14.jpg" />
+    <Content Include="Content\images\15.jpg" />
+    <Content Include="Content\images\16.jpg" />
+    <Content Include="Content\images\17.jpg" />
+    <Content Include="Content\images\18.jpg" />
+    <Content Include="Content\images\19.jpg" />
     <Content Include="Content\images\2.jpg" />
+    <Content Include="Content\images\20.jpg" />
     <Content Include="Content\images\3.jpg" />
     <Content Include="Content\images\4.jpg" />
     <Content Include="Content\images\5.jpg" />
@@ -246,6 +258,8 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Movies\Index.cshtml" />
+    <Content Include="Views\Actors\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

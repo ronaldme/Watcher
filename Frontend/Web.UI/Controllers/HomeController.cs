@@ -6,6 +6,13 @@ namespace Web.UI.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly Random random;
+
+        public HomeController()
+        {
+            random = new Random();
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -14,7 +21,7 @@ namespace Web.UI.Controllers
         public JsonResult GetImage()
         {
             var dir = Server.MapPath(@"\Content\images\");
-            var path = Path.Combine(dir, + new Random().Next(1, 20) + ".jpg");
+            var path = Path.Combine(dir, + random.Next(0, 21) + ".jpg");
             
             var file = File(path, "image/jpeg");
             byte[] bytes = System.IO.File.ReadAllBytes(file.FileName);
