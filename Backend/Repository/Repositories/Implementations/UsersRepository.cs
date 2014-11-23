@@ -3,9 +3,9 @@ using Repository.Repositories.Interfaces;
 
 namespace Repository.Repositories.Implementations
 {
-    public class MovieRepository : Repository<Movie>, IMovieRepository
+    public class UsersRepository : Repository<User>, IUsersRepository
     {
-        public MovieRepository(WatcherData dataContext)
+        public UsersRepository(WatcherData dataContext)
             : base(dataContext)
         {
         }

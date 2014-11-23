@@ -1,6 +1,8 @@
-﻿namespace Repository.Repositories.Interfaces
+﻿using Repository.Entities;
+
+namespace Repository.Repositories.Interfaces
 {
-    public interface IShowRepository
+    public interface IShowRepository : IRepository<Show>
     {
          
     }

@@ -2,7 +2,7 @@
 
 namespace Repository.Repositories.Interfaces
 {
-    public interface IMovieRepository : IRepository<Movie>
-    {
+    public interface IUsersRepository : IRepository<User>
+    { 
     }
 }

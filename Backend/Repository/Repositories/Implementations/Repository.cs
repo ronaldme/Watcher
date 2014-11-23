@@ -9,20 +9,29 @@ namespace Repository.Repositories.Implementations
     public class Repository<T> : IRepository<T> where T : class
     {
         protected DbSet<T> DbSet;
+        private readonly DbContext dbContext;
 
         public Repository(DbContext dataContext)
         {
             DbSet = dataContext.Set<T>();
+            dbContext = dataContext;
         }
 
         public void Insert(T entity)
         {
             DbSet.Add(entity);
+            dbContext.SaveChanges();
+        }
+
+        public void Update()
+        {
+            dbContext.SaveChanges();
         }
 
         public void Delete(T entity)
         {
             DbSet.Remove(entity);
+            dbContext.SaveChanges();
         }
 
         public IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate)
