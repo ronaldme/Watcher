@@ -3,124 +3,26 @@
 }
 
 <h1>Welcome to Watcher!</h1>
-<script src="~/Scripts/bootstrap.min.js"></script>
-<div class="row">
-    <div class="col-md-4">
-        <input type="text" class="form-control" id="search" placeholder="Search..">
-        
-        <br/>
-        <div style="margin-top: 10px; margin-bottom: 10px;">
-            <ul id="searchList"></ul>
-        </div>
-        
-        <h2>Top rated TV-shows</h2>
-        <div style="margin-top: 10px; margin-bottom: 10px;">
-            <ul id="topRated"></ul>
-        </div>
-    </div>
-</div>
+<p>
+    If you like watching TV-shows then this website is great to keep track of new episodes.
+    After subscribing to a show you will get automatically notified when a new episode is available.
+</p>
 
-<div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Subscribe</h4>
-            </div>
-            <div class="modal-body">
-                <p id="showId" class="hidden"></p>
-                <p id="modal-content"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="subscribe">Subscribe!</button>
-            </div>
-        </div>
-    </div>
-</div>
+<p>It is also possible to subscribe to a TV-show or an actor/actress!</p>
+
+<img id="image" style="width:300px; height: 500px"/>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $.ajax({
             dataType: "json",
             type: 'POST',
-            url: '@Url.Action("TopRated", "Home")',
-            success: displayTopRated,
+            url: '@Url.Action("GetImage", "Home")',
+            success: displayImage,
         });
-    });
 
-    $('#search').on('input', function () {
-        if ($('#search').val().length >= 3) {
-            $.ajax({
-                dataType: "json",
-                type: 'POST',
-                url: '@Url.Action("Search", "Home")',
-                data: {
-                    input: $('#search').val()
-                },
-                success: displaySearchResults,
-            });
+        function displayImage(image) {
+            $('#image').attr('src', 'data:image/png;base64,' + image);
         }
-    });
-
-    function displayTopRated(data) {
-        $('#topRated').empty();
-
-        for (var i = 0; i < data.length; i++) {
-            $('#topRated').append('<li id=' + data[i].Id + '><a href="javascript:void(0)">' + data[i].Name + '</a></li>');
-        }
-    }
-
-    function displaySearchResults(data) {
-        $('#searchList').empty();
-
-        for (var i = 0; i < data.length; i++) {
-            $('#searchList').append('<li id=' + data[i].Id + '><a href="javascript:void(0)">' + data[i].Name + '</a></li>');
-        }
-    }
-
-    function displayInfo(data) {
-        var text = 'Subscribe to: ' + data.Name;
-
-        $('#showId').text(data.Id);
-        $('#modal-content').text(text);
-
-        $('#myModal').modal('show');
-    }
-
-    $('#subscribe').click(function () {
-        $.ajax({
-            dataType: "json",
-            type: 'POST',
-            url: '@Url.Action("Subscribe", "Home")',
-            data: {
-                id: $('#showId').text()
-            },
-            success: displayInfo,
-        });
-    });
-
-    $('#topRated').on('click', 'li', function () {
-        $.ajax({
-            dataType: "json",
-            type: 'POST',
-            url: '@Url.Action("Get", "Home")',
-            data: {
-                id: this.id
-            },
-            success: displayInfo,
-        });
-    });
-
-    $('#searchList').on('click', 'li', function () {
-        $.ajax({
-            dataType: "json",
-            type: 'POST',
-            url: '@Url.Action("Get", "Home")',
-            data: {
-                id: this.id
-            },
-            success: displayInfo,
-        });
     });
 </script>

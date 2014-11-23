@@ -77,7 +77,7 @@ namespace Web.UI.Controllers
                 {
                     await SignInAsync(user, false);
                   
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "TvShows");
                 }
                
                 AddErrors(result);
@@ -350,7 +350,7 @@ namespace Web.UI.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "TvShows");
         }
 
         [AllowAnonymous]
@@ -428,7 +428,7 @@ namespace Web.UI.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "TvShows");
             }
         }
 

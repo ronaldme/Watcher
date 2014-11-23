@@ -7,7 +7,7 @@ using Messages.DTO;
 
 namespace BLL
 {
-    public class TheMovieDb
+    public class TheMovieDb : ITheMovieDb
     {
         private readonly string apiKey = ConfigurationManager.AppSettings.Get("apiKey");
 
@@ -25,6 +25,14 @@ namespace BLL
             string json = GetResponse(request);
 
             return Convert.ToShows(json);
+        }
+
+        public TvShowDTO GetBy(int id)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(Urls.searchTvById + id + "?api_key=" + apiKey);
+            string json = GetResponse(request);
+
+            return Convert.ToShow(json);
         }
 
         private string GetResponse(HttpWebRequest request)
@@ -50,16 +58,6 @@ namespace BLL
         private string ReplaceSpaces(string input)
         {
             return input.Contains(" ") ? input.Replace(' ', '+') : input;
-        }
-
-        public string searchId = "http://api.themoviedb.org/3/tv/";
-        
-        public TvShowDTO GetBy(int id)
-        {
-            var request = (HttpWebRequest)WebRequest.Create(searchId + id + "?api_key=" + apiKey);
-            string json = GetResponse(request);
-
-            return Convert.ToShow(json);
         }
     }
 }

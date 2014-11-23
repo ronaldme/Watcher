@@ -1,65 +1,27 @@
 ﻿using System;
+using System.IO;
 using System.Web.Mvc;
-using EasyNetQ;
-using Messages;
-using Messages.DTO;
-using Messages.Request;
-using Messages.Response;
 
 namespace Web.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IBus bus;
-
-        public HomeController(IBus bus)
-        {
-            this.bus = bus;
-        }
-
         public ActionResult Index()
         {
             return View();
         }
 
-        public JsonResult TopRated()
+        public JsonResult GetImage()
         {
-            var response = bus.Request<TvShow, TvShowListDTO>(new TvShow
-            {
-                ShowRequest = ShowRequest.TopRated
-            });
+            var dir = Server.MapPath(@"\Content\images\");
+            var path = Path.Combine(dir, + new Random().Next(1, 20) + ".jpg");
             
-            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
-        }
+            var file = File(path, "image/jpeg");
+            byte[] bytes = System.IO.File.ReadAllBytes(file.FileName);
 
-        public JsonResult Search(string input)
-        {
-            var response = bus.Request<TvShowSearch, TvShowListDTO>(new TvShowSearch
-            {
-                Search = input
-            });
-            
-            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
-        }
+            var image = Convert.ToBase64String(bytes);
 
-        public JsonResult Get(int id)
-        {
-            var response = bus.Request<TvShowSearchById, TvShowDTO>(new TvShowSearchById
-            {
-                Id = Convert.ToInt32(id)
-            });
-
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult Subscribe(int id)
-        {
-            var response = bus.Request<TvSubscription, Subscription>(new TvSubscription
-            {
-                Id = Convert.ToInt32(id)
-            });
-
-            return Json(response, JsonRequestBehavior.AllowGet);
+            return Json(image, JsonRequestBehavior.AllowGet);
         }
     }
 }
