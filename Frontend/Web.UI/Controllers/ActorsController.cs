@@ -2,6 +2,7 @@
 
 namespace Web.UI.Controllers
 {
+    [Authorize]
     public class ActorsController : Controller
     {
         public ActionResult Index()

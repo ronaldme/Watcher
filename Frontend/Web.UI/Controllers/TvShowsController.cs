@@ -1,16 +1,28 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
 using Messages;
 using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Web.UI.Controllers
 {
+    [Authorize]
     public class TvShowsController : Controller
     {
         private readonly IBus bus;
+
+        private ApplicationUserManager userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get { return userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { userManager = value; }
+        }
 
         public TvShowsController(IBus bus)
         {
@@ -54,10 +66,12 @@ namespace Web.UI.Controllers
 
         public JsonResult Subscribe(int id)
         {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
             var response = bus.Request<TvSubscription, Subscription>(new TvSubscription
             {
                 Id = Convert.ToInt32(id),
-                EmailUser = "ronaldme@gmail.com"
+                EmailUser = user.Email
             });
 
             return Json(response, JsonRequestBehavior.AllowGet);

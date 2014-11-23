@@ -26,6 +26,8 @@ namespace Web.UI.DI
             container.Register(
                 Component.For<IBus>().Instance(bus)
             );
+
+
         }
     }
 }

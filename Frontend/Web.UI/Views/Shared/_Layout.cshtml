@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Activities.Statements
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -22,10 +23,13 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                @if (User.Identity.IsAuthenticated)
+                {
                     <li>@Html.ActionLink("Tv shows", "Index", "TvShows")</li>
                     <li>@Html.ActionLink("Movies", "Index", "Movies")</li>
                     <li>@Html.ActionLink("Actor/Actress", "Index", "Actors")</li>
-                </ul>
+                }
+            </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
