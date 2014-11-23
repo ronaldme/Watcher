@@ -3,17 +3,18 @@
     public interface ISubscribe
     {
         /// <summary>
-        /// Subscribes on a TV show
+        /// Subscribe on a TV show
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        void SubscribeTv(int id);
+        void SubscribeTv();
 
         /// <summary>
         /// Subscribes on a Movie
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        void SubscribeMovie(int id);
+        void SubscribeMovie();
+
+        /// <summary>
+        /// Subscribe on a Actor/Actress
+        /// </summary>
+        void SubscribeActor();
     }
 }

@@ -13,24 +13,24 @@ namespace Services
     {
         private List<IDisposable> disposables;
         private readonly IBus bus;
-        private readonly TheMovieDb movieDb;
+        private readonly ITheMovieDb theMovieDb;
 
-        public TvShows(IBus bus)
+        public TvShows(IBus bus, ITheMovieDb theMovieDb)
         {
-            movieDb = new TheMovieDb();
             this.bus = bus;
-        }
-
-        public void AiringToday()
-        {
+            this.theMovieDb = theMovieDb;
         }
 
         public void TopRated()
         {
-            bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO
+            disposables.Add(bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO
             {
-                TvShows = movieDb.GetTopRated()
-            });
+                TvShows = theMovieDb.GetTopRated()
+            }));
+        }
+
+        public void AiringToday()
+        {
         }
 
         public void New()
@@ -41,7 +41,7 @@ namespace Services
         {
             disposables = new List<IDisposable>();
 
-            // Run all methods implemented from the ISearchTV interface
+            // Run all methods implemented from the ITvShow interface
             typeof(ITvShows).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
         }
 

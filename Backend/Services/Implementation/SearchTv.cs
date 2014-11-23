@@ -12,13 +12,13 @@ namespace Services
     public class SearchTv : ISearchTv, IMqResponder
     {
         private List<IDisposable> disposables;
-        private readonly TheMovieDb movieDb;
+        private readonly ITheMovieDb theMovieDb;
         private readonly IBus bus;
 
-        public SearchTv(IBus bus)
+        public SearchTv(IBus bus, ITheMovieDb theMovieDb)
         {
             this.bus = bus;
-            movieDb = new TheMovieDb(); // todo: get rid of this
+            this.theMovieDb = theMovieDb;
         }
 
         public void Start()
@@ -36,17 +36,17 @@ namespace Services
 
         public void Search()
         {
-            disposables.Add(bus.Respond<TvShowSearch, TvShowListDTO>(request => new TvShowListDTO {TvShows = movieDb.SearchTv(request.Search)}));
+            disposables.Add(bus.Respond<TvShowSearch, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Search) }));
         }
 
         public void SearchByActor()
         {
-            disposables.Add(bus.Respond<TvShowSearchByActor, TvShowListDTO>(request => new TvShowListDTO {TvShows = movieDb.SearchTv(request.Actor)}));
+            disposables.Add(bus.Respond<TvShowSearchByActor, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Actor) }));
         }
 
         public void SearchById()
         {
-            disposables.Add(bus.Respond<TvShowSearchById, TvShowDTO>(request => movieDb.GetBy(request.Id)));
+            disposables.Add(bus.Respond<TvShowSearchById, TvShowDTO>(request => theMovieDb.GetBy(request.Id)));
         }
     }
 }

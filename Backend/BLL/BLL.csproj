@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITheMovieDb.cs" />
     <Compile Include="Json\Item.cs" />
     <Compile Include="Json\Convert.cs" />
     <Compile Include="Json\Root.cs" />
