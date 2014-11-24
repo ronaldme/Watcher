@@ -16,14 +16,6 @@ namespace Web.UI.Controllers
     {
         private readonly IBus bus;
 
-        private ApplicationUserManager userManager;
-
-        public ApplicationUserManager UserManager
-        {
-            get { return userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
-            private set { userManager = value; }
-        }
-
         public TvShowsController(IBus bus)
         {
             this.bus = bus;
@@ -54,23 +46,14 @@ namespace Web.UI.Controllers
             return Json(response.TvShows, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Get(int id)
+        public JsonResult Subscribe(int id, string name)
         {
-            var response = bus.Request<TvShowSearchById, TvShowDTO>(new TvShowSearchById
-            {
-                Id = Convert.ToInt32(id)
-            });
-
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult Subscribe(int id)
-        {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            var user = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
 
             var response = bus.Request<TvSubscription, Subscription>(new TvSubscription
             {
                 Id = Convert.ToInt32(id),
+                Name = name,
                 EmailUser = user.Email
             });
 

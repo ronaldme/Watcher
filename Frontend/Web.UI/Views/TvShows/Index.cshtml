@@ -29,6 +29,7 @@
             </div>
             <div class="modal-body">
                 <p id="showId" class="hidden"></p>
+                <p id="showName" class="hidden"></p>
                 <p id="modal-content"></p>
             </div>
             <div class="modal-footer">
@@ -67,7 +68,7 @@ $(document).ready(function () {
         $('#topRated').empty();
 
         for (var i = 0; i < data.length; i++) {
-            $('#topRated').append('<li id=' + data[i].Id + '><a href="javascript:void(0)">' + data[i].Name + '</a></li>');
+            $('#topRated').append('<li id=' + data[i].Id + '><a href="javascript:void(0)" id="test">' + data[i].Name + '</a></li>');
         }
     }
 
@@ -79,11 +80,11 @@ $(document).ready(function () {
         }
     }
 
-    function displayInfo(data) {
-        var text = 'Subscribe to: ' + data.Name;
+    function displayInfo(id, name) {
+        $('#modal-content').text('Subscribe to: ' + name);
 
-        $('#showId').text(data.Id);
-        $('#modal-content').text(text);
+        $('#showId').text(id);
+        $('#showName').text(name);
 
         $('#myModal').modal('show');
     }
@@ -94,34 +95,19 @@ $(document).ready(function () {
             type: 'POST',
             url: '@Url.Action("Subscribe", "TvShows")',
             data: {
-                id: $('#showId').text()
+                id: $('#showId').text(),
+                name: $('#showName').text()
             },
             success: displayInfo,
         });
     });
 
     $('#topRated').on('click', 'li', function () {
-        $.ajax({
-            dataType: "json",
-            type: 'POST',
-            url: '@Url.Action("Get", "TvShows")',
-            data: {
-                id: this.id
-            },
-            success: displayInfo,
-        });
+        displayInfo(this.id, this.innerText);
     });
 
     $('#searchList').on('click', 'li', function () {
-        $.ajax({
-            dataType: "json",
-            type: 'POST',
-            url: '@Url.Action("Get", "TvShows")',
-            data: {
-                id: this.id
-            },
-            success: displayInfo,
-        });
+        displayInfo(this.id, this.innerText);
     });
 });
 </script>

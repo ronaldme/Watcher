@@ -21,7 +21,7 @@ namespace Web.UI.Controllers
         public JsonResult GetImage()
         {
             var dir = Server.MapPath(@"\Content\images\");
-            var path = Path.Combine(dir, + random.Next(1, 21) + ".jpg");
+            var path = Path.Combine(dir, + random.Next(1, 41) + ".jpg");
             
             var file = File(path, "image/jpeg");
             byte[] bytes = System.IO.File.ReadAllBytes(file.FileName);
