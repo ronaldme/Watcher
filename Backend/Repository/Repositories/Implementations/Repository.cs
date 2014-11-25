@@ -17,10 +17,12 @@ namespace Repository.Repositories.Implementations
             dbContext = dataContext;
         }
 
-        public void Insert(T entity)
+        public T Insert(T entity)
         {
             DbSet.Add(entity);
             dbContext.SaveChanges();
+
+            return entity;
         }
 
         public void Update()

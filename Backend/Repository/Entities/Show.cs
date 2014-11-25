@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,6 +8,12 @@ namespace Repository.Entities
     [Table("Show")]
     public class Show
     {
+        public Show()
+        {
+            Users = new HashSet<User>();
+        }
+
+        [Key]
         public int Id { get; set; }
 
         [Required]
@@ -20,5 +27,6 @@ namespace Repository.Entities
         public DateTime? NextEpisodeNr { get; set; }
 
         public int? TheMovieDbId { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

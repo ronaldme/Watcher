@@ -13,6 +13,7 @@ namespace Repository.Entities
             Users = new HashSet<User>();
         }
 
+         [Key]
         public int Id { get; set; }
 
         [Required]

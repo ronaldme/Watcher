@@ -1,4 +1,5 @@
-﻿using Repository.Repositories.Interfaces;
+﻿using Repository.Entities;
+using Repository.Repositories.Interfaces;
 
 namespace Repository.Repositories.Implementations
 {

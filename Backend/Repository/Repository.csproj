@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actor.cs" />
+    <Compile Include="Entities\Actor.cs" />
     <Compile Include="Entities\Movie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Implementations\ActorRepository.cs" />

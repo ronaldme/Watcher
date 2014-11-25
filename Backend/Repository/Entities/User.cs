@@ -8,8 +8,10 @@ namespace Repository.Entities
         public User()
         {
             Movies = new HashSet<Movie>();
+            Shows = new HashSet<Show>();
         }
 
+         [Key]
         public int Id { get; set; }
 
         [Required]
@@ -17,5 +19,6 @@ namespace Repository.Entities
         public string Email { get; set; }
 
         public virtual ICollection<Movie> Movies { get; set; }
+        public virtual ICollection<Show> Shows { get; set; }
     }
 }

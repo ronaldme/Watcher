@@ -21,6 +21,11 @@ namespace Repository
                 .HasMany(e => e.Users)
                 .WithMany(e => e.Movies)
                 .Map(m => m.ToTable("UsersMovie").MapLeftKey("MovieId").MapRightKey("UsersId"));
+
+            modelBuilder.Entity<Show>()
+               .HasMany(e => e.Users)
+               .WithMany(e => e.Shows)
+               .Map(m => m.ToTable("UsersShow").MapLeftKey("ShowId").MapRightKey("UsersId"));
         }
     }
 }
