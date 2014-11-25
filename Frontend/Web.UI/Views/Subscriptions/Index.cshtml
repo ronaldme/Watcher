@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Watcher";
+}
+
+<h1>Subscriptions</h1>
+
+@*
+<tbody data-bind="foreach: seats">
+    <tr>
+        <td data-bind="text: name"></td>
+        <td data-bind="text: meal().mealName"></td>
+        <td data-bind="text: meal().price"></td>
+    </tr>
+</tbody>
+*@
+
+<div style="margin-top: 10px; margin-bottom: 10px;">
+    <ul id="subscriptions"></ul>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajax({
+            dataType: "json",
+            type: 'POST',
+            url: '@Url.Action("GetSubscriptions", "Subscriptions")',
+            success: display,
+        });
+
+        function display(data) {
+
+            for (var i = 0; i < data.length; i++) {
+                $('#subscriptions').append('<li id=' + data[i].Id + '><a href="javascript:void(0)" id="test">' + data[i].Name + '</a></li>');
+            }
+
+/*            var array = new Array();
+
+            for (var i = 0; i < data.length; i++) {
+                array.push(new Show(data[i].Id, data[i].Name));
+            }
+
+            ko.applyBindings(new SubscriptionsViewModel(array));*/
+        }
+
+/*        function Show(id, name) {
+            var self = this;
+
+            self.id = id;
+            self.name = ko.observable(name);
+        }
+
+        function SubscriptionsViewModel(array) {
+            var self = this;
+
+            self.shows = ko.observableArray(array);
+
+        }*/
+    });
+</script>

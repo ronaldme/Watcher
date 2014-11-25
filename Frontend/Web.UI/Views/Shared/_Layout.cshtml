@@ -1,5 +1,4 @@
-﻿@using System.Activities.Statements
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -9,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/knockout-3.2.0.debug.js"></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -23,14 +23,33 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Tv shows", "Index", "TvShows")</li>
+                        <li>@Html.ActionLink("Movies", "Index", "Movies")</li>
+                        <li>@Html.ActionLink("Actor/Actress", "Index", "Actors")</li>
+                    }
+                </ul>
+                @if (Request.IsAuthenticated)
                 {
-                    <li>@Html.ActionLink("Tv shows", "Index", "TvShows")</li>
-                    <li>@Html.ActionLink("Movies", "Index", "Movies")</li>
-                    <li>@Html.ActionLink("Actor/Actress", "Index", "Actors")</li>
+                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>@Html.ActionLink("Subscriptions", "Index", "Subscriptions")</li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        </ul>
+                    }
                 }
-            </ul>
-                @Html.Partial("_LoginPartial")
+                else
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                    </ul>
+                }
+
             </div>
         </div>
     </div>
