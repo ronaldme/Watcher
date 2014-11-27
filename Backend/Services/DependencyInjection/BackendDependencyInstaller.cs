@@ -23,7 +23,7 @@ namespace Services.DependencyInjection
             container.Register(Component.For<WatcherData>().LifeStyle.Singleton);
 
             container.Register(
-                Classes.FromAssemblyContaining<TvShows>()
+                Classes.FromAssemblyContaining<TvShowService>()
                     .Where(type => true)
                     .WithServiceAllInterfaces()
                     .LifestyleSingleton()

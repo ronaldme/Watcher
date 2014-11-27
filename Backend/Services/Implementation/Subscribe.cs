@@ -11,7 +11,7 @@ using Services.Interfaces;
 
 namespace Services
 {
-    public class Subscribe : ISubscribe, IMqResponder
+    public class Subscribe : ISubscriptionService, IMqResponder
     {
         private List<IDisposable> disposables;
         private readonly IBus bus;
@@ -27,12 +27,25 @@ namespace Services
             this.showRepository = showRepository;
         }
 
-        public void SubscribeTv()
+        public void Start()
         {
-            disposables.Add(bus.Respond<TvSubscription, Subscription>(SubscribeTo));
+            disposables = new List<IDisposable>();
+
+            // Run all methods implemented from the ISearchTV interface
+            typeof(ISubscriptionService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
         }
 
-        private Subscription SubscribeTo(TvSubscription tvSubscription)
+        public void Stop()
+        {
+            disposables.ForEach(x => x.Dispose());
+        }
+
+        public void SubscribeTv()
+        {
+            disposables.Add(bus.Respond<TvSubscription, Subscription>(SubscribeToShow));
+        }
+
+        private Subscription SubscribeToShow(TvSubscription tvSubscription)
         {
             try
             {
@@ -96,6 +109,69 @@ namespace Services
 
         public void SubscribeMovie()
         {
+            disposables.Add(bus.Respond<MovieSubscription, Subscription>(SubscribeToMovie));
+        }
+
+        private Subscription SubscribeToMovie(MovieSubscription movieSubscription)
+        {
+            try
+            {
+                User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
+                Movie movie = movieRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == movieSubscription.Id);
+
+                if (user == null)
+                {
+                    if (movie == null)
+                    {
+                        movie = movieRepository.Insert(new Movie
+                        {
+                            Name = movieSubscription.Name,
+                            TheMovieDbId = movieSubscription.Id
+                        });
+
+                        usersRepository.Insert(new User
+                        {
+                            Email = movieSubscription.EmailUser,
+                            Movies = new Collection<Movie> { movie }
+                        });
+                    }
+                    else
+                    {
+                        usersRepository.Insert(new User
+                        {
+                            Email = movieSubscription.EmailUser,
+                            Movies = new Collection<Movie> { movie }
+                        });
+                    }
+                }
+                else
+                {
+                    if (movie == null)
+                    {
+                        movie = movieRepository.Insert(new Movie
+                        {
+                            Name = movieSubscription.Name,
+                            TheMovieDbId = movieSubscription.Id
+                        });
+                        user.Movies.Add(movie);
+                    }
+                    else
+                    {
+                        user.Movies.Add(movie);
+                    }
+                    usersRepository.Update();
+                }
+
+                return new Subscription { IsSuccess = true };
+            }
+            catch (Exception e)
+            {
+                return new Subscription
+                {
+                    IsSuccess = false,
+                    Message = e.InnerException.ToString()
+                };
+            }
         }
 
         public void SubscribeActor()
@@ -103,17 +179,19 @@ namespace Services
             
         }
 
-        public void Start()
+        public void UnsubscribeTv()
         {
-            disposables = new List<IDisposable>();
-
-            // Run all methods implemented from the ISearchTV interface
-            typeof(ISubscribe).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
+            
         }
 
-        public void Stop()
+        public void UnsubscribeMovie()
         {
-            disposables.ForEach(x => x.Dispose());
+            
+        }
+
+        public void UnsubscribeActor()
+        {
+            
         }
     }
 }

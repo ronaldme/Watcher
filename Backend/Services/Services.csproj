@@ -61,16 +61,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\BackendDependencyInstaller.cs" />
+    <Compile Include="Implementation\MovieService.cs" />
     <Compile Include="Implementation\Subscribe.cs" />
     <Compile Include="Implementation\Subscriptions.cs" />
+    <Compile Include="Implementation\TvShowService.cs" />
+    <Compile Include="Interfaces\IMovieService.cs" />
     <Compile Include="Interfaces\IMqResponder.cs" />
-    <Compile Include="Interfaces\ISearchTv.cs" />
-    <Compile Include="Interfaces\ISubscribe.cs" />
+    <Compile Include="Interfaces\ISubscriptionService.cs" />
     <Compile Include="Interfaces\ISubscriptions.cs" />
-    <Compile Include="Interfaces\ITvShows.cs" />
+    <Compile Include="Interfaces\ITvShowService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Implementation\SearchTv.cs" />
-    <Compile Include="Implementation\TvShows.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Messages\Messages.csproj">

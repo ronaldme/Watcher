@@ -9,13 +9,13 @@ using Services.Interfaces;
 
 namespace Services
 {
-    public class SearchTv : ISearchTv, IMqResponder
+    public class TvShowService : ITvShowService, IMqResponder
     {
         private List<IDisposable> disposables;
-        private readonly ITheMovieDb theMovieDb;
         private readonly IBus bus;
+        private readonly ITheMovieDb theMovieDb;
 
-        public SearchTv(IBus bus, ITheMovieDb theMovieDb)
+        public TvShowService(IBus bus, ITheMovieDb theMovieDb)
         {
             this.bus = bus;
             this.theMovieDb = theMovieDb;
@@ -25,13 +25,29 @@ namespace Services
         {
             disposables = new List<IDisposable>();
 
-            // Run all methods implemented from the ISearchTV interface
-            typeof (ISearchTv).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
+            // Run all methods implemented from the ITvShow interface
+            typeof(ITvShowService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
         }
 
         public void Stop()
         {
             disposables.ForEach(x => x.Dispose());
+        }
+
+        public void TopRated()
+        {
+            disposables.Add(bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO
+            {
+                TvShows = theMovieDb.GetTopRated()
+            }));
+        }
+
+        public void AiringToday()
+        {
+        }
+
+        public void New()
+        {
         }
 
         public void Search()
@@ -46,7 +62,7 @@ namespace Services
 
         public void SearchById()
         {
-            disposables.Add(bus.Respond<TvShowSearchById, TvShowDTO>(request => theMovieDb.GetBy(request.Id)));
+            disposables.Add(bus.Respond<TvShowSearchById, TvShowDTO>(request => theMovieDb.GetShowBy(request.Id)));
         }
     }
 }

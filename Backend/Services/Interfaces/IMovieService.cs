@@ -1,7 +1,8 @@
 ﻿namespace Services.Interfaces
 {
-    public interface ISearchTv
+    public interface IMovieService
     {
+        void Upcoming();
         void Search();
         void SearchByActor();
         void SearchById();
