@@ -7,15 +7,21 @@
 <div class="row">
     <div class="col-md-4">
         <input type="text" class="form-control" id="search" placeholder="Search..">
-        
-        <br/>
         <div style="margin-top: 10px; margin-bottom: 10px;">
-            <ul id="searchList"></ul>
+            <ul id="searchList" data-bind="foreach: searchResults">
+                <li>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                </li>
+            </ul>
         </div>
-        
+
         <h2>Top rated shows</h2>
         <div style="margin-top: 10px; margin-bottom: 10px;">
-            <ul id="topRated"></ul>
+            <ul id="topRated" data-bind="foreach: topRated">
+                <li>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
@@ -41,73 +47,91 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready(function () {
-    $.ajax({
-        dataType: "json",
-        type: 'POST',
-        url: '@Url.Action("TopRated", "TvShows")',
-        success: displayTopRated,
-    });
-  
+    $(document).ready(function () {
+        var viewModel = new ViewModel();
+        ko.applyBindings(viewModel);
 
-    $('#search').on('input', function () {
-        if ($('#search').val().length >= 3) {
+        function ViewModel() {
+            var self = this;
+
+            self.topRated = ko.observable();
+            self.searchResults = ko.observable();
+
             $.ajax({
                 dataType: "json",
                 type: 'POST',
-                url: '@Url.Action("Search", "TvShows")',
-                data: {
-                    input: $('#search').val()
-                },
-                success: displaySearchResults,
+                url: '@Url.Action("TopRated", "TvShows")',
+                success: topRated
             });
+
+            function topRated(data) {
+                var shows = new Array();
+
+                for (var i = 0; i < data.length; i++) {
+                    shows.push(new TvShow(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                }
+
+                self.topRated(shows);
+            }
+
+            self.search = $('#search').on('input', function () {
+                $.ajax({
+                    dataType: "json",
+                    type: 'POST',
+                    url: '@Url.Action("Search", "TvShows")',
+                    data: {
+                        input: $('#search').val()
+                    },
+                    success: displaySearchResults
+                });
+            });
+
+            function displaySearchResults(data) {
+                var shows = new Array();
+
+                for (var i = 0; i < data.length; i++) {
+                    shows.push(new TvShow(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                }
+
+                self.searchResults(shows);
+            }
         }
-    });
 
-    function displayTopRated(data) {
-        $('#topRated').empty();
+        function TvShow(id, name) {
+            var self = this;
 
-        for (var i = 0; i < data.length; i++) {
-            $('#topRated').append('<li id=' + data[i].Id + '><a href="javascript:void(0)" id="test">' + data[i].Name + '</a></li>');
+            self.id = ko.observable(id);
+            self.name = ko.observable(name);
         }
-    }
 
-    function displaySearchResults(data) {
-        $('#searchList').empty();
-
-        for (var i = 0; i < data.length; i++) {
-            $('#searchList').append('<li id=' + data[i].Id + '><a href="javascript:void(0)">' + data[i].Name + '</a></li>');
-        }
-    }
-
-    function displayInfo(id, name) {
-        $('#modal-content').text('Subscribe to: ' + name);
-
-        $('#showId').text(id);
-        $('#showName').text(name);
-
-        $('#myModal').modal('show');
-    }
-
-    $('#subscribe').click(function () {
-        $.ajax({
-            dataType: "json",
-            type: 'POST',
-            url: '@Url.Action("Subscribe", "TvShows")',
-            data: {
-                id: $('#showId').text(),
-                name: $('#showName').text()
-            },
-            success: displayInfo,
+        $('#subscribe').click(function () {
+            $.ajax({
+                dataType: "json",
+                type: 'POST',
+                url: '@Url.Action("Subscribe", "TvShows")',
+                data: {
+                    id: $('#showId').text(),
+                    name: $('#showName').text()
+                },
+                success: displayInfo,
+            });
         });
-    });
 
-    $('#topRated').on('click', 'li', function () {
-        displayInfo(this.id, this.innerText);
-    });
+        $('#topRated').on('click', 'li', function () {
+            displayInfo(this.id, this.innerText);
+        });
 
-    $('#searchList').on('click', 'li', function () {
-        displayInfo(this.id, this.innerText);
+        $('#searchList').on('click', 'li', function () {
+            displayInfo(this.id, this.innerText);
+        });
+
+        function displayInfo(id, name) {
+            $('#modal-content').text('Subscribe to: ' + name);
+
+            $('#showId').text(id);
+            $('#showName').text(name);
+
+            $('#myModal').modal('show');
+        }
     });
-});
 </script>

@@ -5,12 +5,23 @@
 <h1>Movies</h1>
 <script src="~/Scripts/bootstrap.min.js"></script>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <input type="text" class="form-control" id="search" placeholder="Search..">
-
-        <br />
         <div style="margin-top: 10px; margin-bottom: 10px;">
-            <ul id="searchList"></ul>
+            <ul id="searchList" data-bind="foreach: searchResults">
+                <li>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                </li>
+            </ul>
+        </div>
+        
+        <h2>Upcoming movies</h2>
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+            <ul id="upcoming" data-bind="foreach: upcoming">
+                <li>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
@@ -23,7 +34,8 @@
                 <h4 class="modal-title">Subscribe</h4>
             </div>
             <div class="modal-body">
-                <p id="showId" class="hidden"></p>
+                <p id="movieId" class="hidden"></p>
+                <p id="movieName" class="hidden"></p>
                 <p id="modal-content"></p>
             </div>
             <div class="modal-footer">
@@ -36,6 +48,78 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-   
+        var viewModel = new ViewModel();
+        ko.applyBindings(viewModel);
+
+        function ViewModel() {
+            var self = this;
+
+            self.upcoming = ko.observable();
+            self.searchResults = ko.observable();
+
+            $.ajax({
+                dataType: "json",
+                type: 'POST',
+                url: '@Url.Action("Upcoming", "Movies")',
+                success: upcoming
+            });
+
+            function upcoming(data) {
+                var movies = new Array();
+
+                for (var i = 0; i < data.length; i++) {
+                    movies.push(new Movie(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                }
+
+                self.upcoming(movies);
+            }
+
+            self.search = $('#search').on('input', function() {
+                $.ajax({
+                    dataType: "json",
+                    type: 'POST',
+                    url: '@Url.Action("Search", "Movies")',
+                    data: {
+                        input: $('#search').val()
+                    },
+                    success: displaySearchResults
+                });
+            });
+
+            function displaySearchResults(data) {
+                var movies = new Array();
+
+                for (var i = 0; i < data.length; i++) {
+                    movies.push(new Movie(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                }
+
+                self.searchResults(movies);
+            }
+        }
+
+        function Movie(id, name, releaseDate) {
+            var self = this;
+
+            self.id = ko.observable(id);
+            self.name = ko.observable(name);
+            self.releaseDate = ko.observable(releaseDate);
+        }
+
+        $('#upcoming').on('click', 'li', function () {
+            displayInfo(this.id, this.innerText);
+        });
+
+        $('#searchList').on('click', 'li', function () {
+            displayInfo(this.id, this.innerText);
+        });
+
+        function displayInfo(id, name) {
+            $('#modal-content').text('Subscribe to: ' + name);
+
+            $('#movieId').text(id);
+            $('#movieName').text(name);
+
+            $('#myModal').modal('show');
+        }
     });
 </script>
