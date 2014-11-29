@@ -1,4 +1,4 @@
-﻿namespace Messages.Request
+﻿namespace Messages.Response
 {
     public class Unsubscription
     {

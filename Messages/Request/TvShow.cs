@@ -1,4 +1,6 @@
-﻿namespace Messages.Request
+﻿using Messages.Types;
+
+namespace Messages.Request
 {
     public class TvShow
     {

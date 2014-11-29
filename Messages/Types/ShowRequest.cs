@@ -1,4 +1,4 @@
-﻿namespace Messages
+﻿namespace Messages.Types
 {
     public enum ShowRequest
     {
