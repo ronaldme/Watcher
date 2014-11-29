@@ -48,16 +48,31 @@ namespace Web.UI.Controllers
 
         public JsonResult Subscribe(int id, string name)
         {
-            var user = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
+            string email = GetEmail();
 
             var response = bus.Request<TvSubscription, Subscription>(new TvSubscription
             {
                 Id = Convert.ToInt32(id),
                 Name = name,
-                EmailUser = user.Email
+                EmailUser = email
             });
 
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        public string GetEmail()
+        {
+            var httpCookie = HttpContext.Request.Cookies.Get("email");
+
+            if (httpCookie != null)
+            {
+                return httpCookie.Value;
+            }
+
+            return HttpContext.GetOwinContext()
+                .GetUserManager<ApplicationUserManager>()
+                .FindById(User.Identity.GetUserId())
+                .Email;
         }
     }
 }

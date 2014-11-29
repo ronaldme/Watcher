@@ -26,6 +26,8 @@
     </div>
 </div>
 
+<p id="succesMessage" class="bg-success hidden" style="height: 35px; line-height: 35px; padding-left: 10px;">Success!</p>
+
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -74,7 +76,7 @@
                 self.upcoming(movies);
             }
 
-            self.search = $('#search').on('input', function() {
+            self.search = $('#search').on('input', function () {
                 $.ajax({
                     dataType: "json",
                     type: 'POST',
@@ -105,15 +107,34 @@
             self.releaseDate = ko.observable(releaseDate);
         }
 
-        $('#upcoming').on('click', 'li', function () {
+        $('#subscribe').click(function () {
+            $.ajax({
+                dataType: "json",
+                type: 'POST',
+                url: '@Url.Action("Subscribe", "Movies")',
+                data: {
+                    id: $('#movieId').text(),
+                    name: $('#movieName').text()
+                },
+                success: function(success) {
+                    if (success) {
+                        $('#myModal').modal('hide');
+                        $('#succesMessage').removeClass('hidden');
+                    }
+                }
+            });
+        });
+
+        $('#upcoming').on('click', 'a', function () {
             displayInfo(this.id, this.innerText);
         });
 
-        $('#searchList').on('click', 'li', function () {
+        $('#searchList').on('click', 'a', function () {
             displayInfo(this.id, this.innerText);
         });
 
         function displayInfo(id, name) {
+            $('#succesMessage').addClass('hidden');
             $('#modal-content').text('Subscribe to: ' + name);
 
             $('#movieId').text(id);

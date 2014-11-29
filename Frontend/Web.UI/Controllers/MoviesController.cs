@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
+using Messages.Response;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
@@ -43,9 +46,31 @@ namespace Web.UI.Controllers
 
         public JsonResult Subscribe(int id, string name)
         {
-            var user = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
+            var email = GetEmail();
 
-            return null;
+            var response = bus.Request<MovieSubscription, Subscription>(new MovieSubscription
+            {
+                Id = Convert.ToInt32(id),
+                Name = name,
+                EmailUser = email
+            });
+
+            return Json(response.IsSuccess, JsonRequestBehavior.AllowGet);
+        }
+
+        public string GetEmail()
+        {
+            var httpCookie = HttpContext.Request.Cookies.Get("email");
+
+            if (httpCookie != null)
+            {
+                return httpCookie.Value;
+            }
+
+            return HttpContext.GetOwinContext()
+                .GetUserManager<ApplicationUserManager>()
+                .FindById(User.Identity.GetUserId())
+                .Email;
         }
     }
 }

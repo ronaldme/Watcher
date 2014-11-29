@@ -61,10 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\BackendDependencyInstaller.cs" />
+    <Compile Include="Implementation\ActorService.cs" />
     <Compile Include="Implementation\MovieService.cs" />
-    <Compile Include="Implementation\Subscribe.cs" />
+    <Compile Include="Implementation\SubscribeService.cs" />
     <Compile Include="Implementation\Subscriptions.cs" />
     <Compile Include="Implementation\TvShowService.cs" />
+    <Compile Include="Interfaces\IActorService.cs" />
     <Compile Include="Interfaces\IMovieService.cs" />
     <Compile Include="Interfaces\IMqResponder.cs" />
     <Compile Include="Interfaces\ISubscriptionService.cs" />

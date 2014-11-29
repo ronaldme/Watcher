@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -37,12 +38,17 @@ namespace Web.UI.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
+
+                    var cookie = new HttpCookie("email")
+                    {
+                        Value = user.Email,
+                        Expires = DateTime.Now.AddDays(10)
+                    };
+                    HttpContext.Response.SetCookie(cookie);
+
                     return RedirectToLocal(returnUrl);
                 }
-                else
-                {
                     ModelState.AddModelError("", "Invalid username or password.");
-                }
             }
 
             return View(model);

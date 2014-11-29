@@ -39,17 +39,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTO\Actor.cs" />
-    <Compile Include="DTO\Movie.cs" />
+    <Compile Include="DTO\MovieDTO.cs" />
+    <Compile Include="DTO\MovieListDTO.cs" />
     <Compile Include="DTO\TvShowDTO.cs" />
     <Compile Include="DTO\TvShowListDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\MovieList.cs" />
+    <Compile Include="Request\MovieRequest.cs" />
+    <Compile Include="Request\MovieSearch.cs" />
+    <Compile Include="Request\MovieSubscription.cs" />
     <Compile Include="Request\TvList.cs" />
     <Compile Include="Request\TvShowSearch.cs" />
     <Compile Include="Request\TvShow.cs" />
     <Compile Include="Request\TvShowSearchByActor.cs" />
     <Compile Include="Request\TvShowSearchById.cs" />
     <Compile Include="Request\TvSubscription.cs" />
+    <Compile Include="Request\UnsubscribeMovie.cs" />
+    <Compile Include="Request\UnsubscribeTv.cs" />
+    <Compile Include="Response\Unsubscription.cs" />
     <Compile Include="Response\Subscription.cs" />
     <Compile Include="Types\ShowRequest.cs" />
   </ItemGroup>

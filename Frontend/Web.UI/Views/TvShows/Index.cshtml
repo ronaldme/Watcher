@@ -26,6 +26,8 @@
     </div>
 </div>
 
+<p id="succesMessage" class="bg-success hidden" style="height: 35px; line-height: 35px; padding-left: 10px;">Success!</p>
+
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -113,19 +115,25 @@
                     id: $('#showId').text(),
                     name: $('#showName').text()
                 },
-                success: displayInfo,
+                success: function(success) {
+                    if (success) {
+                        $('#myModal').modal('hide');
+                        $('#succesMessage').removeClass('hidden');
+                    }
+                }
             });
         });
 
-        $('#topRated').on('click', 'li', function () {
+        $('#topRated').on('click', 'a', function () {
             displayInfo(this.id, this.innerText);
         });
 
-        $('#searchList').on('click', 'li', function () {
+        $('#searchList').on('click', 'a', function () {
             displayInfo(this.id, this.innerText);
         });
 
         function displayInfo(id, name) {
+            $('#succesMessage').addClass('hidden');
             $('#modal-content').text('Subscribe to: ' + name);
 
             $('#showId').text(id);

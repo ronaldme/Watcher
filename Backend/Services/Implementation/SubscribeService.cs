@@ -11,7 +11,7 @@ using Services.Interfaces;
 
 namespace Services
 {
-    public class Subscribe : ISubscriptionService, IMqResponder
+    public class SubscribeService : ISubscriptionService, IMqResponder
     {
         private List<IDisposable> disposables;
         private readonly IBus bus;
@@ -19,7 +19,7 @@ namespace Services
         private readonly IMovieRepository movieRepository;
         private readonly IShowRepository showRepository;
 
-        public Subscribe(IBus bus, IUsersRepository usersRepository, IMovieRepository movieRepository, IShowRepository showRepository)
+        public SubscribeService(IBus bus, IUsersRepository usersRepository, IMovieRepository movieRepository, IShowRepository showRepository)
         {
             this.bus = bus;
             this.usersRepository = usersRepository;
@@ -174,19 +174,55 @@ namespace Services
             }
         }
 
-        public void SubscribeActor()
-        {
-            
-        }
-
         public void UnsubscribeTv()
         {
-            
+            disposables.Add(bus.Respond<UnsubscribeTv, Unsubscription>(UnsubscribeToTv));
+        }
+
+        private Unsubscription UnsubscribeToTv(UnsubscribeTv unsubscribeTv)
+        {
+            User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == unsubscribeTv.Email);
+            Show show = showRepository.GetAll().FirstOrDefault(x => x.Id == unsubscribeTv.Id);
+
+            if (user != null)
+            {
+                user.Shows.Remove(show);
+                showRepository.Delete(show);
+                usersRepository.Update();
+            }
+
+            return new Unsubscription
+            {
+                IsSuccess = true
+            };
         }
 
         public void UnsubscribeMovie()
         {
-            
+            disposables.Add(bus.Respond<UnsubscribeMovie, Unsubscription>(UnsubscribeToMovie));
+        }
+
+        private Unsubscription UnsubscribeToMovie(UnsubscribeMovie unsubscribeMovie)
+        {
+            User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == unsubscribeMovie.Email);
+            Movie movie = movieRepository.GetAll().FirstOrDefault(x => x.Id == unsubscribeMovie.Id);
+
+            if (user != null)
+            {
+                user.Movies.Remove(movie);
+                movieRepository.Delete(movie);
+                usersRepository.Update();
+            }
+
+            return new Unsubscription
+            {
+                IsSuccess = true
+            };
+        }
+
+        public void SubscribeActor()
+        {
+
         }
 
         public void UnsubscribeActor()

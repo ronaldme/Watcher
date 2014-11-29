@@ -26,9 +26,9 @@ namespace Services
             disposables.Add(bus.Respond<TvList, TvShowListDTO>(GetUsersShows));
         }
 
-        private TvShowListDTO GetUsersShows(TvList subscription)
+        private TvShowListDTO GetUsersShows(TvList tvList)
         {
-            var user = usersRepository.GetAll().FirstOrDefault(x => x.Email == subscription.Email);
+            var user = usersRepository.GetAll().FirstOrDefault(x => x.Email == tvList.Email);
 
             var tvShows = user.Shows.Select(x => new TvShowDTO
             {
@@ -44,7 +44,21 @@ namespace Services
 
         public void GetMovies()
         {
-            
+            disposables.Add(bus.Respond<MovieList, MovieListDTO>(GetUsersMovies));
+        }
+
+        private MovieListDTO GetUsersMovies(MovieList movieList)
+        {
+            var user = usersRepository.GetAll().FirstOrDefault(x => x.Email == movieList.Email);
+
+            return new MovieListDTO
+            {
+                Movies = user.Movies.Select(x => new MovieDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList()
+            };
         }
 
         public void GetActors()
