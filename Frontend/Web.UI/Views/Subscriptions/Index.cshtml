@@ -3,7 +3,7 @@
 }
 
 <div id="subscription" class="subscription hidden">
-    <div style="float: left; width: 420px;">
+    <div style="float: left; width: 380px;">
         <h2>Tv-show subscriptions</h2>
         <ul id="showSubscriptions" data-bind="foreach: movies">
             <li>
@@ -12,7 +12,7 @@
         </ul>
     </div>
 
-    <div style="float: left; width: 420px;">
+    <div style="float: left; width: 380px;">
         <h2>Movie subscriptions</h2>
         <ul id="movieSubscriptions" data-bind="foreach: shows">
             <li>
@@ -21,26 +21,34 @@
         </ul>
     </div>
     
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Unsubscribe</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="itemId" class="hidden"></p>
-                    <p id="itemName" class="hidden"></p>
-                    <p id="modal-content"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="subscribe">Unsubscribe</button>
-                </div>
+    <div style="float: left; width: 380px;">
+        <h2>Person subscriptions</h2>
+        <ul id="personSubscriptions" data-bind="foreach: persons">
+            <li>
+                <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Unsubscribe</h4>
+            </div>
+            <div class="modal-body">
+                <p id="itemId" class="hidden"></p>
+                <p id="itemName" class="hidden"></p>
+                <p id="modal-content"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="subscribe">Unsubscribe</button>
             </div>
         </div>
     </div>
-    
 </div>
 
 <script type="text/javascript">
@@ -55,6 +63,7 @@
         function display(data) {
             var shows = new Array();
             var movies = new Array();
+            var persons = new Array();
 
             for (var i = 0; i < data.Movies.length; i++) {
                 shows.push(new ListItem(data.Movies[i].Id, data.Movies[i].Name));
@@ -64,7 +73,11 @@
                 movies.push(new ListItem(data.TvShows[i].Id, data.TvShows[i].Name));
             }
 
-            var viewModel = new SubscriptionsViewModel(shows, movies);
+            for (var i = 0; i < data.Persons.length; i++) {
+                persons.push(new ListItem(data.Persons[i].Id, data.Persons[i].Name));
+            }
+
+            var viewModel = new SubscriptionsViewModel(shows, movies, persons);
             ko.applyBindings(viewModel);
 
             $('#subscription').removeClass('hidden');
@@ -76,24 +89,29 @@
             self.id = ko.observable(id);
             self.name = ko.observable(name);
         }
-
-
-        function SubscriptionsViewModel(tvShows, movies) {
+        
+        function SubscriptionsViewModel(tvShows, movies, persons) {
             var self = this;
 
             self.shows = ko.observableArray(tvShows);
             self.movies = ko.observableArray(movies);
+            self.persons = ko.observableArray(persons);
         }
 
-        var isMovie;
+        var unsubscribeType;
 
         $('#showSubscriptions').on('click', 'a', function () {
-            isMovie = false;
+            unsubscribeType = "show";
             displayInfo(this.id, this.innerText);
         });
 
         $('#movieSubscriptions').on('click', 'a', function () {
-            isMovie = true;
+            unsubscribeType = "movie";
+            displayInfo(this.id, this.innerText);
+        });
+
+        $('#personSubscriptions').on('click', 'a', function () {
+            unsubscribeType = "person";
             displayInfo(this.id, this.innerText);
         });
 
@@ -113,7 +131,7 @@
                 url: '@Url.Action("UnSubscribe", "Subscriptions")',
                 data: {
                     id: $('#itemId').text(),
-                    isMovie: isMovie
+                    unsubscribeType: unsubscribeType
                 },
                 success: function(success) {
                     if (success) {

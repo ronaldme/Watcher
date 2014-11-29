@@ -1,23 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
-using Messages;
 using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
-using Messages.Types;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace Web.UI.Controllers
 {
     [Authorize]
-    public class TvShowsController : Controller
+    public class PersonsController : Controller
     {
         private readonly IBus bus;
 
-        public TvShowsController(IBus bus)
+        public PersonsController(IBus bus)
         {
             this.bus = bus;
         }
@@ -27,38 +26,32 @@ namespace Web.UI.Controllers
             return View();
         }
 
-        public JsonResult TopRated()
+        public JsonResult Popular()
         {
-            var response = bus.Request<TvShow, TvShowListDTO>(new TvShow
-            {
-                ShowRequest = ShowRequest.TopRated
-            });
-            
-            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
+            var response = bus.Request<PersonRequest, List<PersonDTO>>(new PersonRequest());
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Search(string input)
         {
-            var response = bus.Request<TvShowSearch, TvShowListDTO>(new TvShowSearch
-            {
-                Search = input
-            });
-            
-            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
+            var response = bus.Request<PersonSearch, List<PersonDTO>>(new PersonSearch{Search = input});
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Subscribe(int id, string name)
         {
-            string email = GetEmail();
+            var email = GetEmail();
 
-            var response = bus.Request<TvSubscription, Subscription>(new TvSubscription
+            var response = bus.Request<PersonSubscription, Subscription>(new PersonSubscription
             {
                 Id = Convert.ToInt32(id),
                 Name = name,
                 EmailUser = email
             });
 
-            return Json(response, JsonRequestBehavior.AllowGet);
+            return Json(response.IsSuccess, JsonRequestBehavior.AllowGet);
         }
 
         public string GetEmail()

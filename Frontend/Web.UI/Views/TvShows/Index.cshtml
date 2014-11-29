@@ -15,7 +15,7 @@
             </ul>
         </div>
 
-        <h2>Top rated shows</h2>
+        <h2>Top rated</h2>
         <div style="margin-top: 10px; margin-bottom: 10px;">
             <ul id="topRated" data-bind="foreach: topRated">
                 <li>
@@ -76,16 +76,18 @@
                 self.topRated(shows);
             }
 
-            self.search = $('#search').on('input', function () {
-                $.ajax({
-                    dataType: "json",
-                    type: 'POST',
-                    url: '@Url.Action("Search", "TvShows")',
-                    data: {
-                        input: $('#search').val()
-                    },
-                    success: displaySearchResults
-                });
+            self.search = $('#search').on('input', function() {
+                if ($('#search').val().length > 0) {
+                    $.ajax({
+                        dataType: "json",
+                        type: 'POST',
+                        url: '@Url.Action("Search", "TvShows")',
+                        data: {
+                            input: $('#search').val()
+                        },
+                        success: displaySearchResults
+                    });
+                }
             });
 
             function displaySearchResults(data) {

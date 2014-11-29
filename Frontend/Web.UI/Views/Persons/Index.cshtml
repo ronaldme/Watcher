@@ -2,7 +2,7 @@
     ViewBag.Title = "Watcher";
 }
 
-<h1>Movies</h1>
+<h1>Persons</h1>
 <script src="~/Scripts/bootstrap.min.js"></script>
 <div class="row">
     <div class="col-md-8">
@@ -14,10 +14,10 @@
                 </li>
             </ul>
         </div>
-        
-        <h2>Upcoming</h2>
+
+        <h2>Popular</h2>
         <div style="margin-top: 10px; margin-bottom: 10px;">
-            <ul id="upcoming" data-bind="foreach: upcoming">
+            <ul id="popular" data-bind="foreach: popular">
                 <li>
                     <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
                 </li>
@@ -36,8 +36,8 @@
                 <h4 class="modal-title">Subscribe</h4>
             </div>
             <div class="modal-body">
-                <p id="movieId" class="hidden"></p>
-                <p id="movieName" class="hidden"></p>
+                <p id="personId" class="hidden"></p>
+                <p id="personName" class="hidden"></p>
                 <p id="modal-content"></p>
             </div>
             <div class="modal-footer">
@@ -56,24 +56,24 @@
         function ViewModel() {
             var self = this;
 
-            self.upcoming = ko.observable();
+            self.popular = ko.observable();
             self.searchResults = ko.observable();
 
             $.ajax({
                 dataType: "json",
                 type: 'POST',
-                url: '@Url.Action("Upcoming", "Movies")',
-                success: upcoming
+                url: '@Url.Action("Popular", "Persons")',
+                success: popular
             });
 
-            function upcoming(data) {
+            function popular(data) {
                 var movies = new Array();
 
                 for (var i = 0; i < data.length; i++) {
-                    movies.push(new Movie(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                    movies.push(new Person(data[i].Id, data[i].Name));
                 }
 
-                self.upcoming(movies);
+                self.popular(movies);
             }
 
             self.search = $('#search').on('input', function() {
@@ -81,7 +81,7 @@
                     $.ajax({
                         dataType: "json",
                         type: 'POST',
-                        url: '@Url.Action("Search", "Movies")',
+                        url: '@Url.Action("Search", "Persons")',
                     data: {
                         input: $('#search').val()
                     },
@@ -94,14 +94,14 @@
                 var movies = new Array();
 
                 for (var i = 0; i < data.length; i++) {
-                    movies.push(new Movie(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                    movies.push(new Person(data[i].Id, data[i].Name));
                 }
 
                 self.searchResults(movies);
             }
         }
 
-        function Movie(id, name, releaseDate) {
+        function Person(id, name, releaseDate) {
             var self = this;
 
             self.id = ko.observable(id);
@@ -113,10 +113,10 @@
             $.ajax({
                 dataType: "json",
                 type: 'POST',
-                url: '@Url.Action("Subscribe", "Movies")',
+                url: '@Url.Action("Subscribe", "Persons")',
                 data: {
-                    id: $('#movieId').text(),
-                    name: $('#movieName').text()
+                    id: $('#personId').text(),
+                    name: $('#personName').text()
                 },
                 success: function(success) {
                     if (success) {
@@ -127,7 +127,7 @@
             });
         });
 
-        $('#upcoming').on('click', 'a', function () {
+        $('#popular').on('click', 'a', function () {
             displayInfo(this.id, this.innerText);
         });
 
@@ -139,8 +139,8 @@
             $('#succesMessage').addClass('hidden');
             $('#modal-content').text('Subscribe to: ' + name);
 
-            $('#movieId').text(id);
-            $('#movieName').text(name);
+            $('#personId').text(id);
+            $('#personName').text(name);
 
             $('#myModal').modal('show');
         }
