@@ -8,12 +8,21 @@ namespace BLL
 {
     public class TheMovieDb : ITheMovieDb
     {
+        #region Search
         public List<TvShowDTO> SearchTv(string search)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchTv + "&query=" + ReplaceSpaces(search) + "&vote_count.gte=10" + "&sort_by=popularity.desc");
             string json = GetResponse(request);
 
             return Convert.ToShows(json);
+        }
+
+        public List<MovieDTO> SearchMovie(string search)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchMovie + "&query=" + ReplaceSpaces(search));
+            string json = GetResponse(request);
+
+            return Convert.ToMovies(json);
         }
 
         public List<PersonDTO> SearchPerson(string search)
@@ -23,8 +32,10 @@ namespace BLL
 
             return Convert.ToPersons(json);
         }
+        #endregion
 
-        public List<TvShowDTO> GetTopRated()
+        #region List DTO's
+        public List<TvShowDTO> TopRated()
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.TopRated);
             string json = GetResponse(request);
@@ -35,47 +46,32 @@ namespace BLL
         public List<PersonDTO> Populair()
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.PopularPersons);
-
             string json = GetResponse(request);
 
             return Convert.ToPersons(json);
         }
 
-        public TvShowDTO GetShowBy(int id)
+        public List<MovieDTO> Upcoming()
         {
-            throw new System.NotImplementedException();
-        }
+            var request = (HttpWebRequest)WebRequest.Create(Urls.UpcomingMovies);
+            string json = GetResponse(request);
 
+            return Convert.toNew(json);
+        }
+        #endregion
+
+        #region Get
         public TvShowDTO GetBy(int id)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchTvById + "/" + id);         
-            
-            string json1 = GetResponse(request);
-
-            var converted = Convert.ToObj(json1);
-
-            return Convert.ToShow(json1);
-        }
-
-        public List<MovieDTO> Upcoming()
-        {
-            var request = (HttpWebRequest) WebRequest.Create(Urls.UpcomingMovies);
-
             string json = GetResponse(request);
 
-            var converted = Convert.toNew(json);
-
-            return converted;
-
+            return Convert.ToShow(json);
         }
 
-        public List<MovieDTO> SearchMovie(string search)
+        public TvShowDTO GetShowBy(int id)
         {
-            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchMovie + "&query=" + ReplaceSpaces(search));
-
-            string json = GetResponse(request);
-
-            return Convert.ToMovies(json);
+            throw new System.NotImplementedException();
         }
 
         public MovieDTO GetMovieBy(int id)
@@ -87,16 +83,9 @@ namespace BLL
         {
             throw new System.NotImplementedException();
         }
+        #endregion
 
-        public void Get()
-        {
-            int id = 0;
-            int seasonid = 0;
-            var requestEpisodes = (HttpWebRequest)WebRequest.Create("https://api.themoviedb.org/3/tv/" +
-                                                                    id +
-                                                                    "/season/ + " + seasonid);
-        }
-
+        #region Private methods
         private string GetResponse(HttpWebRequest request)
         {
             request.KeepAlive = true;
@@ -121,5 +110,6 @@ namespace BLL
         {
             return input.Contains(" ") ? input.Replace(' ', '+') : input;
         }
+        #endregion
     }
 }

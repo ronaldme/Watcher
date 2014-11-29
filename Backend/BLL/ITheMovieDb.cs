@@ -6,7 +6,15 @@ namespace BLL
     public interface ITheMovieDb
     {
         List<TvShowDTO> SearchTv(string search);
-        List<TvShowDTO> GetTopRated();
-        TvShowDTO GetBy(int id);
+        List<MovieDTO> SearchMovie(string search);
+        List<PersonDTO> SearchPerson(string search);
+
+        List<TvShowDTO> TopRated();
+        List<MovieDTO> Upcoming();
+        List<PersonDTO> Populair();
+        
+        TvShowDTO GetShowBy(int id);
+        MovieDTO GetMovieBy(int id);
+        PersonDTO GetPersonBy(int id);
     }
 }
