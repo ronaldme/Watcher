@@ -6,7 +6,7 @@
         void TopRated();
         void New();
         void Search();
-        void SearchByActor();
+        void SearchByPerson();
         void SearchById();
     }
 }

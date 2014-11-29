@@ -35,7 +35,7 @@ namespace Services
 
         }
 
-        public void SearchByActor()
+        public void SearchByPerson()
         {
             
         }

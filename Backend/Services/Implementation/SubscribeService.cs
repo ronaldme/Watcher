@@ -18,13 +18,15 @@ namespace Services
         private readonly IUsersRepository usersRepository;
         private readonly IMovieRepository movieRepository;
         private readonly IShowRepository showRepository;
+        private readonly IPersonRepository personRepository;
 
-        public SubscribeService(IBus bus, IUsersRepository usersRepository, IMovieRepository movieRepository, IShowRepository showRepository)
+        public SubscribeService(IBus bus, IUsersRepository usersRepository, IMovieRepository movieRepository, IShowRepository showRepository, IPersonRepository personRepository)
         {
             this.bus = bus;
             this.usersRepository = usersRepository;
             this.movieRepository = movieRepository;
             this.showRepository = showRepository;
+            this.personRepository = personRepository;
         }
 
         public void Start()
@@ -220,14 +222,94 @@ namespace Services
             };
         }
 
-        public void SubscribeActor()
+        public void SubscribePerson()
         {
-
+            disposables.Add(bus.Respond<PersonSubscription, Subscription>(SubscribeToPerson));
         }
 
-        public void UnsubscribeActor()
+        private Subscription SubscribeToPerson(PersonSubscription personSubscription)
         {
-            
+            try
+            {
+                User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == personSubscription.EmailUser);
+                Person person = personRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == personSubscription.Id);
+
+                if (user == null)
+                {
+                    if (person == null)
+                    {
+                        person = personRepository.Insert(new Person
+                        {
+                            Name = personSubscription.Name,
+                            TheMovieDbId = personSubscription.Id
+                        });
+
+                        usersRepository.Insert(new User
+                        {
+                            Email = personSubscription.EmailUser,
+                            Persons = new Collection<Person> { person }
+                        });
+                    }
+                    else
+                    {
+                        usersRepository.Insert(new User
+                        {
+                            Email = personSubscription.EmailUser,
+                            Persons = new Collection<Person> { person }
+                        });
+                    }
+                }
+                else
+                {
+                    if (person == null)
+                    {
+                        person = personRepository.Insert(new Person
+                        {
+                            Name = personSubscription.Name,
+                            TheMovieDbId = personSubscription.Id
+                        });
+                        user.Persons.Add(person);
+                    }
+                    else
+                    {
+                        user.Persons.Add(person);
+                    }
+                    usersRepository.Update();
+                }
+
+                return new Subscription { IsSuccess = true };
+            }
+            catch (Exception e)
+            {
+                return new Subscription
+                {
+                    IsSuccess = false,
+                    Message = e.InnerException.ToString()
+                };
+            }
+        }
+
+        public void UnsubscribePerson()
+        {
+            disposables.Add(bus.Respond<UnsubscribePerson, Unsubscription>(UnsubscribeToPerson));
+        }
+
+        private Unsubscription UnsubscribeToPerson(UnsubscribePerson unsubscribePerson)
+        {
+            User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == unsubscribePerson.Email);
+            Person person = personRepository.GetAll().FirstOrDefault(x => x.Id == unsubscribePerson.Id);
+
+            if (user != null)
+            {
+                user.Persons.Remove(person);
+                personRepository.Delete(person);
+                usersRepository.Update();
+            }
+
+            return new Unsubscription
+            {
+                IsSuccess = true
+            };
         }
     }
 }

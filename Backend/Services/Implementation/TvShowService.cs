@@ -38,7 +38,7 @@ namespace Services
         {
             disposables.Add(bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO
             {
-                TvShows = theMovieDb.GetTopRated()
+                TvShows = theMovieDb.TopRated()
             }));
         }
 
@@ -55,9 +55,9 @@ namespace Services
             disposables.Add(bus.Respond<TvShowSearch, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Search) }));
         }
 
-        public void SearchByActor()
+        public void SearchByPerson()
         {
-            disposables.Add(bus.Respond<TvShowSearchByActor, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Actor) }));
+            disposables.Add(bus.Respond<TvShowSearchByPerson, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Person) }));
         }
 
         public void SearchById()

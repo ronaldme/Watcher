@@ -61,9 +61,23 @@ namespace Services
             };
         }
 
-        public void GetActors()
+        public void GetPersons()
         {
-            
+            disposables.Add(bus.Respond<PersonList, PersonListDTO>(GetUsersPersons));
+        }
+
+        private PersonListDTO GetUsersPersons(PersonList personList)
+        {
+            var user = usersRepository.GetAll().FirstOrDefault(x => x.Email == personList.Email);
+
+            return new PersonListDTO
+            {
+                Persons = user.Persons.Select(x => new PersonDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList()
+            };
         }
 
         public void Start()

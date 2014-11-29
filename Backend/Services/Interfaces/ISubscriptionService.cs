@@ -13,9 +13,9 @@
         void SubscribeMovie();
 
         /// <summary>
-        /// Subscribe on an Actor/Actress
+        /// Subscribe on a person
         /// </summary>
-        void SubscribeActor();
+        void SubscribePerson();
 
         /// <summary>
         /// Unsubscribe on a TV show
@@ -28,8 +28,8 @@
         void UnsubscribeMovie();
 
         /// <summary>
-        /// Unsubscribes on an Actor/Actress
+        /// Unsubscribes on a person
         /// </summary>
-        void UnsubscribeActor();
+        void UnsubscribePerson();
     }
 }

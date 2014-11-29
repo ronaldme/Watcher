@@ -4,6 +4,6 @@
     {
         void GetShows();
         void GetMovies();
-        void GetActors();
+        void GetPersons();
     }
 }

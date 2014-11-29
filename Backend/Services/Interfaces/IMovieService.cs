@@ -4,7 +4,7 @@
     {
         void Upcoming();
         void Search();
-        void SearchByActor();
+        void SearchByPerson();
         void SearchById();
     }
 }

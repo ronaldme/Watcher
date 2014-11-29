@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using BLL;
 using EasyNetQ;
+using Messages.DTO;
+using Messages.Request;
 using Services.Interfaces;
 
 namespace Services
 {
-    public class ActorService : IActorService, IMqResponder
+    public class PersonService : IPersonService, IMqResponder
     {
         private List<IDisposable> disposables;
         private readonly IBus bus;
         private readonly ITheMovieDb theMovieDb;
 
-        public ActorService(IBus bus, ITheMovieDb theMovieDb)
+        public PersonService(IBus bus, ITheMovieDb theMovieDb)
         {
             this.bus = bus;
             this.theMovieDb = theMovieDb;
@@ -24,7 +26,7 @@ namespace Services
             disposables = new List<IDisposable>();
 
             // Run all methods implemented from the ISearchTV interface
-            typeof(IActorService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
+            typeof(IPersonService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
         }
 
         public void Stop()
@@ -32,9 +34,14 @@ namespace Services
             disposables.ForEach(x => x.Dispose());
         }
 
+        public void Popular()
+        {
+            disposables.Add(bus.Respond<PersonRequest, List<PersonDTO>>(x => new List<PersonDTO>(theMovieDb.Populair())));
+        }
+
         public void Search()
         {
-            
+            disposables.Add(bus.Respond<PersonSearch, List<PersonDTO>>(x => new List<PersonDTO>(theMovieDb.SearchPerson(x.Search))));
         }
 
         public void SearchById()

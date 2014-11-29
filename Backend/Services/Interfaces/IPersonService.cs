@@ -1,7 +1,8 @@
 ﻿namespace Services.Interfaces
 {
-    public interface IActorService
+    public interface IPersonService
     {
+        void Popular();
         void Search();
         void SearchById();
     }
