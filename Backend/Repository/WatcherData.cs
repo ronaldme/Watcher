@@ -10,7 +10,7 @@ namespace Repository
         {
         }
 
-        public virtual DbSet<Actor> Actors { get; set; }
+        public virtual DbSet<Person> Persons { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Show> Shows { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -26,6 +26,11 @@ namespace Repository
                .HasMany(e => e.Users)
                .WithMany(e => e.Shows)
                .Map(m => m.ToTable("UsersShow").MapLeftKey("ShowId").MapRightKey("UsersId"));
+
+            modelBuilder.Entity<Person>()
+              .HasMany(e => e.Users)
+              .WithMany(e => e.Persons)
+              .Map(m => m.ToTable("UsersPerson").MapLeftKey("PersonId").MapRightKey("UsersId"));
         }
     }
 }

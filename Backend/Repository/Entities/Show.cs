@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
 {
-    [Table("Show")]
     public class Show
     {
         public Show()

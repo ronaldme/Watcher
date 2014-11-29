@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
     
 namespace Repository.Entities
 {
-    [Table("Actor")]
-    public class Actor
+    public class Person
     {
+        public Person()
+        {
+            Users = new HashSet<User>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -15,5 +19,9 @@ namespace Repository.Entities
         public string Name { get; set; }
 
         public DateTime? Birthday { get; set; }
+
+        public int? TheMovieDbId { get; set; }
+
+        public virtual ICollection<User> Users { get; set; }
     }
 }

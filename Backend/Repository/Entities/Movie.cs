@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
 {
-    [Table("Movie")]
     public class Movie
     {
         public Movie()
@@ -13,7 +11,7 @@ namespace Repository.Entities
             Users = new HashSet<User>();
         }
 
-         [Key]
+        [Key]
         public int Id { get; set; }
 
         [Required]

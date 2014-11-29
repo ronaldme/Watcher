@@ -30,7 +30,7 @@ namespace Services.DependencyInjection
                 );
 
             container.Register(
-                Classes.FromAssemblyContaining<IActorRepository>()
+                Classes.FromAssemblyContaining<IPersonRepository>()
                     .Where(type => true)
                     .WithServiceAllInterfaces()
                     .LifestyleTransient()

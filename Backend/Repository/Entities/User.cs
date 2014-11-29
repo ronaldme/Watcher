@@ -9,9 +9,10 @@ namespace Repository.Entities
         {
             Movies = new HashSet<Movie>();
             Shows = new HashSet<Show>();
+            Persons = new HashSet<Person>();
         }
 
-         [Key]
+        [Key]
         public int Id { get; set; }
 
         [Required]
@@ -20,5 +21,6 @@ namespace Repository.Entities
 
         public virtual ICollection<Movie> Movies { get; set; }
         public virtual ICollection<Show> Shows { get; set; }
+        public virtual ICollection<Person> Persons { get; set; }
     }
 }

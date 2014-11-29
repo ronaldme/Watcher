@@ -3,9 +3,9 @@ using Repository.Repositories.Interfaces;
 
 namespace Repository.Repositories.Implementations
 {
-    public class ActorRepository : Repository<Actor>, IActorRepository
+    public class PersonRepository : Repository<Person>, IPersonRepository
     {
-        public ActorRepository(WatcherData dataContext)
+        public PersonRepository(WatcherData dataContext)
             : base(dataContext)
         {
         }
