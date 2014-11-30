@@ -62,7 +62,7 @@ namespace Services
 
         public void SearchById()
         {
-            disposables.Add(bus.Respond<TvShowSearchById, TvShowDTO>(request => theMovieDb.GetShowBy(request.Id)));
+            //disposables.Add(bus.Respond<TvShowSearchById, TvShowDTO>(request => theMovieDb.GetShowBy(request.Id)));
         }
     }
 }

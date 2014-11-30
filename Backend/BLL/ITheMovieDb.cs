@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BLL.Json.Shows;
 using Messages.DTO;
 
 namespace BLL
@@ -12,9 +13,11 @@ namespace BLL
         List<TvShowDTO> TopRated();
         List<MovieDTO> Upcoming();
         List<PersonDTO> Populair();
-        
-        TvShowDTO GetShowBy(int id);
+
+        Testing GetShowBy(int id);
         MovieDTO GetMovieBy(int id);
         PersonDTO GetPersonBy(int id);
+
+        TvShowDTO GetLatestEpisode(int tvId, List<Season> seasons);
     }
 }

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using BLL.Json;
+using BLL.Json.Shows;
 using Messages.DTO;
+using Convert = BLL.Json.Convert;
 
 namespace BLL
 {
@@ -61,31 +63,145 @@ namespace BLL
         #endregion
 
         #region Get
-        public TvShowDTO GetBy(int id)
+        public Testing GetShowBy(int id)
         {
-            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchTvById + "/" + id);         
+            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchTvById, id));
             string json = GetResponse(request);
 
             return Convert.ToShow(json);
         }
 
-        public TvShowDTO GetShowBy(int id)
+        public TvShowDTO GetLatestEpisode(int tvId, List<Season> seasons)
         {
-            throw new System.NotImplementedException();
-        }
+            CurrentNextSeason currentNextSeason = GetCurrentNextSeason(seasons);
+            
+            var requestCurrent = (HttpWebRequest)WebRequest.Create(Urls.SearchTvSeasons(tvId, currentNextSeason.Current.Season_Number));
+            string jsonCurrent = GetResponse(requestCurrent);
 
+            var episodes = Convert.ToSeasons(jsonCurrent).Episodes; // episodes current season
+            
+            // True: this season is finished
+            if (!string.IsNullOrEmpty(episodes[episodes.Count - 1].Air_Date) && DateTime.Parse(episodes[episodes.Count - 1].Air_Date) < DateTime.UtcNow)
+            {
+                if (currentNextSeason.Next != null)
+                {
+                    var requestNext =
+                        (HttpWebRequest)
+                            WebRequest.Create(Urls.SearchTvSeasons(tvId, currentNextSeason.Next.Season_Number));
+                    string jsonNext = GetResponse(requestNext);
+
+                    SeasonRootObject nextSeason = Convert.ToSeasons(jsonNext);
+
+                    if (DateTime.Parse(nextSeason.Air_Date) > DateTime.UtcNow) // season not yet released
+                    {
+                        if (!string.IsNullOrEmpty(nextSeason.Episodes[0].Air_Date))
+                        {
+                            return new TvShowDTO
+                            {
+                                NextEpisodeNr = 1,
+                                LastFinishedSeasonNr = nextSeason.Season_Number - 1,
+                                ReleaseNextEpisode = DateTime.Parse(nextSeason.Episodes[0].Air_Date)
+                            };
+                        } 
+                        return new TvShowDTO
+                        {
+                            NextEpisodeNr = 1,
+                            LastFinishedSeasonNr = nextSeason.Season_Number - 1,
+                            ReleaseNextEpisode = null
+                        };
+                    }
+
+                    foreach (Episode episode in nextSeason.Episodes)
+                    {
+                        if (!string.IsNullOrEmpty(episode.Air_Date) &&
+                            DateTime.Parse(episode.Air_Date) > DateTime.UtcNow)
+                        {
+                            return new TvShowDTO
+                            {
+                                NextEpisodeNr = episode.Episode_Number,
+                                LastFinishedSeasonNr = nextSeason.Season_Number - 1,
+                                ReleaseNextEpisode = DateTime.Parse(episode.Air_Date)
+                            };
+                        }
+                    }
+                }
+                else
+                {
+                    return new TvShowDTO
+                    {
+                        LastFinishedSeasonNr = currentNextSeason.Current.Season_Number,
+                        NextEpisodeNr = 1
+                    };
+                }
+            }
+            
+            // Current season is not yet finished
+            for (int i = episodes.Count - 1; i >= 0; i--)
+            {
+                if (!string.IsNullOrEmpty(episodes[i].Air_Date) &&
+                    DateTime.Parse(episodes[i].Air_Date) < DateTime.UtcNow)
+                {
+                    Episode nextEpisode = episodes[i + 1];
+
+                    return new TvShowDTO
+                    {
+                        NextEpisodeNr = nextEpisode.Episode_Number,
+                        ReleaseNextEpisode = DateTime.Parse(nextEpisode.Air_Date),
+                        LastFinishedSeasonNr = nextEpisode.Season_Number - 1
+                    };
+                }
+            }
+
+            return new TvShowDTO();
+        }
+        
         public MovieDTO GetMovieBy(int id)
         {
-            throw new System.NotImplementedException();
+            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchMovieById, id));
+            string json = GetResponse(request);
+
+            return Convert.ToMovie(json);
         }
 
         public PersonDTO GetPersonBy(int id)
         {
-            throw new System.NotImplementedException();
+            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchPersonById, id));
+            string json = GetResponse(request);
+
+            return Convert.ToPerson(json);
         }
         #endregion
 
         #region Private methods
+        private CurrentNextSeason GetCurrentNextSeason(List<Season> seasons)
+        {
+            var currentNextSeason = new CurrentNextSeason();
+
+            for (int i = 0; i < seasons.Count; i++)
+            {
+                Season season = seasons[i];
+
+                if (!string.IsNullOrEmpty(season.Air_Date) &&
+                    DateTime.Parse(season.Air_Date) > DateTime.UtcNow)
+                {
+                    currentNextSeason.Next = season;
+
+                    if (i > 1)
+                    {
+                        // Current season could be ended but we need to check that.
+                        currentNextSeason.Current = seasons[i - 1];
+                    }
+                }
+            }
+
+            if (currentNextSeason.Current == null)
+            {
+                currentNextSeason.Current = seasons.FindLast(x => !string.IsNullOrEmpty(x.Air_Date));
+            }
+
+            return currentNextSeason;
+        }
+
         private string GetResponse(HttpWebRequest request)
         {
             request.KeepAlive = true;

@@ -20,7 +20,7 @@ namespace BLL.Json.Shows
         public int Number_Of_Seasons { get; set; }
         public string Original_Name { get; set; }
         public List<string> Origin_Country { get; set; }
-        public string Vverview { get; set; }
+        public string Overview { get; set; }
         public double Popularity { get; set; }
         public string Poster_Path { get; set; }
         public List<ProductionCompany> Production_Companies { get; set; }

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+
 namespace BLL.Json.Shows
 {
-    public class RootObject2
+    public class SeasonRootObject
     {
         public string Air_Date { get; set; }
         public List<Episode> Episodes { get; set; }

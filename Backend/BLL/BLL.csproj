@@ -43,13 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrentNextSeason.cs" />
     <Compile Include="ITheMovieDb.cs" />
     <Compile Include="Json\Movies\Dates.cs" />
     <Compile Include="Json\Movies\RootObjectMovies.cs" />
+    <Compile Include="Json\Persons\PersonObject.cs" />
     <Compile Include="Json\Persons\RootObjectPerson.cs" />
     <Compile Include="Json\Persons\KnownFor.cs" />
     <Compile Include="Json\Persons\ResultAct.cs" />
+    <Compile Include="Json\Shows\Crew.cs" />
     <Compile Include="Json\Shows\Episode.cs" />
+    <Compile Include="Json\Shows\GuestStar.cs" />
     <Compile Include="Json\Shows\RootObject.cs" />
     <Compile Include="Json\Shows\CreatedBy.cs" />
     <Compile Include="Json\Shows\Genre.cs" />
@@ -59,10 +63,11 @@
     <Compile Include="Json\Shows\Network.cs" />
     <Compile Include="Json\Shows\ProductionCompany.cs" />
     <Compile Include="Json\Shows\Root.cs" />
-    <Compile Include="Json\Shows\RootObject2.cs" />
     <Compile Include="Json\Shows\Season.cs" />
+    <Compile Include="Json\Shows\SeasonRootObject.cs" />
     <Compile Include="Notifier\Mailer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Testing.cs" />
     <Compile Include="Urls.cs" />
     <Compile Include="TheMovieDb.cs" />
   </ItemGroup>

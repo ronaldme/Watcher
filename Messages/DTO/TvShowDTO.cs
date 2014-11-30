@@ -1,12 +1,14 @@
-﻿namespace Messages.DTO
+﻿using System;
+
+namespace Messages.DTO
 {
     public class TvShowDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string OriginalName { get; set; }
-        public string AirDate { get; set; }
-        public double VoteAverage { get; set; }
-        public int VoteCount { get; set; }
+        public DateTime? AirDate { get; set; }
+        public int LastFinishedSeasonNr { get; set; }
+        public int NextEpisodeNr { get; set; }
+        public DateTime? ReleaseNextEpisode { get; set; }
     }
 }

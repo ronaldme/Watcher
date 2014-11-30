@@ -46,7 +46,7 @@ namespace Web.UI.Controllers
 
             var response = bus.Request<PersonSubscription, Subscription>(new PersonSubscription
             {
-                Id = Convert.ToInt32(id),
+                TheMovieDbId = Convert.ToInt32(id),
                 Name = name,
                 EmailUser = email
             });

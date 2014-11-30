@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using BLL;
+using BLL.Json.Shows;
 using EasyNetQ;
+using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
 using Repository.Entities;
@@ -19,14 +22,16 @@ namespace Services
         private readonly IMovieRepository movieRepository;
         private readonly IShowRepository showRepository;
         private readonly IPersonRepository personRepository;
+        private readonly ITheMovieDb theMovieDb;
 
-        public SubscribeService(IBus bus, IUsersRepository usersRepository, IMovieRepository movieRepository, IShowRepository showRepository, IPersonRepository personRepository)
+        public SubscribeService(IBus bus, IUsersRepository usersRepository, IMovieRepository movieRepository, IShowRepository showRepository, IPersonRepository personRepository, ITheMovieDb theMovieDb)
         {
             this.bus = bus;
             this.usersRepository = usersRepository;
             this.movieRepository = movieRepository;
             this.showRepository = showRepository;
             this.personRepository = personRepository;
+            this.theMovieDb = theMovieDb;
         }
 
         public void Start()
@@ -42,6 +47,7 @@ namespace Services
             disposables.ForEach(x => x.Dispose());
         }
 
+        #region Tv shows
         public void SubscribeTv()
         {
             disposables.Add(bus.Respond<TvSubscription, Subscription>(SubscribeToShow));
@@ -52,7 +58,10 @@ namespace Services
             try
             {
                 User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
-                Show show = showRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == tvSubscription.Id);
+                Show show = showRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
+                Testing showInfo = theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
+
+                TvShowDTO dto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
                 if (user == null)
                 {
@@ -60,8 +69,11 @@ namespace Services
                     {
                         show = showRepository.Insert(new Show
                         {
-                            Name = tvSubscription.Name,
-                            TheMovieDbId = tvSubscription.Id
+                            TheMovieDbId = tvSubscription.TheMovieDbId,
+                            Name = showInfo.Name,
+                            ReleaseDate = showInfo.AirDate,
+                            LastFinishedSeason = dto.LastFinishedSeasonNr,
+                            ReleaseNextEpisode = dto.ReleaseNextEpisode
                         });
 
                         usersRepository.Insert(new User
@@ -85,81 +97,17 @@ namespace Services
                     {
                         show = showRepository.Insert(new Show
                         {
-                            Name = tvSubscription.Name,
-                            TheMovieDbId = tvSubscription.Id
+                            TheMovieDbId = tvSubscription.TheMovieDbId,
+                            Name = showInfo.Name,
+                            ReleaseDate = showInfo.AirDate,
+                            LastFinishedSeason = dto.LastFinishedSeasonNr,
+                            ReleaseNextEpisode = dto.ReleaseNextEpisode
                         });
                         user.Shows.Add(show);
                     }
                     else
                     {
                         user.Shows.Add(show);
-                    }
-                    usersRepository.Update();
-                }
-
-                return new Subscription { IsSuccess = true };
-            }
-            catch (Exception e)
-            {
-                return new Subscription
-                {
-                    IsSuccess = false,
-                    Message = e.InnerException.ToString()
-                };
-            }
-        }
-
-        public void SubscribeMovie()
-        {
-            disposables.Add(bus.Respond<MovieSubscription, Subscription>(SubscribeToMovie));
-        }
-
-        private Subscription SubscribeToMovie(MovieSubscription movieSubscription)
-        {
-            try
-            {
-                User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
-                Movie movie = movieRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == movieSubscription.Id);
-
-                if (user == null)
-                {
-                    if (movie == null)
-                    {
-                        movie = movieRepository.Insert(new Movie
-                        {
-                            Name = movieSubscription.Name,
-                            TheMovieDbId = movieSubscription.Id
-                        });
-
-                        usersRepository.Insert(new User
-                        {
-                            Email = movieSubscription.EmailUser,
-                            Movies = new Collection<Movie> { movie }
-                        });
-                    }
-                    else
-                    {
-                        usersRepository.Insert(new User
-                        {
-                            Email = movieSubscription.EmailUser,
-                            Movies = new Collection<Movie> { movie }
-                        });
-                    }
-                }
-                else
-                {
-                    if (movie == null)
-                    {
-                        movie = movieRepository.Insert(new Movie
-                        {
-                            Name = movieSubscription.Name,
-                            TheMovieDbId = movieSubscription.Id
-                        });
-                        user.Movies.Add(movie);
-                    }
-                    else
-                    {
-                        user.Movies.Add(movie);
                     }
                     usersRepository.Update();
                 }
@@ -193,10 +141,79 @@ namespace Services
                 usersRepository.Update();
             }
 
-            return new Unsubscription
+            return new Unsubscription { IsSuccess = true };
+        }
+        #endregion
+
+        #region Movies
+        public void SubscribeMovie()
+        {
+            disposables.Add(bus.Respond<MovieSubscription, Subscription>(SubscribeToMovie));
+        }
+
+        private Subscription SubscribeToMovie(MovieSubscription movieSubscription)
+        {
+            try
             {
-                IsSuccess = true
-            };
+                User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
+                Movie movie = movieRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == movieSubscription.TheMovieDbId);
+                MovieDTO movieInfo = theMovieDb.GetMovieBy(movieSubscription.TheMovieDbId);
+
+                if (user == null)
+                {
+                    if (movie == null)
+                    {
+                        movie = movieRepository.Insert(new Movie
+                        {
+                            TheMovieDbId = movieSubscription.TheMovieDbId,
+                            Name = movieInfo.Name,
+                            ReleaseDate = DateTime.Parse(movieInfo.ReleaseDate)
+                        });
+
+                        usersRepository.Insert(new User
+                        {
+                            Email = movieSubscription.EmailUser,
+                            Movies = new Collection<Movie> { movie }
+                        });
+                    }
+                    else
+                    {
+                        usersRepository.Insert(new User
+                        {
+                            Email = movieSubscription.EmailUser,
+                            Movies = new Collection<Movie> { movie }
+                        });
+                    }
+                }
+                else
+                {
+                    if (movie == null)
+                    {
+                        movie = movieRepository.Insert(new Movie
+                        {
+                            TheMovieDbId = movieSubscription.TheMovieDbId,
+                            Name = movieInfo.Name,
+                            ReleaseDate = DateTime.Parse(movieInfo.ReleaseDate)
+                        });
+                        user.Movies.Add(movie);
+                    }
+                    else
+                    {
+                        user.Movies.Add(movie);
+                    }
+                    usersRepository.Update();
+                }
+
+                return new Subscription { IsSuccess = true };
+            }
+            catch (Exception e)
+            {
+                return new Subscription
+                {
+                    IsSuccess = false,
+                    Message = e.InnerException.ToString()
+                };
+            }
         }
 
         public void UnsubscribeMovie()
@@ -216,12 +233,11 @@ namespace Services
                 usersRepository.Update();
             }
 
-            return new Unsubscription
-            {
-                IsSuccess = true
-            };
+            return new Unsubscription { IsSuccess = true };
         }
+        #endregion
 
+        #region Persons
         public void SubscribePerson()
         {
             disposables.Add(bus.Respond<PersonSubscription, Subscription>(SubscribeToPerson));
@@ -232,7 +248,8 @@ namespace Services
             try
             {
                 User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == personSubscription.EmailUser);
-                Person person = personRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == personSubscription.Id);
+                Person person = personRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
+                PersonDTO personInfo = theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
 
                 if (user == null)
                 {
@@ -241,7 +258,8 @@ namespace Services
                         person = personRepository.Insert(new Person
                         {
                             Name = personSubscription.Name,
-                            TheMovieDbId = personSubscription.Id
+                            TheMovieDbId = personSubscription.TheMovieDbId,
+                            Birthday = DateTime.Parse(personInfo.Birthday)
                         });
 
                         usersRepository.Insert(new User
@@ -266,7 +284,8 @@ namespace Services
                         person = personRepository.Insert(new Person
                         {
                             Name = personSubscription.Name,
-                            TheMovieDbId = personSubscription.Id
+                            TheMovieDbId = personSubscription.TheMovieDbId,
+                            Birthday = DateTime.Parse(personInfo.Birthday)
                         });
                         user.Persons.Add(person);
                     }
@@ -277,7 +296,7 @@ namespace Services
                     usersRepository.Update();
                 }
 
-                return new Subscription { IsSuccess = true };
+                return new Subscription {IsSuccess = true};
             }
             catch (Exception e)
             {
@@ -306,10 +325,8 @@ namespace Services
                 usersRepository.Update();
             }
 
-            return new Unsubscription
-            {
-                IsSuccess = true
-            };
+            return new Unsubscription {IsSuccess = true};
         }
+        #endregion
     }
 }
