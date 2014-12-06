@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Startup.Console", "Backend\Startup.Console\Startup.Console.csproj", "{92FC223D-0E62-4A64-82E5-6CCC6077AFD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTables.Mvc", "Frontend\DataTables.Mvc\DataTables.Mvc.csproj", "{431ADB89-3DA0-4E18-9AF0-984B917E6EB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{92FC223D-0E62-4A64-82E5-6CCC6077AFD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92FC223D-0E62-4A64-82E5-6CCC6077AFD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92FC223D-0E62-4A64-82E5-6CCC6077AFD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{431ADB89-3DA0-4E18-9AF0-984B917E6EB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{431ADB89-3DA0-4E18-9AF0-984B917E6EB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{431ADB89-3DA0-4E18-9AF0-984B917E6EB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{431ADB89-3DA0-4E18-9AF0-984B917E6EB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,5 +82,6 @@ Global
 		{E62689B8-39E1-47DB-B96D-21432900A35C} = {5E2CB1C6-17A6-40CF-90E0-E755FAF278D6}
 		{254AA977-2887-4AF8-BF66-F7A51C7C4B61} = {5C604E13-AEB1-4CC7-84A7-4CEC1D0D3545}
 		{92FC223D-0E62-4A64-82E5-6CCC6077AFD3} = {5E2CB1C6-17A6-40CF-90E0-E755FAF278D6}
+		{431ADB89-3DA0-4E18-9AF0-984B917E6EB8} = {74414738-AE3A-415F-B4E7-1F0A0901AF9F}
 	EndGlobalSection
 EndGlobal
