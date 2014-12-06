@@ -111,22 +111,34 @@ namespace Services
 
         private SubscriptionListDTO GetSubscriptions(SubscriptionRequest subscriptionRequest)
         {
-            var movies = GetUsersMovies(new MovieList {Email = subscriptionRequest.Email});
-            var shows = GetUsersShows(new TvList {Email = subscriptionRequest.Email});
+            var movies = GetUsersMovies(new MovieList {Email = subscriptionRequest.Email}).Movies;
+            var shows = GetUsersShows(new TvList {Email = subscriptionRequest.Email}).TvShows;
 
-            var entities = movies.Movies.Select(movie => new SubscriptionsDTO
+            var resultSet = new List<SubscriptionsDTO>();
+
+            if (movies != null)
             {
-                Id = movie.Id,
-                Name = movie.Name,
-                ReleaseDate = movie.ReleaseDate
-            }).ToList();
+                resultSet.AddRange(movies.Select(movie => new SubscriptionsDTO
+                {
+                    Id = movie.Id,
+                    Name = movie.Name,
+                    ReleaseDate = movie.ReleaseDate
+                }).ToList());
+            }
 
-            entities.AddRange(shows.TvShows.Select(show => new SubscriptionsDTO
+            if (shows != null)
             {
-                Id = show.Id, Name = show.Name, ReleaseDate = show.ReleaseNextEpisode.Value, EpisodeNumber = show.NextEpisodeNr, LastFinishedSeason = show.LastFinishedSeasonNr
-            }));
+                resultSet.AddRange(shows.Select(show => new SubscriptionsDTO
+                {
+                    Id = show.Id,
+                    Name = show.Name,
+                    ReleaseDate = show.ReleaseNextEpisode.Value,
+                    EpisodeNumber = show.NextEpisodeNr,
+                    LastFinishedSeason = show.LastFinishedSeasonNr
+                }).ToList());
+            }
 
-            var data = entities.OrderByDescending(x => x.ReleaseDate).Select(x => new SubscriptionsDTO
+            var data = resultSet.OrderByDescending(x => x.ReleaseDate).Select(x => new SubscriptionsDTO
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -138,7 +150,7 @@ namespace Services
             return new SubscriptionListDTO
             {
                 Subscriptions = data,
-                Filtered = entities.Count
+                Filtered = resultSet.Count
             };
         }
     }

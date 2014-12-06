@@ -43,6 +43,7 @@
     <Compile Include="DTO\MovieDTO.cs" />
     <Compile Include="DTO\MovieListDTO.cs" />
     <Compile Include="DTO\PersonListDTO.cs" />
+    <Compile Include="DTO\SubscriptionListDTO.cs" />
     <Compile Include="DTO\TvShowDTO.cs" />
     <Compile Include="DTO\TvShowListDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,15 +55,14 @@
     <Compile Include="Request\MovieSubscription.cs" />
     <Compile Include="Request\PersonSearch.cs" />
     <Compile Include="Request\PersonSubscription.cs" />
+    <Compile Include="Request\SubscriptionList.cs" />
     <Compile Include="Request\TvList.cs" />
     <Compile Include="Request\TvShowSearch.cs" />
     <Compile Include="Request\TvShow.cs" />
     <Compile Include="Request\TvShowSearchByPerson.cs" />
     <Compile Include="Request\TvShowSearchById.cs" />
     <Compile Include="Request\TvSubscription.cs" />
-    <Compile Include="Request\UnsubscribeMovie.cs" />
-    <Compile Include="Request\UnsubscribePerson.cs" />
-    <Compile Include="Request\UnsubscribeTv.cs" />
+    <Compile Include="Request\Unsubscribe.cs" />
     <Compile Include="Response\Unsubscription.cs" />
     <Compile Include="Response\Subscription.cs" />
     <Compile Include="Types\ShowRequest.cs" />

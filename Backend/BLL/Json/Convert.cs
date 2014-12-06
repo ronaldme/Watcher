@@ -50,7 +50,7 @@ namespace BLL.Json
             {
                 Id = rootObjectMovie.Id,
                 Name = rootObjectMovie.Title,
-                ReleaseDate = rootObjectMovie.Release_Date
+                ReleaseDate = !string.IsNullOrEmpty(rootObjectMovie.Release_Date) ? DateTime.Parse(rootObjectMovie.Release_Date) : DateTime.MinValue
             }).ToList();
         }
 
@@ -62,7 +62,7 @@ namespace BLL.Json
             {
                 Id = deserialized.Id,
                 Name = deserialized.Title,
-                ReleaseDate = deserialized.Release_Date
+                ReleaseDate = !string.IsNullOrEmpty(deserialized.Release_Date) ? DateTime.Parse(deserialized.Release_Date) : DateTime.MinValue
             };
         }
 
@@ -75,7 +75,7 @@ namespace BLL.Json
             {
                 Id = result.Id,
                 Name = result.Title,
-                ReleaseDate = result.Release_Date
+                ReleaseDate = !string.IsNullOrEmpty(result.Release_Date) ? DateTime.Parse(result.Release_Date) : DateTime.MinValue
             }).ToList();
         }
         #endregion

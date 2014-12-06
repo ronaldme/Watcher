@@ -1,5 +1,9 @@
-﻿using System.Web;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using DataTables.Mvc;
 using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
@@ -24,64 +28,38 @@ namespace Web.UI.Controllers
             return View();
         }
 
-        public JsonResult GetSubscriptions()
+        public JsonResult GetSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
             string email = GetEmail();
-            
-            var tvList = bus.Request<TvList, TvShowListDTO>(new TvList
+
+            var subscriptionsList = bus.Request<SubscriptionRequest, SubscriptionListDTO>(new SubscriptionRequest
             {
                 Email = email
             });
 
-            var movieList = bus.Request<MovieList, MovieListDTO>(new MovieList
+            var data = subscriptionsList.Subscriptions.Select(x => new
             {
-                Email = email
+                x.Id,
+                x.Name,
+                x.LastFinishedSeason,
+                x.EpisodeNumber,
+                ReleaseDate = x.ReleaseDate.ToString("dd-MM-yyyy")
             });
 
-            var personList = bus.Request<PersonList, PersonListDTO>(new PersonList
-            {
-                Email = email
-            });
-
-            return Json(new { tvList.TvShows, movieList.Movies, personList.Persons }, JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Unsubscribe(int id, string unsubscribeType)
+        public JsonResult Unsubscribe(int id, string name)
         {
             string email = GetEmail();
-            Unsubscription response;
 
-            switch (unsubscribeType)
+            Unsubscription response = bus.Request<Unsubscribe, Unsubscription>(new Unsubscribe
             {
-                case "show":
-                    response = bus.Request<UnsubscribeTv, Unsubscription>(new UnsubscribeTv
-                    {
-                        Email = email,
-                        Id = id
-                    });
-                    break;
-
-                case "movie":
-                    response = bus.Request<UnsubscribeMovie, Unsubscription>(new UnsubscribeMovie
-                    {
-                        Email = email,
-                        Id = id
-                    });
-                    break;
-
-                case "person":
-                    response = bus.Request<UnsubscribePerson, Unsubscription>(new UnsubscribePerson
-                    {
-                        Email = email,
-                        Id = id
-                    });
-                    break;
-
-                default:
-                    response = new Unsubscription{IsSuccess = false};
-                break;
-            }
-
+                Email = email,
+                Id = id,
+                Name = name
+            });
+              
             return Json(new { response.IsSuccess }, JsonRequestBehavior.AllowGet);
         }
 
@@ -89,10 +67,7 @@ namespace Web.UI.Controllers
         {
             var httpCookie = HttpContext.Request.Cookies.Get("email");
 
-            if (httpCookie != null)
-            {
-                return httpCookie.Value;
-            }
+            if (httpCookie != null) return httpCookie.Value;
             
             return HttpContext.GetOwinContext()
                 .GetUserManager<ApplicationUserManager>()
