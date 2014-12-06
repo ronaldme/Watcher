@@ -18,18 +18,8 @@
         void SubscribePerson();
 
         /// <summary>
-        /// Unsubscribe on a TV show
+        /// Unsubscribe a movie, show or person
         /// </summary>
-        void UnsubscribeTv();
-
-        /// <summary>
-        /// Unsubscribe on a Movie
-        /// </summary>
-        void UnsubscribeMovie();
-
-        /// <summary>
-        /// Unsubscribes on a person
-        /// </summary>
-        void UnsubscribePerson();
+        void Unsubscribe();
     }
 }

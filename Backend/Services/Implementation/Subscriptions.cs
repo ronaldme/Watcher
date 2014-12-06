@@ -21,6 +21,21 @@ namespace Services
             this.usersRepository = usersRepository;
         }
 
+        public void Start()
+        {
+            disposables = new List<IDisposable>();
+
+            // Run all methods implemented from the ISearchTV interface
+            typeof(ISubscriptions).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
+
+            disposables.Add(bus.Respond<SubscriptionRequest, SubscriptionListDTO>(GetSubscriptions));
+        }
+
+        public void Stop()
+        {
+            disposables.ForEach(x => x.Dispose());
+        }
+
         public void GetShows()
         {
             disposables.Add(bus.Respond<TvList, TvShowListDTO>(GetUsersShows));
@@ -28,18 +43,21 @@ namespace Services
 
         private TvShowListDTO GetUsersShows(TvList tvList)
         {
-            var user = usersRepository.GetAll().FirstOrDefault(x => x.Email == tvList.Email);
+            var user = usersRepository.All().FirstOrDefault(x => x.Email == tvList.Email);
 
-            var tvShows = user.Shows.Select(x => new TvShowDTO
+            if (user != null)
             {
-                Id = x.Id,
-                Name = x.Name
-            }).ToList();
-
-            return new TvShowListDTO
-            {
-                TvShows = tvShows
-            };
+                return new TvShowListDTO
+                {
+                    TvShows = user.Shows.Select(x => new TvShowDTO
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        ReleaseNextEpisode = x.ReleaseDate
+                    }).ToList()
+                };
+            }
+            return new TvShowListDTO();
         }
 
         public void GetMovies()
@@ -49,16 +67,23 @@ namespace Services
 
         private MovieListDTO GetUsersMovies(MovieList movieList)
         {
-            var user = usersRepository.GetAll().FirstOrDefault(x => x.Email == movieList.Email);
+            var user = usersRepository.All().FirstOrDefault(x => x.Email == movieList.Email);
 
-            return new MovieListDTO
+            if (user != null)
             {
-                Movies = user.Movies.Select(x => new MovieDTO
+                return new MovieListDTO
                 {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToList()
-            };
+                    Movies =
+                    user.Movies.Select(x => new MovieDTO
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        ReleaseDate = x.ReleaseDate.Value
+
+                    }).ToList()
+                };    
+            }
+            return new MovieListDTO();
         }
 
         public void GetPersons()
@@ -68,29 +93,53 @@ namespace Services
 
         private PersonListDTO GetUsersPersons(PersonList personList)
         {
-            var user = usersRepository.GetAll().FirstOrDefault(x => x.Email == personList.Email);
+            var user = usersRepository.All().FirstOrDefault(x => x.Email == personList.Email);
 
-            return new PersonListDTO
+            if (user != null)
             {
-                Persons = user.Persons.Select(x => new PersonDTO
+                return new PersonListDTO
                 {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToList()
+                    Persons = user.Persons.Select(x => new PersonDTO
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList()
+                };
+            }
+            return new PersonListDTO();
+        }
+
+        private SubscriptionListDTO GetSubscriptions(SubscriptionRequest subscriptionRequest)
+        {
+            var movies = GetUsersMovies(new MovieList {Email = subscriptionRequest.Email});
+            var shows = GetUsersShows(new TvList {Email = subscriptionRequest.Email});
+
+            var entities = movies.Movies.Select(movie => new SubscriptionsDTO
+            {
+                Id = movie.Id,
+                Name = movie.Name,
+                ReleaseDate = movie.ReleaseDate
+            }).ToList();
+
+            entities.AddRange(shows.TvShows.Select(show => new SubscriptionsDTO
+            {
+                Id = show.Id, Name = show.Name, ReleaseDate = show.ReleaseNextEpisode.Value, EpisodeNumber = show.NextEpisodeNr, LastFinishedSeason = show.LastFinishedSeasonNr
+            }));
+
+            var data = entities.OrderByDescending(x => x.ReleaseDate).Select(x => new SubscriptionsDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                ReleaseDate = x.ReleaseDate,
+                EpisodeNumber = x.EpisodeNumber,
+                LastFinishedSeason = x.LastFinishedSeason
+            }).ToList();
+
+            return new SubscriptionListDTO
+            {
+                Subscriptions = data,
+                Filtered = entities.Count
             };
-        }
-
-        public void Start()
-        {
-            disposables = new List<IDisposable>();
-
-            // Run all methods implemented from the ISearchTV interface
-            typeof(ISubscriptions).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
-        }
-
-        public void Stop()
-        {
-            disposables.ForEach(x => x.Dispose());
         }
     }
 }

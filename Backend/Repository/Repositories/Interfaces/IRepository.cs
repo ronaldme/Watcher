@@ -10,7 +10,7 @@ namespace Repository.Repositories.Interfaces
         void Delete(T entity);
         void Update();
         T GetById(int id);
-        IQueryable<T> GetAll();
+        IQueryable<T> All();
         IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate);
     }
 }

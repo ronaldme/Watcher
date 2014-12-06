@@ -61,17 +61,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\BackendDependencyInstaller.cs" />
+    <Compile Include="Implementation\NotifyService.cs" />
     <Compile Include="Implementation\PersonService.cs" />
     <Compile Include="Implementation\MovieService.cs" />
     <Compile Include="Implementation\SubscribeService.cs" />
     <Compile Include="Implementation\Subscriptions.cs" />
     <Compile Include="Implementation\TvShowService.cs" />
+    <Compile Include="Implementation\UpdateService.cs" />
+    <Compile Include="Interfaces\INotifyService.cs" />
     <Compile Include="Interfaces\IPersonService.cs" />
     <Compile Include="Interfaces\IMovieService.cs" />
     <Compile Include="Interfaces\IMqResponder.cs" />
     <Compile Include="Interfaces\ISubscriptionService.cs" />
     <Compile Include="Interfaces\ISubscriptions.cs" />
     <Compile Include="Interfaces\ITvShowService.cs" />
+    <Compile Include="Interfaces\IUpdateService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -41,7 +41,7 @@ namespace Repository.Repositories.Implementations
             return DbSet.Where(predicate);
         }
 
-        public IQueryable<T> GetAll()
+        public IQueryable<T> All()
         {
             return DbSet;
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using BLL;
-using BLL.Json.Shows;
 using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
@@ -57,8 +56,8 @@ namespace Services
         {
             try
             {
-                User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
-                Show show = showRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
+                User user = usersRepository.All().FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
+                Show show = showRepository.All().FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
                 Testing showInfo = theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
 
                 TvShowDTO dto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
@@ -123,26 +122,6 @@ namespace Services
                 };
             }
         }
-
-        public void UnsubscribeTv()
-        {
-            disposables.Add(bus.Respond<UnsubscribeTv, Unsubscription>(UnsubscribeToTv));
-        }
-
-        private Unsubscription UnsubscribeToTv(UnsubscribeTv unsubscribeTv)
-        {
-            User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == unsubscribeTv.Email);
-            Show show = showRepository.GetAll().FirstOrDefault(x => x.Id == unsubscribeTv.Id);
-
-            if (user != null)
-            {
-                user.Shows.Remove(show);
-                showRepository.Delete(show);
-                usersRepository.Update();
-            }
-
-            return new Unsubscription { IsSuccess = true };
-        }
         #endregion
 
         #region Movies
@@ -155,8 +134,8 @@ namespace Services
         {
             try
             {
-                User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
-                Movie movie = movieRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == movieSubscription.TheMovieDbId);
+                User user = usersRepository.All().FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
+                Movie movie = movieRepository.All().FirstOrDefault(x => x.TheMovieDbId == movieSubscription.TheMovieDbId);
                 MovieDTO movieInfo = theMovieDb.GetMovieBy(movieSubscription.TheMovieDbId);
 
                 if (user == null)
@@ -167,7 +146,7 @@ namespace Services
                         {
                             TheMovieDbId = movieSubscription.TheMovieDbId,
                             Name = movieInfo.Name,
-                            ReleaseDate = DateTime.Parse(movieInfo.ReleaseDate)
+                            ReleaseDate = movieInfo.ReleaseDate
                         });
 
                         usersRepository.Insert(new User
@@ -193,7 +172,7 @@ namespace Services
                         {
                             TheMovieDbId = movieSubscription.TheMovieDbId,
                             Name = movieInfo.Name,
-                            ReleaseDate = DateTime.Parse(movieInfo.ReleaseDate)
+                            ReleaseDate = movieInfo.ReleaseDate
                         });
                         user.Movies.Add(movie);
                     }
@@ -215,26 +194,6 @@ namespace Services
                 };
             }
         }
-
-        public void UnsubscribeMovie()
-        {
-            disposables.Add(bus.Respond<UnsubscribeMovie, Unsubscription>(UnsubscribeToMovie));
-        }
-
-        private Unsubscription UnsubscribeToMovie(UnsubscribeMovie unsubscribeMovie)
-        {
-            User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == unsubscribeMovie.Email);
-            Movie movie = movieRepository.GetAll().FirstOrDefault(x => x.Id == unsubscribeMovie.Id);
-
-            if (user != null)
-            {
-                user.Movies.Remove(movie);
-                movieRepository.Delete(movie);
-                usersRepository.Update();
-            }
-
-            return new Unsubscription { IsSuccess = true };
-        }
         #endregion
 
         #region Persons
@@ -247,8 +206,8 @@ namespace Services
         {
             try
             {
-                User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == personSubscription.EmailUser);
-                Person person = personRepository.GetAll().FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
+                User user = usersRepository.All().FirstOrDefault(x => x.Email == personSubscription.EmailUser);
+                Person person = personRepository.All().FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
                 PersonDTO personInfo = theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
 
                 if (user == null)
@@ -307,26 +266,52 @@ namespace Services
                 };
             }
         }
+        #endregion
 
-        public void UnsubscribePerson()
+        public void Unsubscribe()
         {
-            disposables.Add(bus.Respond<UnsubscribePerson, Unsubscription>(UnsubscribeToPerson));
+            disposables.Add(bus.Respond<Unsubscribe, Unsubscription>(UnsubscribeThis));
         }
 
-        private Unsubscription UnsubscribeToPerson(UnsubscribePerson unsubscribePerson)
+        private Unsubscription UnsubscribeThis(Unsubscribe unsubscribe)
         {
-            User user = usersRepository.GetAll().FirstOrDefault(x => x.Email == unsubscribePerson.Email);
-            Person person = personRepository.GetAll().FirstOrDefault(x => x.Id == unsubscribePerson.Id);
-
+            User user = usersRepository.All().FirstOrDefault(x => x.Email == unsubscribe.Email);
+            
             if (user != null)
             {
-                user.Persons.Remove(person);
-                personRepository.Delete(person);
-                usersRepository.Update();
-            }
+                Person person = personRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+                if (person != null)
+                {
+                    user.Persons.Remove(person);
+                    personRepository.Delete(person);
+                    usersRepository.Update();
 
-            return new Unsubscription {IsSuccess = true};
+                    return CreateUnsubscription(true);
+                }
+
+                Movie movie = movieRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+                if (movie != null)
+                {
+                    user.Movies.Remove(movie);
+                    movieRepository.Delete(movie);
+                    usersRepository.Update();
+                }
+                
+                Show show = showRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+                if (show != null)
+                {
+                    user.Shows.Remove(show);
+                    showRepository.Delete(show);
+                    usersRepository.Update();
+                }
+                return CreateUnsubscription(false, "No subscription found.");
+            }
+            return CreateUnsubscription(false, "User not found.");
         }
-        #endregion
+
+        private Unsubscription CreateUnsubscription(bool succes, string message = null)
+        {
+            return new Unsubscription { IsSuccess = succes, Message = message};
+        }
     }
 }
