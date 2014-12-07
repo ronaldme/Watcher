@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
-using Messages;
 using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
 using Messages.Types;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace Web.UI.Controllers
 {
     [Authorize]
-    public class TvShowsController : Controller
+    public class TvShowsController : BaseController
     {
         private readonly IBus bus;
 
@@ -58,21 +54,6 @@ namespace Web.UI.Controllers
             });
 
             return Json(response, JsonRequestBehavior.AllowGet);
-        }
-
-        public string GetEmail()
-        {
-            var httpCookie = HttpContext.Request.Cookies.Get("email");
-
-            if (httpCookie != null)
-            {
-                return httpCookie.Value;
-            }
-
-            return HttpContext.GetOwinContext()
-                .GetUserManager<ApplicationUserManager>()
-                .FindById(User.Identity.GetUserId())
-                .Email;
         }
     }
 }

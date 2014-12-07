@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace Web.UI.Controllers
 {
     [Authorize]
-    public class PersonsController : Controller
+    public class PersonsController : BaseController
     {
         private readonly IBus bus;
 
@@ -52,21 +49,6 @@ namespace Web.UI.Controllers
             });
 
             return Json(response.IsSuccess, JsonRequestBehavior.AllowGet);
-        }
-
-        public string GetEmail()
-        {
-            var httpCookie = HttpContext.Request.Cookies.Get("email");
-
-            if (httpCookie != null)
-            {
-                return httpCookie.Value;
-            }
-
-            return HttpContext.GetOwinContext()
-                .GetUserManager<ApplicationUserManager>()
-                .FindById(User.Identity.GetUserId())
-                .Email;
         }
     }
 }

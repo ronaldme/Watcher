@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
@@ -13,7 +12,7 @@ using Microsoft.AspNet.Identity.Owin;
 namespace Web.UI.Controllers
 {
     [Authorize]
-    public class MoviesController : Controller
+    public class MoviesController : BaseController
     {
         private readonly IBus bus;
 
@@ -55,21 +54,6 @@ namespace Web.UI.Controllers
             });
 
             return Json(response.IsSuccess, JsonRequestBehavior.AllowGet);
-        }
-
-        public string GetEmail()
-        {
-            var httpCookie = HttpContext.Request.Cookies.Get("email");
-
-            if (httpCookie != null)
-            {
-                return httpCookie.Value;
-            }
-
-            return HttpContext.GetOwinContext()
-                .GetUserManager<ApplicationUserManager>()
-                .FindById(User.Identity.GetUserId())
-                .Email;
         }
     }
 }

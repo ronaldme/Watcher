@@ -1,20 +1,15 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using DataTables.Mvc;
 using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace Web.UI.Controllers
 {
     [Authorize]
-    public class SubscriptionsController : Controller
+    public class SubscriptionsController : BaseController
     {
         private readonly IBus bus;
 
@@ -43,8 +38,8 @@ namespace Web.UI.Controllers
                 x.Name,
                 x.LastFinishedSeason,
                 x.EpisodeNumber,
-                ReleaseDate = x.ReleaseDate.ToString("dd-MM-yyyy")
-            });
+                ReleaseDate = x.ReleaseDate.Year != 1 ? x.ReleaseDate.ToString("dd-MM-yyyy") : "Unknown"
+            }).ToList();
 
             return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);
         }
@@ -61,18 +56,6 @@ namespace Web.UI.Controllers
             });
               
             return Json(new { response.IsSuccess }, JsonRequestBehavior.AllowGet);
-        }
-
-        public string GetEmail()
-        {
-            var httpCookie = HttpContext.Request.Cookies.Get("email");
-
-            if (httpCookie != null) return httpCookie.Value;
-            
-            return HttpContext.GetOwinContext()
-                .GetUserManager<ApplicationUserManager>()
-                .FindById(User.Identity.GetUserId())
-                .Email;
         }
     }
 }

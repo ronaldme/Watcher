@@ -10,7 +10,7 @@ using Web.UI.ViewModels;
 namespace Web.UI.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private ApplicationUserManager userManager;
 

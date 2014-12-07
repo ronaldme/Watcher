@@ -132,6 +132,9 @@
   <data name="EmailRequired" xml:space="preserve">
     <value>Email field is required</value>
   </data>
+  <data name="NotifyHours" xml:space="preserve">
+    <value>Notify hours</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>

@@ -4,7 +4,7 @@ using System.Web.Mvc;
 
 namespace Web.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly Random random;
 

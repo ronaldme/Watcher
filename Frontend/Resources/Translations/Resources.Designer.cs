@@ -106,6 +106,15 @@ namespace Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notify hours.
+        /// </summary>
+        public static string NotifyHours {
+            get {
+                return ResourceManager.GetString("NotifyHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Password {
