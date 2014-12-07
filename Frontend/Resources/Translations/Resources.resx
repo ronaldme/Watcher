@@ -133,10 +133,13 @@
     <value>Email field is required</value>
   </data>
   <data name="NotifyHours" xml:space="preserve">
-    <value>Notify hours</value>
+    <value>Notify at hours past midnight</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome</value>

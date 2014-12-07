@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -16,10 +17,22 @@ namespace Web.UI.Controllers
                 return httpCookie.Value;
             }
 
-            return HttpContext.GetOwinContext()
-                .GetUserManager<ApplicationUserManager>()
-                .FindById(User.Identity.GetUserId())
-                .Email;
+            return Email();
+        }
+
+        public void SetEmailCookie()
+        {
+            var cookie = new HttpCookie("email")
+            {
+                Value = Email(),
+                Expires = DateTime.Now.AddDays(10)
+            };
+            HttpContext.Response.SetCookie(cookie);
+        }
+
+        private string Email()
+        {
+            return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId()).Email;
         }
     }
 }

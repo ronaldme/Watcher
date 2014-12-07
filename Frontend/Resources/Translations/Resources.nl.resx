@@ -117,6 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Bevestig wachtwoord</value>
+  </data>
+  <data name="DoNotMatch" xml:space="preserve">
+    <value>De wachtwoorden komen niet overeen</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmailNotValid" xml:space="preserve">
+    <value>Geen geldige email</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email veld is verplicht</value>
+  </data>
+  <data name="NotifyHours" xml:space="preserve">
+    <value>Notificatie in uren na middennacht</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Wachtwoord</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Opslaan</value>
+  </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welkom</value>
   </data>

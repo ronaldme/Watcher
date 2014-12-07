@@ -6,6 +6,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using EasyNetQ;
+using Web.UI.Controllers;
 
 namespace Web.UI.DI
 {
@@ -13,7 +14,7 @@ namespace Web.UI.DI
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            var contollers = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.BaseType == typeof(Controller)).ToList();
+            var contollers = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.BaseType == typeof(BaseController)).ToList();
             foreach (var controller in contollers)
             {
                 container.Register(Component.For(controller).LifestylePerWebRequest());

@@ -39,12 +39,7 @@ namespace Web.UI.Controllers
                 {
                     await SignInAsync(user, model.RememberMe);
 
-                    var cookie = new HttpCookie("email")
-                    {
-                        Value = user.Email,
-                        Expires = DateTime.Now.AddDays(10)
-                    };
-                    HttpContext.Response.SetCookie(cookie);
+                    SetEmailCookie();
 
                     return RedirectToLocal(returnUrl);
                 }
