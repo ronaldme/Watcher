@@ -19,6 +19,8 @@ namespace Repository.Entities
         [StringLength(255)]
         public string Email { get; set; }
 
+        public int NotifyHoursPastMidnight { get; set; }
+
         public virtual ICollection<Movie> Movies { get; set; }
         public virtual ICollection<Show> Shows { get; set; }
         public virtual ICollection<Person> Persons { get; set; }

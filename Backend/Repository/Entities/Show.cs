@@ -18,12 +18,11 @@ namespace Repository.Entities
         [StringLength(100)]
         public string Name { get; set; }
 
-        public DateTime? ReleaseDate { get; set; }
         public int LastFinishedSeason { get; set; }
-        public DateTime? ReleaseLastEpisode { get; set; }
+        public int NextEpisode { get; set; }
         public DateTime? ReleaseNextEpisode { get; set; }
 
-        public int? TheMovieDbId { get; set; }
+        public int TheMovieDbId { get; set; }
         public virtual ICollection<User> Users { get; set; }
     }
 }

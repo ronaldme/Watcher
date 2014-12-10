@@ -20,7 +20,7 @@ namespace Repository.Entities
 
         public DateTime? ReleaseDate { get; set; }
 
-        public int? TheMovieDbId { get; set; }
+        public int TheMovieDbId { get; set; }
 
         public virtual ICollection<User> Users { get; set; }
     }

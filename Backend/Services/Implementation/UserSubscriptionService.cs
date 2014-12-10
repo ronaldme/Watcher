@@ -9,13 +9,13 @@ using EasyNetQ;
 
 namespace Services
 {
-    public class Subscriptions : ISubscriptions, IMqResponder
+    public class UserSubscriptionService : IUserSubscriptionService, IMqResponder
     {
         private List<IDisposable> disposables;
         private readonly IBus bus;
         private readonly IUsersRepository usersRepository;
 
-        public Subscriptions(IBus bus, IUsersRepository usersRepository)
+        public UserSubscriptionService(IBus bus, IUsersRepository usersRepository)
         {
             this.bus = bus;
             this.usersRepository = usersRepository;
@@ -26,7 +26,7 @@ namespace Services
             disposables = new List<IDisposable>();
 
             // Run all methods implemented from the ISearchTV interface
-            typeof(ISubscriptions).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
+            typeof(IUserSubscriptionService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
 
             disposables.Add(bus.Respond<SubscriptionRequest, SubscriptionListDTO>(GetSubscriptions));
         }
@@ -49,11 +49,13 @@ namespace Services
             {
                 return new TvShowListDTO
                 {
-                    TvShows = user.Shows.Select(x => new TvShowDTO
+                    TvShows = user.Shows.Select(x => new ShowDTO
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        ReleaseNextEpisode = x.ReleaseDate
+                        ReleaseNextEpisode = x.ReleaseNextEpisode,
+                        LastFinishedSeason = x.LastFinishedSeason,
+                        NextEpisode = x.NextEpisode
                     }).ToList()
                 };
             }
@@ -73,8 +75,7 @@ namespace Services
             {
                 return new MovieListDTO
                 {
-                    Movies =
-                    user.Movies.Select(x => new MovieDTO
+                    Movies = user.Movies.Select(x => new MovieDTO
                     {
                         Id = x.Id,
                         Name = x.Name,
@@ -132,9 +133,9 @@ namespace Services
                 {
                     Id = show.Id,
                     Name = show.Name,
-                    ReleaseDate = show.ReleaseNextEpisode.Value,
-                    EpisodeNumber = show.NextEpisodeNr,
-                    LastFinishedSeason = show.LastFinishedSeasonNr
+                    ReleaseDate = show.ReleaseNextEpisode.HasValue ? show.ReleaseNextEpisode.Value : new DateTime(1),
+                    EpisodeNumber = show.NextEpisode,
+                    LastFinishedSeason = show.LastFinishedSeason
                 }).ToList());
             }
 

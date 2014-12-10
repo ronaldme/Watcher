@@ -5,7 +5,6 @@ using BLL.Json.Movies;
 using BLL.Json.Persons;
 using BLL.Json.Shows;
 using Messages.DTO;
-using Messages.Request;
 using Newtonsoft.Json;
 
 namespace BLL.Json
@@ -13,29 +12,32 @@ namespace BLL.Json
     public class Convert
     {
         #region Tv shows
-        public static List<TvShowDTO> ToShows(string json)
+        public static List<ShowDTO> ToShows(string json)
         {
             var root = JsonConvert.DeserializeObject<Root>(json);
 
-            return root.Results.Select(tvShow => new TvShowDTO
+            return root.Results.Select(tvShow => new ShowDTO
             {
                 Id = tvShow.Id,
-                Name = tvShow.Name,
-                AirDate = !string.IsNullOrEmpty(tvShow.First_Air_Date) ? DateTime.Parse(tvShow.First_Air_Date) : (DateTime?) null
+                Name = tvShow.Name
             }).ToList();
         }
 
-        public static Testing ToShow(string json)
+        public static ShowDTO ToShow(string json)
         {
             var deserialized = JsonConvert.DeserializeObject<RootObject>(json);
 
-            return new Testing
+            return new ShowDTO
             {
                 Id = deserialized.Id,
                 Name = deserialized.Name,
-                AirDate = DateTime.Parse(deserialized.First_Air_Date),
-                Seasons = deserialized.Seasons,
-                Number_Of_Seasons = deserialized.Number_Of_Seasons
+                Seasons = deserialized.Seasons.Select(x => new Messages.DTO.Season
+                {
+                    Id = x.Id,
+                    Air_Date = x.Air_Date,
+                    Season_Number = x.Season_Number
+                }).ToList(),
+                NumberOfSeasons = deserialized.Number_Of_Seasons
             };
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data.Entity;
 using BLL;
+using BLL.Notifier;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -19,6 +20,9 @@ namespace Services.DependencyInjection
 
             var theMovieDb = new TheMovieDb();
             container.Register(Component.For<ITheMovieDb>().Instance(theMovieDb));
+
+            var emailNotifier = new MailNotifier();
+            container.Register(Component.For<INotifyUser>().Instance(emailNotifier));
 
             container.Register(Component.For<WatcherData>().LifeStyle.Singleton);
 

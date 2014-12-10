@@ -12,7 +12,6 @@
                 <th>Name</th>
                 <th>Release date</th>
                 <th>Episode number</th>
-                <th>Current season</th>
             </tr>
         </thead>
     </table>
@@ -49,10 +48,9 @@
                 'url': '@Url.Action("GetSubscriptions", "Subscriptions")',
             },
             columns: [
-                { data: 'Id', orderable: false },
+                { data: 'Id', orderable: false, visible: false },
                 { data: 'Name', orderable: false },
                 { data: 'ReleaseDate', orderable: false },
-                { data: 'LastFinishedSeason', orderable: false },
                 { data: 'EpisodeNumber', orderable: false }
             ]
         });

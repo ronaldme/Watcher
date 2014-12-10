@@ -39,7 +39,7 @@ namespace Web.UI.Controllers
                 {
                     await SignInAsync(user, model.RememberMe);
 
-                    SetEmailCookie();
+                    SetEmailCookie(model.Email);
 
                     return RedirectToLocal(returnUrl);
                 }

@@ -7,8 +7,8 @@ namespace Messages.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int LastFinishedSeasonNr { get; set; }
-        public int NextEpisodeNr { get; set; }
+        public int LastFinishedSeason { get; set; }
+        public int NextEpisode { get; set; }
         public DateTime? ReleaseNextEpisode { get; set; }
         public List<Season> Seasons { get; set; }
         public int NumberOfSeasons { get; set; }

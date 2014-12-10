@@ -11,7 +11,7 @@ namespace BLL
     public class TheMovieDb : ITheMovieDb
     {
         #region Search
-        public List<TvShowDTO> SearchTv(string search)
+        public List<ShowDTO> SearchTv(string search)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchTv + "&query=" + ReplaceSpaces(search) + "&vote_count.gte=10" + "&sort_by=popularity.desc");
             string json = GetResponse(request);
@@ -37,7 +37,7 @@ namespace BLL
         #endregion
 
         #region List DTO's
-        public List<TvShowDTO> TopRated()
+        public List<ShowDTO> TopRated()
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.TopRated);
             string json = GetResponse(request);
@@ -63,7 +63,7 @@ namespace BLL
         #endregion
 
         #region Get
-        public Testing GetShowBy(int id)
+        public ShowDTO GetShowBy(int id)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchTvById, id));
             string json = GetResponse(request);
@@ -71,7 +71,7 @@ namespace BLL
             return Convert.ToShow(json);
         }
 
-        public TvShowDTO GetLatestEpisode(int tvId, List<Season> seasons)
+        public ShowDTO GetLatestEpisode(int tvId, List<Messages.DTO.Season> seasons)
         {
             CurrentNextSeason currentNextSeason = GetCurrentNextSeason(seasons);
             
@@ -96,17 +96,17 @@ namespace BLL
                     {
                         if (!string.IsNullOrEmpty(nextSeason.Episodes[0].Air_Date))
                         {
-                            return new TvShowDTO
+                            return new ShowDTO
                             {
-                                NextEpisodeNr = 1,
-                                LastFinishedSeasonNr = nextSeason.Season_Number - 1,
+                                NextEpisode = 1,
+                                LastFinishedSeason = nextSeason.Season_Number - 1,
                                 ReleaseNextEpisode = DateTime.Parse(nextSeason.Episodes[0].Air_Date)
                             };
                         } 
-                        return new TvShowDTO
+                        return new ShowDTO
                         {
-                            NextEpisodeNr = 1,
-                            LastFinishedSeasonNr = nextSeason.Season_Number - 1,
+                            NextEpisode = 1,
+                            LastFinishedSeason = nextSeason.Season_Number - 1,
                             ReleaseNextEpisode = null
                         };
                     }
@@ -116,10 +116,10 @@ namespace BLL
                         if (!string.IsNullOrEmpty(episode.Air_Date) &&
                             DateTime.Parse(episode.Air_Date) > DateTime.UtcNow)
                         {
-                            return new TvShowDTO
+                            return new ShowDTO
                             {
-                                NextEpisodeNr = episode.Episode_Number,
-                                LastFinishedSeasonNr = nextSeason.Season_Number - 1,
+                                NextEpisode = episode.Episode_Number,
+                                LastFinishedSeason = nextSeason.Season_Number - 1,
                                 ReleaseNextEpisode = DateTime.Parse(episode.Air_Date)
                             };
                         }
@@ -127,10 +127,10 @@ namespace BLL
                 }
                 else
                 {
-                    return new TvShowDTO
+                    return new ShowDTO
                     {
-                        LastFinishedSeasonNr = currentNextSeason.Current.Season_Number,
-                        NextEpisodeNr = 1
+                        LastFinishedSeason = currentNextSeason.Current.Season_Number,
+                        NextEpisode = 1
                     };
                 }
             }
@@ -143,16 +143,16 @@ namespace BLL
                 {
                     Episode nextEpisode = episodes[i + 1];
 
-                    return new TvShowDTO
+                    return new ShowDTO
                     {
-                        NextEpisodeNr = nextEpisode.Episode_Number,
+                        NextEpisode = nextEpisode.Episode_Number,
                         ReleaseNextEpisode = DateTime.Parse(nextEpisode.Air_Date),
-                        LastFinishedSeasonNr = nextEpisode.Season_Number - 1
+                        LastFinishedSeason = nextEpisode.Season_Number - 1
                     };
                 }
             }
 
-            return new TvShowDTO();
+            return new ShowDTO();
         }
         
         public MovieDTO GetMovieBy(int id)
@@ -173,13 +173,13 @@ namespace BLL
         #endregion
 
         #region Private methods
-        private CurrentNextSeason GetCurrentNextSeason(List<Season> seasons)
+        private CurrentNextSeason GetCurrentNextSeason(List<Messages.DTO.Season> seasons)
         {
             var currentNextSeason = new CurrentNextSeason();
 
             for (int i = 0; i < seasons.Count; i++)
             {
-                Season season = seasons[i];
+                Messages.DTO.Season season = seasons[i];
 
                 if (!string.IsNullOrEmpty(season.Air_Date) &&
                     DateTime.Parse(season.Air_Date) > DateTime.UtcNow)

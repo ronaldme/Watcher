@@ -5,39 +5,40 @@ using System.Net.Mail;
 
 namespace BLL.Notifier
 {
-    public class Mailer
+    public class MailNotifier : INotifyUser
     {
         private readonly SmtpSection smtpSection;
 
-        public Mailer()
+        public MailNotifier()
         {
             smtpSection = (SmtpSection) ConfigurationManager.GetSection("system.net/mailSettings/smtp");
         }
 
-        public void Send(string destination, string subject, string message)
+        public void NotifyUser(UserNotification notification)
         {
             var client = InitializeSmtpClient();
 
-            var mailMessage = new MailMessage(destination, smtpSection.From)
+            var mailMessage = new MailMessage(smtpSection.From, notification.Destination)
             {
-                Subject = subject,
-                Body = message
+                Subject = notification.Subject,
+                Body = notification.Message
             };
-            
-            client.Send(mailMessage);
+
+            client.SendAsync(mailMessage, null);
         }
 
-        public SmtpClient InitializeSmtpClient()
+        private SmtpClient InitializeSmtpClient()
         {
             return new SmtpClient()
             {
                 Host = smtpSection.Network.Host,
                 Port = smtpSection.Network.Port,
                 UseDefaultCredentials = smtpSection.Network.DefaultCredentials,
-                Credentials = new NetworkCredential(smtpSection.Network.UserName, smtpSection.Network.Password),
                 EnableSsl = smtpSection.Network.EnableSsl,
-                DeliveryMethod = smtpSection.DeliveryMethod
+                DeliveryMethod = smtpSection.DeliveryMethod,
+                Timeout = 10000,
+                Credentials = new NetworkCredential(smtpSection.Network.UserName, smtpSection.Network.Password),
             };
-        }
+        }  
     }
 }

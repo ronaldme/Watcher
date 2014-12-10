@@ -36,8 +36,8 @@ namespace Web.UI.Controllers
             {
                 x.Id,
                 x.Name,
-                x.LastFinishedSeason,
                 x.EpisodeNumber,
+                x.LastFinishedSeason,
                 ReleaseDate = x.ReleaseDate.Year != 1 ? x.ReleaseDate.ToString("dd-MM-yyyy") : "Unknown"
             }).ToList();
 

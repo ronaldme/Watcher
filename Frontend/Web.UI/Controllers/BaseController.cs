@@ -20,11 +20,11 @@ namespace Web.UI.Controllers
             return Email();
         }
 
-        public void SetEmailCookie()
+        public void SetEmailCookie(string mail = null)
         {
             var cookie = new HttpCookie("email")
             {
-                Value = Email(),
+                Value = mail ?? Email(),
                 Expires = DateTime.Now.AddDays(10)
             };
             HttpContext.Response.SetCookie(cookie);

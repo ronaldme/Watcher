@@ -58,9 +58,9 @@ namespace Services
             {
                 User user = usersRepository.All().FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
                 Show show = showRepository.All().FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
-                Testing showInfo = theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
+                ShowDTO showInfo = theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
 
-                TvShowDTO dto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
+                ShowDTO dto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
                 if (user == null)
                 {
@@ -70,15 +70,16 @@ namespace Services
                         {
                             TheMovieDbId = tvSubscription.TheMovieDbId,
                             Name = showInfo.Name,
-                            ReleaseDate = showInfo.AirDate,
-                            LastFinishedSeason = dto.LastFinishedSeasonNr,
-                            ReleaseNextEpisode = dto.ReleaseNextEpisode
+                            LastFinishedSeason = dto.LastFinishedSeason,
+                            ReleaseNextEpisode = dto.ReleaseNextEpisode,
+                            NextEpisode = dto.NextEpisode
                         });
 
                         usersRepository.Insert(new User
                         {
                             Email = tvSubscription.EmailUser,
-                            Shows = new Collection<Show> {show}
+                            Shows = new Collection<Show> {show},
+                            NotifyHoursPastMidnight = 9
                         });
                     }
                     else
@@ -86,7 +87,8 @@ namespace Services
                         usersRepository.Insert(new User
                         {
                             Email = tvSubscription.EmailUser,
-                            Shows = new Collection<Show> {show}
+                            Shows = new Collection<Show> {show},
+                            NotifyHoursPastMidnight = 9
                         });
                     }
                 }
@@ -98,9 +100,9 @@ namespace Services
                         {
                             TheMovieDbId = tvSubscription.TheMovieDbId,
                             Name = showInfo.Name,
-                            ReleaseDate = showInfo.AirDate,
-                            LastFinishedSeason = dto.LastFinishedSeasonNr,
-                            ReleaseNextEpisode = dto.ReleaseNextEpisode
+                            LastFinishedSeason = dto.LastFinishedSeason,
+                            ReleaseNextEpisode = dto.ReleaseNextEpisode,
+                            NextEpisode = dto.NextEpisode
                         });
                         user.Shows.Add(show);
                     }

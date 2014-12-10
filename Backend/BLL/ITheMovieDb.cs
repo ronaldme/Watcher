@@ -6,18 +6,18 @@ namespace BLL
 {
     public interface ITheMovieDb
     {
-        List<TvShowDTO> SearchTv(string search);
+        List<ShowDTO> SearchTv(string search);
         List<MovieDTO> SearchMovie(string search);
         List<PersonDTO> SearchPerson(string search);
 
-        List<TvShowDTO> TopRated();
+        List<ShowDTO> TopRated();
         List<MovieDTO> Upcoming();
         List<PersonDTO> Populair();
 
-        Testing GetShowBy(int id);
+        ShowDTO GetShowBy(int id);
         MovieDTO GetMovieBy(int id);
         PersonDTO GetPersonBy(int id);
 
-        TvShowDTO GetLatestEpisode(int tvId, List<Season> seasons);
+        ShowDTO GetLatestEpisode(int tvId, List<Messages.DTO.Season> seasons);
     }
 }

@@ -21,11 +21,13 @@ namespace Startup
             container.Install(new BackendDependencyInstaller());
 
             container.ResolveAll<IMqResponder>().ForEach(x => x.Start());
+            container.ResolveAll<IStartable>().ForEach(x => x.Start());
         }
 
         protected override void OnStop()
         {
             container.ResolveAll<IMqResponder>().ForEach(x => x.Stop());
+            container.ResolveAll<IStartable>().ForEach(x => x.Stop());
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Services.Interfaces
 {
-    public interface ISubscriptions
+    public interface IUserSubscriptionService
     {
         void GetShows();
         void GetMovies();

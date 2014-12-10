@@ -4,7 +4,7 @@ namespace BLL
 {
     public class CurrentNextSeason
     {
-        public Season Current { get; set; }
-        public Season Next { get; set; }
+        public Messages.DTO.Season Current { get; set; }
+        public Messages.DTO.Season Next { get; set; }
     }
 }

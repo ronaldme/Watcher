@@ -48,6 +48,7 @@ namespace Web.UI.Controllers
                     var applicationManger = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
                     var user = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(User.Identity.GetUserId());
+                    user.UserName = viewModel.Email;
                     user.Email = viewModel.Email;
 
                     applicationManger.Update(user);
