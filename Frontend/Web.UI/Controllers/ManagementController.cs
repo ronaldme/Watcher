@@ -55,10 +55,10 @@ namespace Web.UI.Controllers
                     SetEmailCookie();
                 }
                 
-                return Redirect("Index");
+                return View("Index");
             }
            
-            return Redirect("Index");
+            return View("Index");
         }
     }
 }

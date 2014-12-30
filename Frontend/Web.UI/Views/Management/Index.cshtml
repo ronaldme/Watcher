@@ -12,11 +12,13 @@
         <div>
             <p>@Html.LabelFor(x => x.NotifyHour)</p>
             <p>@Html.TextBoxFor(x => x.NotifyHour)</p>
+            <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyHour)</p>
         </div>
 
         <div>
             <p>@Html.LabelFor(x => x.Email)</p>
             <p>@Html.TextBoxFor(x => x.Email)</p>
+            <p style="color:red">@Html.ValidationMessageFor(x => x.Email)</p>
         </div>
 
         <div>

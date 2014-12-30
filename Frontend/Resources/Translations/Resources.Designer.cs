@@ -106,7 +106,7 @@ namespace Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Notify at hours past midnight.
+        ///   Looks up a localized string similar to Notify at hours past midnight (UTC).
         /// </summary>
         public static string NotifyHours {
             get {
