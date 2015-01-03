@@ -7,6 +7,9 @@ namespace BLL
     {
         private const string PreFixUrl = "http://api.themoviedb.org/3/";
         private static readonly string SuffixUrl = "?api_key=" + ConfigurationManager.AppSettings.Get("apiKey");
+        
+        private const string PreFixUrlNotify = "https://www.notifymyandroid.com/publicapi/notify?apikey=";
+        private static readonly string ApiKey = ConfigurationManager.AppSettings.Get("notifyMyAndroid");
 
         /// <summary>
         /// Movie urls
@@ -30,6 +33,11 @@ namespace BLL
         public static string SearchPersonById = "person/";
         public static string PopularPersons = FormatUrl("person/popular");
 
+        /// <summary>
+        /// NotifyMyAndroid URL
+        /// </summary>
+        public static string NotifyMyAndroid = PreFixUrlNotify + ApiKey + "&application=Watcher&event=New%20Releases&description=";
+        
         public static string SearchTvSeasons(int tvId, int season)
         {
             return string.Format("{0}{1}{2}{3}{4}{5}", PreFixUrl, "tv/", tvId, "/season/", season, SuffixUrl); 

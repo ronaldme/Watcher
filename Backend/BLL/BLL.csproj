@@ -67,7 +67,7 @@
     <Compile Include="Json\Shows\SeasonRootObject.cs" />
     <Compile Include="Notifier\INotifyUser.cs" />
     <Compile Include="Notifier\MailNotifier.cs" />
-    <Compile Include="Notifier\MyAndroidNotifier.cs" />
+    <Compile Include="Notifier\NotifyMyAndroid.cs" />
     <Compile Include="Notifier\UserNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Urls.cs" />

@@ -133,7 +133,7 @@
     <value>Email field is required</value>
   </data>
   <data name="NotifyHours" xml:space="preserve">
-    <value>Notify at hours past midnight (UTC)</value>
+    <value>Hours past midnight (UTC)</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>

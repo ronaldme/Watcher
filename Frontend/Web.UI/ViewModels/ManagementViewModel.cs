@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace Web.UI.ViewModels
 {
@@ -7,7 +8,9 @@ namespace Web.UI.ViewModels
         [Required]
         [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "NotifyHours")]
         [Range(0, 23)]
-        public int NotifyHour { get; set; }
+        public int SelectedNotifyHour { get; set; }
+
+        public SelectList Hours { get; set; }
 
         [Required]
         [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "Email")]

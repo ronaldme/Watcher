@@ -81,6 +81,8 @@ namespace Services
                     Message = GetSubject(notificationList),
                     Subject = "New releases today!"
                 });
+
+                NotifyMyAndroid.NotifyUser(notificationList);
             }
         }
 

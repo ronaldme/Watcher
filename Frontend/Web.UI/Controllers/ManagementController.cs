@@ -1,4 +1,7 @@
-﻿using System.Web;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
 using Messages.Request;
@@ -12,6 +15,7 @@ namespace Web.UI.Controllers
     public class ManagementController : BaseController
     {
         private readonly IBus bus;
+        private readonly List<int> hours = Enumerable.Range(0, 24).ToList();
 
         public ManagementController(IBus bus)
         {
@@ -21,11 +25,15 @@ namespace Web.UI.Controllers
         public ActionResult Index()
         {
             string email = GetEmail();
-            var response = bus.Request<ManagementRequest, ManagementResponse>(new ManagementRequest{Email = email, OldEmail = email});
-            
+            var response = bus.Request<ManagementRequest, ManagementResponse>(new ManagementRequest
+            {
+                Email = email, OldEmail = email
+            });
+
             return View(new ManagementViewModel
             {
-                NotifyHour = response.NotifyHour,
+                SelectedNotifyHour = response.NotifyHour,
+                Hours = new SelectList(hours),
                 Email = email,
                 OldEmail = email
             });
@@ -37,7 +45,7 @@ namespace Web.UI.Controllers
             {
                 var response = bus.Request<ManagementRequest, ManagementResponse>(new ManagementRequest
                 {
-                    NotifyHour = viewModel.NotifyHour,
+                    NotifyHour = viewModel.SelectedNotifyHour,
                     OldEmail = viewModel.OldEmail,
                     Email = viewModel.Email,
                     SetData = true
@@ -54,11 +62,11 @@ namespace Web.UI.Controllers
                     applicationManger.Update(user);
                     SetEmailCookie();
                 }
-                
-                return View("Index");
+
+                return RedirectToAction("Index");
             }
-           
-            return View("Index");
+
+            return RedirectToAction("Index", viewModel);
         }
     }
 }

@@ -10,9 +10,9 @@
         @Html.HiddenFor(x => x.OldEmail)
 
         <div>
-            <p>@Html.LabelFor(x => x.NotifyHour)</p>
-            <p>@Html.TextBoxFor(x => x.NotifyHour)</p>
-            <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyHour)</p>
+            <p>@Html.LabelFor(x => x.SelectedNotifyHour)</p>
+            <p>@Html.DropDownListFor(x => x.SelectedNotifyHour, Model.Hours)</p>
+            <p style="color:red">@Html.ValidationMessageFor(x => x.SelectedNotifyHour)</p>
         </div>
 
         <div>
