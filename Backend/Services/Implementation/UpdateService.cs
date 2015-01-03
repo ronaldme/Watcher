@@ -46,7 +46,7 @@ namespace Services
 
         public void UpdateMovies()
         {
-            movieInterval = new Timer(intervalMovieHours);
+            movieInterval = new Timer(10000);
             movieInterval.Elapsed += UpdateMoviesNow;
             movieInterval.Enabled = true;
         }
@@ -83,7 +83,7 @@ namespace Services
         
         public void UpdateEpisodes()
         {
-            showInterval = new Timer(intervalShowHours);
+            showInterval = new Timer(20000);
             showInterval.Elapsed += UpdateShowsNow;
             showInterval.Enabled = true;
         }
@@ -96,15 +96,12 @@ namespace Services
 
                 foreach (Show show in shows)
                 {
-                    if (show.ReleaseNextEpisode < DateTime.UtcNow)
-                    {
-                        ShowDTO showInfo = theMovieDb.GetShowBy(show.TheMovieDbId);
-                        ShowDTO showDTO = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
+                    ShowDTO showInfo = theMovieDb.GetShowBy(show.TheMovieDbId);
+                    ShowDTO showDto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
-                        if (showDTO.ReleaseNextEpisode.HasValue && showDTO.ReleaseNextEpisode != show.ReleaseNextEpisode)
-                        {
-                            show.ReleaseNextEpisode = show.ReleaseNextEpisode;
-                        }
+                    if (showDto.ReleaseNextEpisode.HasValue && showDto.ReleaseNextEpisode != show.ReleaseNextEpisode)
+                    {
+                        show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
                     }
                 }
 

@@ -58,7 +58,7 @@ namespace Services
         {
             var users = usersRepository.All();
 
-            foreach (User user in users.Where(user => user.NotifyHoursPastMidnight == DateTime.UtcNow.Hour+1))
+            foreach (User user in users.Where(user => user.NotifyHoursPastMidnight == DateTime.UtcNow.Hour + 1))
             {
                 var notificationList = new List<string>();
 
