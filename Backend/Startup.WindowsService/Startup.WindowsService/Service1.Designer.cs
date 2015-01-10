@@ -1,6 +1,6 @@
-﻿namespace Startup
+﻿namespace Startup.WindowsService
 {
-    partial class Service
+    partial class Service1
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "Service1";
+            // 
+            // Service1
+            // 
+            this.ServiceName = "Watcher Service";
+
         }
 
         #endregion

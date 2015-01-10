@@ -16,8 +16,8 @@ namespace Services
         private readonly IMovieRepository movieRepository;
         private readonly IShowRepository showRepository;
 
-        private readonly int intervalMovieHours;
-        private readonly int intervalShowHours;
+        private readonly int intervalMovie;
+        private readonly int intervalShow;
 
         private Timer movieInterval;
         private Timer showInterval;
@@ -28,8 +28,8 @@ namespace Services
             this.movieRepository = movieRepository;
             this.showRepository = showRepository;
 
-            intervalMovieHours = Convert.ToInt32(ConfigurationManager.AppSettings.Get("movieIntervalHours"));
-            intervalShowHours = Convert.ToInt32(ConfigurationManager.AppSettings.Get("showIntervalHours"));
+            intervalMovie = Convert.ToInt32(ConfigurationManager.AppSettings.Get("movieIntervalHours"));
+            intervalShow = Convert.ToInt32(ConfigurationManager.AppSettings.Get("showIntervalHours"));
         }
 
         public void Start()
@@ -46,7 +46,7 @@ namespace Services
 
         public void UpdateMovies()
         {
-            movieInterval = new Timer(10000);
+            movieInterval = new Timer(intervalMovie);
             movieInterval.Elapsed += UpdateMoviesNow;
             movieInterval.Enabled = true;
         }
@@ -83,7 +83,7 @@ namespace Services
         
         public void UpdateEpisodes()
         {
-            showInterval = new Timer(20000);
+            showInterval = new Timer(intervalShow);
             showInterval.Elapsed += UpdateShowsNow;
             showInterval.Enabled = true;
         }

@@ -4,6 +4,5 @@ namespace Repository.Repositories.Interfaces
 {
     public interface IPersonRepository : IRepository<Person>
     {
-         
     }
 }

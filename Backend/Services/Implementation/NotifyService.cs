@@ -27,7 +27,7 @@ namespace Services
         {
             Thread = new Thread(() =>
             {
-                // We will start on the whole hour
+                // Start notifying on the whole hour
                 while (DateTime.UtcNow.Minute != 0)
                 {
                     Thread.Sleep(500);
@@ -46,7 +46,7 @@ namespace Services
 
         public void NotifyUsers()
         {
-            // after initial notify, check execute every hour
+            // after initial notify, execute every hour
             Notify(null, null);
             
             var notify = new Timer(3600000);
@@ -58,7 +58,7 @@ namespace Services
         {
             var users = usersRepository.All();
 
-            foreach (User user in users.Where(user => user.NotifyHoursPastMidnight == DateTime.UtcNow.Hour + 1))
+            foreach (User user in users.Where(x => x.NotifyHoursPastMidnight == DateTime.UtcNow.Hour))
             {
                 var notificationList = new List<string>();
 
@@ -75,14 +75,24 @@ namespace Services
                     // implement later
                 }
 
-                notifyService.NotifyUser(new UserNotification
+                if (notificationList.Count > 1)
                 {
-                    Destination = user.Email,
-                    Message = GetSubject(notificationList),
-                    Subject = "New releases today!"
-                });
+                    try
+                    {
+                        notifyService.NotifyUser(new UserNotification
+                        {
+                            Destination = user.Email,
+                            Message = GetSubject(notificationList),
+                            Subject = "New releases today!"
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        // sending mail time-out
+                    }
 
-                NotifyMyAndroid.NotifyUser(notificationList);
+                    NotifyMyAndroid.NotifyUser(notificationList);
+                }
             }
         }
 

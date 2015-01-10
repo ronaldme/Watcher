@@ -1,12 +1,11 @@
 ﻿using System.Configuration;
-using Microsoft.SqlServer.Server;
 
 namespace BLL
 {
     public class Urls
     {
         private const string PreFixUrl = "http://api.themoviedb.org/3/";
-        private static readonly string SuffixUrl = "?api_key=" + ConfigurationManager.AppSettings.Get("apiKey");
+        private static readonly string SuffixUrl = "?api_key=" + ConfigurationManager.AppSettings.Get("theMovieDb");
         
         private const string PreFixUrlNotify = "https://www.notifymyandroid.com/publicapi/notify?apikey=";
         private static readonly string ApiKey = ConfigurationManager.AppSettings.Get("notifyMyAndroid");

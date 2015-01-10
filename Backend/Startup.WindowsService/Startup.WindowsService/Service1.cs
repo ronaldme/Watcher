@@ -1,16 +1,17 @@
-﻿using System.ServiceProcess;
+﻿using System.Linq;
+using System.ServiceProcess;
 using Castle.Core.Internal;
 using Castle.Windsor;
 using Services.DependencyInjection;
 using Services.Interfaces;
 
-namespace Startup
+namespace Startup.WindowsService
 {
-    public partial class Service : ServiceBase
+    public partial class Service1 : ServiceBase
     {
-        private IWindsorContainer container;
+        private WindsorContainer container;
 
-        public Service()
+        public Service1()
         {
             InitializeComponent();
         }
@@ -21,13 +22,14 @@ namespace Startup
             container.Install(new BackendDependencyInstaller());
 
             container.ResolveAll<IMqResponder>().ForEach(x => x.Start());
-            container.ResolveAll<IStartable>().ForEach(x => x.Start());
+            container.ResolveAll<Services.Interfaces.IStartable>().ForEach(x => x.Start());
+
         }
 
         protected override void OnStop()
         {
-            container.ResolveAll<IMqResponder>().ForEach(x => x.Stop());
-            container.ResolveAll<IStartable>().ForEach(x => x.Stop());
+            container.ResolveAll<IMqResponder>().ToList().ForEach(x => x.Stop());
+            container.ResolveAll<Services.Interfaces.IStartable>().ToList().ForEach(x => x.Stop());
         }
     }
 }

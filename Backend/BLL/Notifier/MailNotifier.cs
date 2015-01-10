@@ -24,7 +24,7 @@ namespace BLL.Notifier
                 Body = notification.Message
             };
 
-            client.SendAsync(mailMessage, null);
+            client.Send(mailMessage);
         }
 
         private SmtpClient InitializeSmtpClient()

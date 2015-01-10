@@ -855,6 +855,14 @@
             <param name="queue">The queue to send to</param>
             <param name="message">The message</param>
         </member>
+        <member name="M:EasyNetQ.IBus.SendAsync``1(System.String,``0)">
+            <summary>
+            Send a message directly to a queue
+            </summary>
+            <typeparam name="T">The type of message to send</typeparam>
+            <param name="queue">The queue to send to</param>
+            <param name="message">The message</param>
+        </member>
         <member name="M:EasyNetQ.IBus.Receive``1(System.String,System.Action{``0})">
             <summary>
             Receive messages from a queue.
@@ -1197,6 +1205,14 @@
             <param name="queue">The queue to send the message to</param>
             <param name="message">The message to send</param>
         </member>
+        <member name="M:EasyNetQ.Producer.ISendReceive.SendAsync``1(System.String,``0)">
+            <summary>
+            Send a message to the specified queue
+            </summary>
+            <typeparam name="T">The type of message to send</typeparam>
+            <param name="queue">The queue to send the message to</param>
+            <param name="message">The message to send</param>
+        </member>
         <member name="M:EasyNetQ.Producer.ISendReceive.Receive``1(System.String,System.Action{``0})">
             <summary>
             Receive a message from the specified queue
@@ -1272,7 +1288,7 @@
             host=192.168.1.1;port=5672;virtualHost=MyVirtualHost;username=MyUsername;password=MyPassword;requestedHeartbeat=10
             
             The following default values will be used if not specified:
-            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=0
+            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=10
             </param>
             <returns>
             A new RabbitBus instance.
@@ -1287,11 +1303,11 @@
             host=192.168.1.1;port=5672;virtualHost=MyVirtualHost;username=MyUsername;password=MyPassword;requestedHeartbeat=10
             
             The following default values will be used if not specified:
-            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=0
+            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=10
             </param>
             <param name="registerServices">
             Override default services. For example, to override the default IEasyNetQLogger:
-            RabbitHutch.CreateBus("host=localhost", x => x.Register&lt;IEasyNetQLogger&gt;(_ => myLogger));
+            RabbitHutch.CreateBus("host=localhost", x => x.Register{IEasyNetQLogger}(_ => myLogger));
             </param>
             <returns>
             A new RabbitBus instance.
@@ -1321,7 +1337,7 @@
             </param>
             <param name="registerServices">
             Override default services. For example, to override the default IEasyNetQLogger:
-            RabbitHutch.CreateBus("host=localhost", x => x.Register&lt;IEasyNetQLogger&gt;(_ => myLogger));
+            RabbitHutch.CreateBus("host=localhost", x => x.Register{IEasyNetQLogger}(_ => myLogger));
             </param>
             <returns>
             A new RabbitBus instance.
@@ -1336,7 +1352,7 @@
             </param>
             <param name="registerServices">
             Override default services. For example, to override the default IEasyNetQLogger:
-            RabbitHutch.CreateBus("host=localhost", x => x.Register&lt;IEasyNetQLogger&gt;(_ => myLogger));
+            RabbitHutch.CreateBus("host=localhost", x => x.Register{IEasyNetQLogger}(_ => myLogger));
             </param>
             <returns></returns>
         </member>
@@ -1701,7 +1717,7 @@
             Is this queue transient?
             </summary>
         </member>
-        <member name="T:EasyNetQ.DefaultClusterHostSelectionStrategy`1">
+        <member name="T:EasyNetQ.OrderedClusterHostSelectionStrategy`1">
             <summary>
             A collection that hands out the next item until success, or until every item has been tried.
             </summary>

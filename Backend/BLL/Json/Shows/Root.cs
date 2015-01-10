@@ -2,7 +2,6 @@
 
 namespace BLL.Json.Shows
 {
-
     public class Root
     {
         public int Page { get; set; }

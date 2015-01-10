@@ -1,6 +1,4 @@
-﻿using BLL.Json.Shows;
-
-namespace BLL
+﻿namespace BLL
 {
     public class CurrentNextSeason
     {
