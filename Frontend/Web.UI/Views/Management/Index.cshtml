@@ -16,6 +16,11 @@
         </div>
 
         <div>
+            <p>@Html.LabelFor(x => x.NotifyDayLater)</p>
+            <p>@Html.CheckBoxFor(x => x.NotifyDayLater)</p>
+            <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyDayLater)</p>
+        </div>
+        
         <div>
             <p>@Html.LabelFor(x => x.NotifyMyAndroidKey)</p>
             <p>@Html.TextBoxFor(x => x.NotifyMyAndroidKey)</p>

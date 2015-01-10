@@ -132,6 +132,9 @@
   <data name="EmailRequired" xml:space="preserve">
     <value>Email field is required</value>
   </data>
+  <data name="NotifyDayLater" xml:space="preserve">
+    <value>Get notified a day after the release</value>
+  </data>
   <data name="NotifyHours" xml:space="preserve">
     <value>Hours past midnight (UTC)</value>
   </data>

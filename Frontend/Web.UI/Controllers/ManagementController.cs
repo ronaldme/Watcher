@@ -35,6 +35,7 @@ namespace Web.UI.Controllers
                 Hours = new SelectList(Enumerable.Range(0, 24).ToList()),
                 Email = email,
                 OldEmail = email,
+                NotifyDayLater = response.NotifyDayLater,
                 NotifyMyAndroidKey = response.NotifyMyAndroidKey
             });
         }
@@ -49,6 +50,7 @@ namespace Web.UI.Controllers
                     OldEmail = viewModel.OldEmail,
                     Email = viewModel.Email,
                     SetData = true,
+                    NotifyDayLater = viewModel.NotifyDayLater,
                     NotifyMyAndroidKey = viewModel.NotifyMyAndroidKey
                 });
 

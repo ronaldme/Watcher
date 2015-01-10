@@ -61,14 +61,15 @@ namespace Services
             foreach (User user in users.Where(x => x.NotifyHoursPastMidnight == DateTime.UtcNow.Hour))
             {
                 var notificationList = new List<string>();
+                bool notifyDayLater = user.NotifyDayLater;
 
                 if (user.Movies != null)
                 {
-                    AddMovie(user, notificationList);
+                    AddMovie(user, notificationList, notifyDayLater);
                 }
                 if (user.Shows != null)
                 {
-                    AddShow(user, notificationList);
+                    AddShow(user, notificationList, notifyDayLater);
                 }
                 if (user.Persons != null)
                 {
@@ -104,20 +105,22 @@ namespace Services
             return names.Aggregate<string, string>(null, (current, name) => current + (name + "\n"));
         }
 
-        private static void AddMovie(User user, List<string> notificationList)
+        private static void AddMovie(User user, List<string> notificationList, bool notifyDayLater)
         {
             notificationList.AddRange(
                 from movie in user.Movies 
-                where movie.ReleaseDate.HasValue && movie.ReleaseDate.Value.Day == DateTime.UtcNow.Day 
+                where movie.ReleaseDate.HasValue && 
+                (notifyDayLater ? movie.ReleaseDate.Value.Day + 1 == DateTime.UtcNow.Day : movie.ReleaseDate.Value.Day == DateTime.UtcNow.Day)
                 select movie.Name);
         }
 
 
-        private static void AddShow(User user, List<string> notificationList)
+        private static void AddShow(User user, List<string> notificationList, bool notifyDayLater)
         {
             notificationList.AddRange(
                 from show in user.Shows
-                where show.ReleaseNextEpisode.HasValue && show.ReleaseNextEpisode.Value.Day == DateTime.UtcNow.Day
+                where show.ReleaseNextEpisode.HasValue && 
+                (notifyDayLater ? show.ReleaseNextEpisode.Value.Day + 1 == DateTime.UtcNow.Day : show.ReleaseNextEpisode.Value.Day == DateTime.UtcNow.Day)
                 select show.Name);
         }
     }

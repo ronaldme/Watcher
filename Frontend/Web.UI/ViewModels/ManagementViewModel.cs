@@ -19,6 +19,9 @@ namespace Web.UI.ViewModels
 
         public string OldEmail { get; set; }
 
+        [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "NotifyDayLater")]
+        public bool NotifyDayLater { get; set; }
+
         [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "NotifyMyAndroidKey")]
         public string NotifyMyAndroidKey { get; set; }
     }

@@ -132,6 +132,9 @@
   <data name="EmailRequired" xml:space="preserve">
     <value>Email veld is verplicht</value>
   </data>
+  <data name="NotifyDayLater" xml:space="preserve">
+    <value>Get notified a day after the release</value>
+  </data>
   <data name="NotifyHours" xml:space="preserve">
     <value>Notificatie in uren na middennacht</value>
   </data>

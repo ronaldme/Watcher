@@ -106,6 +106,15 @@ namespace Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get notified a day after the release.
+        /// </summary>
+        public static string NotifyDayLater {
+            get {
+                return ResourceManager.GetString("NotifyDayLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hours past midnight (UTC).
         /// </summary>
         public static string NotifyHours {

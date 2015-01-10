@@ -49,6 +49,7 @@ namespace Services
                 {
                     user.NotifyHoursPastMidnight = request.NotifyHour;
                     user.Email = request.Email;
+                    user.NotifyDayLater = request.NotifyDayLater;
                     user.NotifyMyAndroidKey = request.NotifyMyAndroidKey;
                     usersRepository.Update();
                     
@@ -57,6 +58,7 @@ namespace Services
                 return new ManagementResponse
                 {
                     NotifyHour = user.NotifyHoursPastMidnight,
+                    NotifyDayLater = user.NotifyDayLater,
                     NotifyMyAndroidKey = user.NotifyMyAndroidKey
                 };
             }
@@ -66,6 +68,7 @@ namespace Services
                 Email = request.Email,
                 NotifyHoursPastMidnight = request.NotifyHour,
                 NotifyMyAndroidKey = request.NotifyMyAndroidKey,
+                NotifyDayLater = request.NotifyDayLater
             });
 
             return new ManagementResponse();
