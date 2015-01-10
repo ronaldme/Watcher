@@ -21,6 +21,7 @@ namespace Repository.Entities
 
         public int NotifyHoursPastMidnight { get; set; }
 
+        public string NotifyMyAndroidKey { get; set; }
         public virtual ICollection<Movie> Movies { get; set; }
         public virtual ICollection<Show> Shows { get; set; }
         public virtual ICollection<Person> Persons { get; set; }

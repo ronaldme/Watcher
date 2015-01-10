@@ -4,5 +4,6 @@
     {
         public int NotifyHour { get; set; }
         public bool Success { get; set; }
+        public string NotifyMyAndroidKey { get; set; }
     }
 }

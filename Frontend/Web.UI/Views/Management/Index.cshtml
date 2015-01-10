@@ -16,6 +16,13 @@
         </div>
 
         <div>
+        <div>
+            <p>@Html.LabelFor(x => x.NotifyMyAndroidKey)</p>
+            <p>@Html.TextBoxFor(x => x.NotifyMyAndroidKey)</p>
+            <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyMyAndroidKey)</p>
+        </div>
+            
+        <div>
             <p>@Html.LabelFor(x => x.Email)</p>
             <p>@Html.TextBoxFor(x => x.Email)</p>
             <p style="color:red">@Html.ValidationMessageFor(x => x.Email)</p>

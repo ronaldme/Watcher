@@ -18,5 +18,8 @@ namespace Web.UI.ViewModels
         public string Email { get; set; }
 
         public string OldEmail { get; set; }
+
+        [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "NotifyMyAndroidKey")]
+        public string NotifyMyAndroidKey { get; set; }
     }
 }

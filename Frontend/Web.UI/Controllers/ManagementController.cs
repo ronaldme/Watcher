@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -15,7 +14,6 @@ namespace Web.UI.Controllers
     public class ManagementController : BaseController
     {
         private readonly IBus bus;
-        private readonly List<int> hours = Enumerable.Range(0, 24).ToList();
 
         public ManagementController(IBus bus)
         {
@@ -27,15 +25,17 @@ namespace Web.UI.Controllers
             string email = GetEmail();
             var response = bus.Request<ManagementRequest, ManagementResponse>(new ManagementRequest
             {
-                Email = email, OldEmail = email
+                Email = email,
+                OldEmail = email
             });
 
             return View(new ManagementViewModel
             {
                 SelectedNotifyHour = response.NotifyHour,
-                Hours = new SelectList(hours),
+                Hours = new SelectList(Enumerable.Range(0, 24).ToList()),
                 Email = email,
-                OldEmail = email
+                OldEmail = email,
+                NotifyMyAndroidKey = response.NotifyMyAndroidKey
             });
         }
 
@@ -48,7 +48,8 @@ namespace Web.UI.Controllers
                     NotifyHour = viewModel.SelectedNotifyHour,
                     OldEmail = viewModel.OldEmail,
                     Email = viewModel.Email,
-                    SetData = true
+                    SetData = true,
+                    NotifyMyAndroidKey = viewModel.NotifyMyAndroidKey
                 });
 
                 if (response.Success)

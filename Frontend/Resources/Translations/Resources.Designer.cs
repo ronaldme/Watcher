@@ -115,6 +115,15 @@ namespace Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NotifyMyAndroid Key.
+        /// </summary>
+        public static string NotifyMyAndroidKey {
+            get {
+                return ResourceManager.GetString("NotifyMyAndroidKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Password {

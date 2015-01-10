@@ -135,6 +135,9 @@
   <data name="NotifyHours" xml:space="preserve">
     <value>Hours past midnight (UTC)</value>
   </data>
+  <data name="NotifyMyAndroidKey" xml:space="preserve">
+    <value>NotifyMyAndroid Key</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>

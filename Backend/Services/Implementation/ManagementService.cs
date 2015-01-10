@@ -49,23 +49,23 @@ namespace Services
                 {
                     user.NotifyHoursPastMidnight = request.NotifyHour;
                     user.Email = request.Email;
+                    user.NotifyMyAndroidKey = request.NotifyMyAndroidKey;
                     usersRepository.Update();
                     
-                    return new ManagementResponse
-                    {
-                        Success = true
-                    };
+                    return new ManagementResponse { Success = true };
                 }
                 return new ManagementResponse
                 {
-                    NotifyHour = user.NotifyHoursPastMidnight
+                    NotifyHour = user.NotifyHoursPastMidnight,
+                    NotifyMyAndroidKey = user.NotifyMyAndroidKey
                 };
             }
 
             usersRepository.Insert(new User
             {
                 Email = request.Email,
-                NotifyHoursPastMidnight = request.NotifyHour
+                NotifyHoursPastMidnight = request.NotifyHour,
+                NotifyMyAndroidKey = request.NotifyMyAndroidKey,
             });
 
             return new ManagementResponse();

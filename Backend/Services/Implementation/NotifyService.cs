@@ -91,7 +91,10 @@ namespace Services
                         // sending mail time-out
                     }
 
-                    NotifyMyAndroid.NotifyUser(notificationList);
+                    if (!string.IsNullOrEmpty(user.NotifyMyAndroidKey))
+                    {
+                        NotifyMyAndroid.NotifyUser(notificationList, user.NotifyMyAndroidKey);
+                    }
                 }
             }
         }

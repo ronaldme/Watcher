@@ -6,5 +6,6 @@
         public string Email { get; set; }
         public string OldEmail { get; set; }
         public bool SetData { get; set; }
+        public string NotifyMyAndroidKey { get; set; }
     }
 }
