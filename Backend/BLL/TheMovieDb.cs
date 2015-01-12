@@ -113,8 +113,7 @@ namespace BLL
 
                     foreach (Episode episode in nextSeason.Episodes)
                     {
-                        if (!string.IsNullOrEmpty(episode.Air_Date) &&
-                            DateTime.Parse(episode.Air_Date) > DateTime.UtcNow)
+                        if (!string.IsNullOrEmpty(episode.Air_Date) && DateTime.Parse(episode.Air_Date) >= DateTime.UtcNow)
                         {
                             return new ShowDTO
                             {
@@ -138,10 +137,9 @@ namespace BLL
             // Current season is not yet finished
             for (int i = episodes.Count - 1; i >= 0; i--)
             {
-                if (!string.IsNullOrEmpty(episodes[i].Air_Date) &&
-                    DateTime.Parse(episodes[i].Air_Date) < DateTime.UtcNow)
+                if (!string.IsNullOrEmpty(episodes[i].Air_Date) && DateTime.Parse(episodes[i].Air_Date) < DateTime.UtcNow)
                 {
-                    Episode nextEpisode = episodes[i + 1];
+                    Episode nextEpisode = episodes[i];
 
                     return new ShowDTO
                     {
@@ -154,7 +152,7 @@ namespace BLL
 
             return new ShowDTO();
         }
-        
+
         public MovieDTO GetMovieBy(int id)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchMovieById, id));

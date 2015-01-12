@@ -48,7 +48,7 @@ namespace Services
         {
             // after initial notify, execute every hour
             Notify(null, null);
-            
+
             var notify = new Timer(3600000);
             notify.Elapsed += Notify;
             notify.Enabled = true;
@@ -76,7 +76,7 @@ namespace Services
                     // implement later
                 }
 
-                if (notificationList.Count > 1)
+                if (notificationList.Count > 0)
                 {
                     try
                     {
