@@ -70,8 +70,9 @@ namespace Services
                         {
                             TheMovieDbId = tvSubscription.TheMovieDbId,
                             Name = showInfo.Name,
-                            LastFinishedSeason = dto.LastFinishedSeason,
+                            CurrentSeason = dto.CurrentSeason,
                             ReleaseNextEpisode = dto.ReleaseNextEpisode,
+                            EpisodeCount = dto.EpisodeCount,
                             NextEpisode = dto.NextEpisode
                         });
 
@@ -100,8 +101,9 @@ namespace Services
                         {
                             TheMovieDbId = tvSubscription.TheMovieDbId,
                             Name = showInfo.Name,
-                            LastFinishedSeason = dto.LastFinishedSeason,
+                            CurrentSeason = dto.CurrentSeason,
                             ReleaseNextEpisode = dto.ReleaseNextEpisode,
+                            EpisodeCount = dto.EpisodeCount,
                             NextEpisode = dto.NextEpisode
                         });
                         user.Shows.Add(show);

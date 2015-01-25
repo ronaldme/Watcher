@@ -132,6 +132,15 @@
   <data name="EmailRequired" xml:space="preserve">
     <value>Email veld is verplicht</value>
   </data>
+  <data name="EpisodeNumber" xml:space="preserve">
+    <value>Aflevering nummer</value>
+  </data>
+  <data name="Movie" xml:space="preserve">
+    <value>Film(s)</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Naam</value>
+  </data>
   <data name="NotifyDayLater" xml:space="preserve">
     <value>Get notified a day after the release</value>
   </data>
@@ -144,8 +153,20 @@
   <data name="Password" xml:space="preserve">
     <value>Wachtwoord</value>
   </data>
+  <data name="ReleaseDate" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="RemainingEpisodes" xml:space="preserve">
+    <value>Resterende afleveringen</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Opslaan</value>
+  </data>
+  <data name="Season" xml:space="preserve">
+    <value>Seizoen</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Tv show(s)</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welkom</value>

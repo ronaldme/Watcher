@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Resources.Translations {
+namespace Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Resources.Translations {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Resources.Translations.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Resources.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -106,6 +106,33 @@ namespace Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Episode number.
+        /// </summary>
+        public static string EpisodeNumber {
+            get {
+                return ResourceManager.GetString("EpisodeNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movie(s).
+        /// </summary>
+        public static string Movie {
+            get {
+                return ResourceManager.GetString("Movie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get notified a day after the release.
         /// </summary>
         public static string NotifyDayLater {
@@ -142,11 +169,47 @@ namespace Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Release date.
+        /// </summary>
+        public static string ReleaseDate {
+            get {
+                return ResourceManager.GetString("ReleaseDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remaining episodes.
+        /// </summary>
+        public static string RemainingEpisodes {
+            get {
+                return ResourceManager.GetString("RemainingEpisodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Season.
+        /// </summary>
+        public static string Season {
+            get {
+                return ResourceManager.GetString("Season", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show(s).
+        /// </summary>
+        public static string Shows {
+            get {
+                return ResourceManager.GetString("Shows", resourceCulture);
             }
         }
         

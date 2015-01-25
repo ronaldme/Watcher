@@ -6,13 +6,27 @@
 <link href="~/Content/DataTables-1.10.4/media/css/jquery.dataTables.min.css" rel="stylesheet" />
 
 <div style="margin-top: 10px;">
-    <table id="table" class="display" cellspacing="0" width="100%">
+    <h2>@Resources.Resources.Shows</h2>
+    <table id="showTable" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>Release date</th>
-                <th>Episode number</th>
+                <th>@Resources.Resources.Name</th>
+                <th>@Resources.Resources.ReleaseDate</th>
+                <th>@Resources.Resources.Season</th>
+                <th>@Resources.Resources.EpisodeNumber</th>
+                <th>@Resources.Resources.RemainingEpisodes</th>
+            </tr>
+        </thead>
+    </table>
+    
+    <h2>@Resources.Resources.Movie</h2>
+    <table id="movieTable" class="display" cellspacing="0" width="70%" style="float: left">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>@Resources.Resources.Name</th>
+                <th>@Resources.Resources.ReleaseDate</th>
             </tr>
         </thead>
     </table>
@@ -40,24 +54,47 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#table').dataTable({
+        $('#showTable').dataTable({
             serverSide: true,
             bFilter: false,
             bInfo: false,
             bPaginate: false,
             ajax: {
-                'url': '@Url.Action("GetSubscriptions", "Subscriptions")',
+                'url': '@Url.Action("GetTvSubscriptions", "Subscriptions")',
             },
             columns: [
                 { data: 'Id', orderable: false, visible: false },
                 { data: 'Name', orderable: false },
                 { data: 'ReleaseDate', orderable: false },
-                { data: 'EpisodeNumber', orderable: false }
+                { data: 'CurrentSeason', orderable: false },
+                { data: 'EpisodeNumber', orderable: false },
+                { data: 'Remaining', orderable: false }
             ]
         });
 
-        $('#table tbody').on('click', 'tr', function () {
-            var rowData = $('#table').DataTable().row(this).data();
+        $('#showTable tbody').on('click', 'tr', function () {
+            var rowData = $('#showTable').DataTable().row(this).data();
+
+            displayInfo(rowData.Id, rowData.Name);
+        });
+
+        $('#movieTable').dataTable({
+            serverSide: true,
+            bFilter: false,
+            bInfo: false,
+            bPaginate: false,
+            ajax: {
+                'url': '@Url.Action("GetMovieSubscriptions", "Subscriptions")',
+            },
+            columns: [
+                { data: 'Id', orderable: false, visible: false },
+                { data: 'Name', orderable: false },
+                { data: 'ReleaseDate', orderable: false }
+            ]
+        });
+
+        $('#movieTable tbody').on('click', 'tr', function () {
+            var rowData = $('#movieTable').DataTable().row(this).data();
 
             displayInfo(rowData.Id, rowData.Name);
         });

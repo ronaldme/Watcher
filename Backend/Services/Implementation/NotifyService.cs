@@ -84,13 +84,10 @@ namespace Services
                         {
                             Destination = user.Email,
                             Message = GetSubject(notificationList),
-                            Subject = "New releases today!"
+                            Subject = "New releases!"
                         });
                     }
-                    catch (Exception e)
-                    {
-                        // sending mail time-out
-                    }
+                    catch (Exception e) { }
 
                     if (!string.IsNullOrEmpty(user.NotifyMyAndroidKey))
                     {
@@ -108,19 +105,18 @@ namespace Services
         private static void AddMovie(User user, List<string> notificationList, bool notifyDayLater)
         {
             notificationList.AddRange(
-                from movie in user.Movies 
+                from movie in user.Movies
                 where movie.ReleaseDate.HasValue && 
-                (notifyDayLater ? movie.ReleaseDate.Value.Day + 1 == DateTime.UtcNow.Day : movie.ReleaseDate.Value.Day == DateTime.UtcNow.Day)
+                (notifyDayLater ? movie.ReleaseDate.Value.Date.AddDays(1) == DateTime.UtcNow.Date : movie.ReleaseDate.Value.Date == DateTime.UtcNow.Date)
                 select movie.Name);
         }
-
 
         private static void AddShow(User user, List<string> notificationList, bool notifyDayLater)
         {
             notificationList.AddRange(
                 from show in user.Shows
-                where show.ReleaseNextEpisode.HasValue && 
-                (notifyDayLater ? show.ReleaseNextEpisode.Value.Day + 1 == DateTime.UtcNow.Day : show.ReleaseNextEpisode.Value.Day == DateTime.UtcNow.Day)
+                where show.ReleaseNextEpisode.HasValue &&
+                (notifyDayLater ? show.ReleaseNextEpisode.Value.Date.AddDays(1) == DateTime.UtcNow.Date : show.ReleaseNextEpisode.Value.Date == DateTime.UtcNow.Date)
                 select show.Name);
         }
     }

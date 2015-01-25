@@ -28,7 +28,8 @@ namespace Services
             // Run all methods implemented from the ISearchTV interface
             typeof(IUserSubscriptionService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
 
-            disposables.Add(bus.Respond<SubscriptionRequest, SubscriptionListDTO>(GetSubscriptions));
+            disposables.Add(bus.Respond<ShowSubscriptionRequest, ShowSubscriptionListDto>(GetShowSubscriptions));
+            disposables.Add(bus.Respond<MovieSubscriptionRequest, MovieSubscriptionListDto>(GetMovieSubscriptions));
         }
 
         public void Stop()
@@ -54,8 +55,9 @@ namespace Services
                         Id = x.Id,
                         Name = x.Name,
                         ReleaseNextEpisode = x.ReleaseNextEpisode,
-                        LastFinishedSeason = x.LastFinishedSeason,
-                        NextEpisode = x.NextEpisode
+                        CurrentSeason = x.CurrentSeason,
+                        NextEpisode = x.NextEpisode,
+                        EpisodeCount = x.EpisodeCount
                     }).ToList()
                 };
             }
@@ -80,7 +82,6 @@ namespace Services
                         Id = x.Id,
                         Name = x.Name,
                         ReleaseDate = x.ReleaseDate.Value
-
                     }).ToList()
                 };    
             }
@@ -110,16 +111,53 @@ namespace Services
             return new PersonListDTO();
         }
 
-        private SubscriptionListDTO GetSubscriptions(SubscriptionRequest subscriptionRequest)
+        private ShowSubscriptionListDto GetShowSubscriptions(ShowSubscriptionRequest subscriptionRequest)
         {
-            var movies = GetUsersMovies(new MovieList {Email = subscriptionRequest.Email}).Movies;
             var shows = GetUsersShows(new TvList {Email = subscriptionRequest.Email}).TvShows;
+            var resultSet = new List<ShowSubscriptionsDTO>();
 
-            var resultSet = new List<SubscriptionsDTO>();
+            if (shows != null)
+            {
+                resultSet.AddRange(shows.Select(show => new ShowSubscriptionsDTO
+                {
+                    Id = show.Id,
+                    Name = show.Name,
+                    ReleaseDate = show.ReleaseNextEpisode.HasValue ? show.ReleaseNextEpisode.Value : new DateTime(1),
+                    EpisodeNumber = show.NextEpisode,
+                    CurrentSeason = show.CurrentSeason,
+                    RemainingEpisodes = show.EpisodeCount - show.NextEpisode
+                }).ToList());
+            }
+
+            var data = resultSet.Select(x => new ShowSubscriptionsDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                ReleaseDate = x.ReleaseDate,
+                EpisodeNumber = x.EpisodeNumber,
+                CurrentSeason = x.CurrentSeason,
+                RemainingEpisodes = x.RemainingEpisodes
+            }).OrderByDescending(x => x.ReleaseDate)
+            .ThenBy(x => x.CurrentSeason)
+            .ThenBy(x => x.EpisodeNumber)
+            .ToList();
+
+            return new ShowSubscriptionListDto
+            {
+                Subscriptions = data,
+                Filtered = resultSet.Count
+            };
+        }
+
+        private MovieSubscriptionListDto GetMovieSubscriptions(MovieSubscriptionRequest subscriptionRequest)
+        {
+            var movies = GetUsersMovies(new MovieList { Email = subscriptionRequest.Email }).Movies;
+
+            var resultSet = new List<MovieSubscriptionsDTO>();
 
             if (movies != null)
             {
-                resultSet.AddRange(movies.Select(movie => new SubscriptionsDTO
+                resultSet.AddRange(movies.Select(movie => new MovieSubscriptionsDTO
                 {
                     Id = movie.Id,
                     Name = movie.Name,
@@ -127,28 +165,16 @@ namespace Services
                 }).ToList());
             }
 
-            if (shows != null)
-            {
-                resultSet.AddRange(shows.Select(show => new SubscriptionsDTO
-                {
-                    Id = show.Id,
-                    Name = show.Name,
-                    ReleaseDate = show.ReleaseNextEpisode.HasValue ? show.ReleaseNextEpisode.Value : new DateTime(1),
-                    EpisodeNumber = show.NextEpisode,
-                    LastFinishedSeason = show.LastFinishedSeason
-                }).ToList());
-            }
-
-            var data = resultSet.OrderByDescending(x => x.ReleaseDate).Select(x => new SubscriptionsDTO
+            var data = resultSet.Select(x => new MovieSubscriptionsDTO
             {
                 Id = x.Id,
                 Name = x.Name,
-                ReleaseDate = x.ReleaseDate,
-                EpisodeNumber = x.EpisodeNumber,
-                LastFinishedSeason = x.LastFinishedSeason
-            }).ToList();
+                ReleaseDate = x.ReleaseDate
+            })
+            .OrderByDescending(x => x.ReleaseDate)
+            .ToList();
 
-            return new SubscriptionListDTO
+            return new MovieSubscriptionListDto
             {
                 Subscriptions = data,
                 Filtered = resultSet.Count

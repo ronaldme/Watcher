@@ -23,11 +23,11 @@ namespace Web.UI.Controllers
             return View();
         }
 
-        public JsonResult GetSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        public JsonResult GetTvSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
             string email = GetEmail();
 
-            var subscriptionsList = bus.Request<SubscriptionRequest, SubscriptionListDTO>(new SubscriptionRequest
+            var subscriptionsList = bus.Request<ShowSubscriptionRequest, ShowSubscriptionListDto>(new ShowSubscriptionRequest
             {
                 Email = email
             });
@@ -36,8 +36,28 @@ namespace Web.UI.Controllers
             {
                 x.Id,
                 x.Name,
-                x.EpisodeNumber,
-                x.LastFinishedSeason,
+                ReleaseDate = x.ReleaseDate.Year != 1 ? x.ReleaseDate.ToString("dd-MM-yyyy") : "Unknown",
+                CurrentSeason = x.CurrentSeason == 0 ? "" : x.CurrentSeason.ToString(),
+                EpisodeNumber = x.EpisodeNumber == 0 ? "" : x.EpisodeNumber.ToString(),
+                Remaining = x.RemainingEpisodes == 0 ? "" : x.RemainingEpisodes.ToString()
+            }).ToList();
+
+            return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetMovieSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        {
+            string email = GetEmail();
+
+            var subscriptionsList = bus.Request<MovieSubscriptionRequest, MovieSubscriptionListDto>(new MovieSubscriptionRequest
+            {
+                Email = email
+            });
+
+            var data = subscriptionsList.Subscriptions.Select(x => new
+            {
+                x.Id,
+                x.Name,
                 ReleaseDate = x.ReleaseDate.Year != 1 ? x.ReleaseDate.ToString("dd-MM-yyyy") : "Unknown"
             }).ToList();
 

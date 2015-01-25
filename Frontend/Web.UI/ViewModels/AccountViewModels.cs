@@ -4,9 +4,9 @@ namespace Web.UI.ViewModels
 {
     public class Account
     {
-        [EmailAddress(ErrorMessageResourceName = "EmailNotValid", ErrorMessageResourceType = typeof(Resources.Translations.Resources), ErrorMessage = null)]
-        [Required(ErrorMessageResourceName = "EmailRequired", ErrorMessageResourceType = typeof(Resources.Translations.Resources))]
-        [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "Email")]
+        [EmailAddress(ErrorMessageResourceName = "EmailNotValid", ErrorMessageResourceType = typeof(Resources.Resources), ErrorMessage = null)]
+        [Required(ErrorMessageResourceName = "EmailRequired", ErrorMessageResourceType = typeof(Resources.Resources))]
+        [Display(ResourceType = typeof(Resources.Resources), Name = "Email")]
         public string Email { get; set; }
     }
 
@@ -53,12 +53,12 @@ namespace Web.UI.ViewModels
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "Password")]
+        [Display(ResourceType = typeof(Resources.Resources), Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(ResourceType = typeof(Resources.Translations.Resources), Name = "ConfirmPassword")]
-        [Compare("Password", ErrorMessageResourceName = "DoNotMatch", ErrorMessage = null, ErrorMessageResourceType = typeof(Resources.Translations.Resources))]
+        [Display(ResourceType = typeof(Resources.Resources), Name = "ConfirmPassword")]
+        [Compare("Password", ErrorMessageResourceName = "DoNotMatch", ErrorMessage = null, ErrorMessageResourceType = typeof(Resources.Resources))]
         public string ConfirmPassword { get; set; }
     }
 }

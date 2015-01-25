@@ -74,20 +74,18 @@ namespace BLL
         public ShowDTO GetLatestEpisode(int tvId, List<Messages.DTO.Season> seasons)
         {
             CurrentNextSeason currentNextSeason = GetCurrentNextSeason(seasons);
-            
+
             var requestCurrent = (HttpWebRequest)WebRequest.Create(Urls.SearchTvSeasons(tvId, currentNextSeason.Current.Season_Number));
             string jsonCurrent = GetResponse(requestCurrent);
 
             var episodes = Convert.ToSeasons(jsonCurrent).Episodes; // episodes current season
-            
+
             // True: this season is finished
-            if (!string.IsNullOrEmpty(episodes[episodes.Count - 1].Air_Date) && DateTime.Parse(episodes[episodes.Count - 1].Air_Date) < DateTime.UtcNow)
+            if (!string.IsNullOrEmpty(episodes[episodes.Count - 1].Air_Date) && DateTime.Parse(episodes[episodes.Count - 1].Air_Date).Date < DateTime.UtcNow.Date)
             {
                 if (currentNextSeason.Next != null)
                 {
-                    var requestNext =
-                        (HttpWebRequest)
-                            WebRequest.Create(Urls.SearchTvSeasons(tvId, currentNextSeason.Next.Season_Number));
+                    var requestNext = (HttpWebRequest)WebRequest.Create(Urls.SearchTvSeasons(tvId, currentNextSeason.Next.Season_Number));
                     string jsonNext = GetResponse(requestNext);
 
                     SeasonRootObject nextSeason = Convert.ToSeasons(jsonNext);
@@ -99,27 +97,30 @@ namespace BLL
                             return new ShowDTO
                             {
                                 NextEpisode = 1,
-                                LastFinishedSeason = nextSeason.Season_Number - 1,
+                                CurrentSeason = nextSeason.Season_Number,
+                                EpisodeCount = nextSeason.Episodes.Count,
                                 ReleaseNextEpisode = DateTime.Parse(nextSeason.Episodes[0].Air_Date)
                             };
-                        } 
+                        }
                         return new ShowDTO
                         {
                             NextEpisode = 1,
-                            LastFinishedSeason = nextSeason.Season_Number - 1,
+                            CurrentSeason = nextSeason.Season_Number,
+                            EpisodeCount = nextSeason.Episodes.Count,
                             ReleaseNextEpisode = null
                         };
                     }
 
                     foreach (Episode episode in nextSeason.Episodes)
                     {
-                        if (!string.IsNullOrEmpty(episode.Air_Date) && DateTime.Parse(episode.Air_Date) >= DateTime.UtcNow)
+                        if (!string.IsNullOrEmpty(episode.Air_Date) && DateTime.Parse(episode.Air_Date).Date >= DateTime.UtcNow.Date)
                         {
                             return new ShowDTO
                             {
                                 NextEpisode = episode.Episode_Number,
-                                LastFinishedSeason = nextSeason.Season_Number - 1,
-                                ReleaseNextEpisode = DateTime.Parse(episode.Air_Date)
+                                CurrentSeason = nextSeason.Season_Number,
+                                ReleaseNextEpisode = DateTime.Parse(episode.Air_Date),
+                                EpisodeCount = nextSeason.Episodes.Count
                             };
                         }
                     }
@@ -128,16 +129,16 @@ namespace BLL
                 {
                     return new ShowDTO
                     {
-                        LastFinishedSeason = currentNextSeason.Current.Season_Number,
-                        NextEpisode = 1
+                        CurrentSeason = currentNextSeason.Current.Season_Number, 
+                        NextEpisode = 0
                     };
                 }
             }
-            
+
             // Current season is not yet finished
             for (int i = episodes.Count - 1; i >= 0; i--)
             {
-                if (!string.IsNullOrEmpty(episodes[i].Air_Date) && DateTime.Parse(episodes[i].Air_Date) < DateTime.UtcNow)
+                if (!string.IsNullOrEmpty(episodes[i].Air_Date) && DateTime.Parse(episodes[i].Air_Date).Date <= DateTime.UtcNow.Date)
                 {
                     Episode nextEpisode = episodes[i];
 
@@ -145,7 +146,8 @@ namespace BLL
                     {
                         NextEpisode = nextEpisode.Episode_Number,
                         ReleaseNextEpisode = DateTime.Parse(nextEpisode.Air_Date),
-                        LastFinishedSeason = nextEpisode.Season_Number - 1
+                        CurrentSeason = nextEpisode.Season_Number,
+                        EpisodeCount = episodes.Count
                     };
                 }
             }

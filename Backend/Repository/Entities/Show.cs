@@ -18,8 +18,9 @@ namespace Repository.Entities
         [StringLength(100)]
         public string Name { get; set; }
 
-        public int LastFinishedSeason { get; set; }
+        public int CurrentSeason { get; set; }
         public int NextEpisode { get; set; }
+        public int EpisodeCount { get; set; }
         public DateTime? ReleaseNextEpisode { get; set; }
 
         public int TheMovieDbId { get; set; }

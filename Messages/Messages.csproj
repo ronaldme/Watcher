@@ -43,7 +43,7 @@
     <Compile Include="DTO\MovieDTO.cs" />
     <Compile Include="DTO\MovieListDTO.cs" />
     <Compile Include="DTO\PersonListDTO.cs" />
-    <Compile Include="DTO\SubscriptionListDTO.cs" />
+    <Compile Include="DTO\ShowSubscriptionListDto.cs" />
     <Compile Include="DTO\ShowDTO.cs" />
     <Compile Include="DTO\TvShowListDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
