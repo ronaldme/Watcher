@@ -105,6 +105,17 @@ namespace BLL.Json
                 Birthday = deserialized.Birthday
             };
         }
+
+        public static List<PersonDTO> ToPersonInfo(string json)
+        {
+            var deserialized = JsonConvert.DeserializeObject<RootObjectInfo>(json);
+
+            return deserialized.Cast.Select(x => new PersonDTO
+            {
+                ReleaseDate = !string.IsNullOrEmpty(x.release_date) ? DateTime.Parse(x.release_date) : (DateTime?)null,
+                ProductionName = x.original_title
+            }).ToList();
+        }
         #endregion
 
         public static SeasonRootObject ToSeasons(string json)

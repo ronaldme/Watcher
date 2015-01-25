@@ -40,7 +40,12 @@ namespace BLL
 
         public static string SearchTvSeasons(int tvId, int season)
         {
-            return string.Format("{0}{1}{2}{3}{4}{5}", PreFixUrl, "tv/", tvId, "/season/", season, SuffixUrl); 
+            return string.Format("{0}{1}/{2}/{3}/{4}{5}", PreFixUrl, "tv", tvId, "season", season, SuffixUrl); 
+        }
+
+        public static string PersonCredits(int personId)
+        {
+            return string.Format("{0}{1}/{2}/{3}{4}", PreFixUrl, "person", personId, "movie_credits", SuffixUrl);
         }
 
         public static string SearchBy(string searchUrl, int id)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using BLL.Json.Shows;
 using Messages.DTO;
@@ -138,9 +139,11 @@ namespace BLL
             // Current season is not yet finished
             for (int i = episodes.Count - 1; i >= 0; i--)
             {
-                if (!string.IsNullOrEmpty(episodes[i].Air_Date) && DateTime.Parse(episodes[i].Air_Date).Date <= DateTime.UtcNow.Date)
+                if (!string.IsNullOrEmpty(episodes[i].Air_Date) && DateTime.Parse(episodes[i].Air_Date).Date < DateTime.UtcNow.Date)
                 {
-                    Episode nextEpisode = episodes[i];
+                    var episodeNumber = i == episodes.Count ? episodes.Count : i + 1;
+
+                    Episode nextEpisode = episodes[episodeNumber];
 
                     return new ShowDTO
                     {
@@ -167,8 +170,28 @@ namespace BLL
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchPersonById, id));
             string json = GetResponse(request);
+            var personDto = Convert.ToPerson(json);
 
-            return Convert.ToPerson(json);
+            var requestInfo = (HttpWebRequest)WebRequest.Create(Urls.PersonCredits(id));
+            string jsonInfo = GetResponse(requestInfo);
+
+            var personInfo = Convert.ToPersonInfo(jsonInfo).OrderByDescending(x => x.ReleaseDate).ToList();
+
+            for (int i = 0; i < personInfo.Count; i++)
+            {
+                var dto = personInfo[i];
+
+                if (dto.ReleaseDate.HasValue && dto.ReleaseDate.Value.Date < DateTime.UtcNow.Date)
+                {
+                    var number = i == personInfo.Count ? i : i - 1;
+
+                    personDto.ProductionName = personInfo[number].ProductionName;
+                    personDto.ReleaseDate = personInfo[number].ReleaseDate;
+                    break;
+                }
+            }
+
+            return personDto;
         }
         #endregion
 

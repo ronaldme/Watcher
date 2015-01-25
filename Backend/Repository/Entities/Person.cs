@@ -19,6 +19,8 @@ namespace Repository.Entities
         public string Name { get; set; }
 
         public DateTime? Birthday { get; set; }
+        public string ProductionName { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         public int? TheMovieDbId { get; set; }
 

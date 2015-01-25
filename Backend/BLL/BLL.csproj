@@ -48,7 +48,9 @@
     <Compile Include="ITheMovieDb.cs" />
     <Compile Include="Json\Movies\Dates.cs" />
     <Compile Include="Json\Movies\RootObjectMovies.cs" />
+    <Compile Include="Json\Persons\Cast.cs" />
     <Compile Include="Json\Persons\PersonObject.cs" />
+    <Compile Include="Json\Persons\RootObjectInfo.cs" />
     <Compile Include="Json\Persons\RootObjectPerson.cs" />
     <Compile Include="Json\Persons\KnownFor.cs" />
     <Compile Include="Json\Persons\ResultAct.cs" />

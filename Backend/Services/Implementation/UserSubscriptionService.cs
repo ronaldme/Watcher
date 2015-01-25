@@ -30,8 +30,9 @@ namespace Services
 
             disposables.Add(bus.Respond<ShowSubscriptionRequest, ShowSubscriptionListDto>(GetShowSubscriptions));
             disposables.Add(bus.Respond<MovieSubscriptionRequest, MovieSubscriptionListDto>(GetMovieSubscriptions));
+            disposables.Add(bus.Respond<PersonSubscriptionRequest, PersonSubscriptionListDto>(GetPersonSubscriptions));
         }
-
+        
         public void Stop()
         {
             disposables.ForEach(x => x.Dispose());
@@ -125,7 +126,7 @@ namespace Services
                     ReleaseDate = show.ReleaseNextEpisode.HasValue ? show.ReleaseNextEpisode.Value : new DateTime(1),
                     EpisodeNumber = show.NextEpisode,
                     CurrentSeason = show.CurrentSeason,
-                    RemainingEpisodes = show.EpisodeCount - show.NextEpisode
+                    RemainingEpisodes = show.EpisodeCount - show.NextEpisode + 1 // also count next episode
                 }).ToList());
             }
 
@@ -179,6 +180,49 @@ namespace Services
                 Subscriptions = data,
                 Filtered = resultSet.Count
             };
+        }
+
+        private PersonSubscriptionListDto GetPersonSubscriptions(PersonSubscriptionRequest request)
+        {
+            var persons = GetPersonMovies(request.Email).Persons;
+            var data = new List<PersonSubscriptionsDTO>();
+
+            if (persons != null)
+            {
+                data.AddRange(persons.Select(person => new PersonSubscriptionsDTO
+                {
+                    Id = person.Id,
+                    Name = person.Name,
+                    ReleaseDate = person.ReleaseDate,
+                    ProductionName = person.ProductionName
+                }).ToList().OrderByDescending(x => x.ReleaseDate));
+            }
+
+            return new PersonSubscriptionListDto
+            {
+                Subscriptions = data,
+                Filtered = data.Count
+            };
+        }
+
+        private PersonListDTO GetPersonMovies(string email)
+        {
+            var user = usersRepository.All().FirstOrDefault(x => x.Email == email);
+
+            if (user != null)
+            {
+                return new PersonListDTO
+                {
+                    Persons = user.Persons.Select(x => new PersonDTO
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        ProductionName = x.ProductionName,
+                        ReleaseDate = x.ReleaseDate
+                    }).ToList()
+                };
+            }
+            return new PersonListDTO();
         }
     }
 }

@@ -25,11 +25,9 @@ namespace Web.UI.Controllers
 
         public JsonResult GetTvSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
-            string email = GetEmail();
-
             var subscriptionsList = bus.Request<ShowSubscriptionRequest, ShowSubscriptionListDto>(new ShowSubscriptionRequest
             {
-                Email = email
+                Email = GetEmail()
             });
 
             var data = subscriptionsList.Subscriptions.Select(x => new
@@ -47,18 +45,34 @@ namespace Web.UI.Controllers
 
         public JsonResult GetMovieSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
-            string email = GetEmail();
-
             var subscriptionsList = bus.Request<MovieSubscriptionRequest, MovieSubscriptionListDto>(new MovieSubscriptionRequest
             {
-                Email = email
+                Email = GetEmail()
             });
 
             var data = subscriptionsList.Subscriptions.Select(x => new
             {
                 x.Id,
                 x.Name,
-                ReleaseDate = x.ReleaseDate.Year != 1 ? x.ReleaseDate.ToString("dd-MM-yyyy") : "Unknown"
+                ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown"
+            }).ToList();
+
+            return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetPersonSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        {
+            var subscriptionsList = bus.Request<PersonSubscriptionRequest, PersonSubscriptionListDto>(new PersonSubscriptionRequest
+            {
+                Email = GetEmail()
+            });
+
+            var data = subscriptionsList.Subscriptions.Select(x => new
+            {
+                x.Id,
+                x.Name,
+                x.ProductionName,
+                ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown"
             }).ToList();
 
             return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);

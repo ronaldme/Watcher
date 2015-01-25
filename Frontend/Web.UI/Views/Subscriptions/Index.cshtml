@@ -21,11 +21,23 @@
     </table>
     
     <h2>@Resources.Resources.Movie</h2>
-    <table id="movieTable" class="display" cellspacing="0" width="70%" style="float: left">
+    <table id="movieTable" class="display" cellspacing="0" width="100%" style="float: left">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>@Resources.Resources.Name</th>
+                <th>@Resources.Resources.ReleaseDate</th>
+            </tr>
+        </thead>
+    </table>
+    
+    <h2>@Resources.Resources.Person</h2>
+    <table id="personTable" class="display" cellspacing="0" width="100%" style="float: left">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>@Resources.Resources.Name</th>
+                <th>@Resources.Resources.ProductionName</th>
                 <th>@Resources.Resources.ReleaseDate</th>
             </tr>
         </thead>
@@ -95,6 +107,28 @@
 
         $('#movieTable tbody').on('click', 'tr', function () {
             var rowData = $('#movieTable').DataTable().row(this).data();
+
+            displayInfo(rowData.Id, rowData.Name);
+        });
+
+        $('#personTable').dataTable({
+            serverSide: true,
+            bFilter: false,
+            bInfo: false,
+            bPaginate: false,
+            ajax: {
+                'url': '@Url.Action("GetPersonSubscriptions", "Subscriptions")',
+            },
+            columns: [
+                { data: 'Id', orderable: false, visible: false },
+                { data: 'Name', orderable: false },
+                { data: 'ProductionName', orderable: false },
+                { data: 'ReleaseDate', orderable: false }
+            ]
+        });
+
+        $('#personTable tbody').on('click', 'tr', function () {
+            var rowData = $('#personTable').DataTable().row(this).data();
 
             displayInfo(rowData.Id, rowData.Name);
         });

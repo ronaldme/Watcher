@@ -169,6 +169,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Person(s).
+        /// </summary>
+        public static string Person {
+            get {
+                return ResourceManager.GetString("Person", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Production name.
+        /// </summary>
+        public static string ProductionName {
+            get {
+                return ResourceManager.GetString("ProductionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release date.
         /// </summary>
         public static string ReleaseDate {

@@ -218,38 +218,19 @@ namespace Services
                 {
                     if (person == null)
                     {
-                        person = personRepository.Insert(new Person
-                        {
-                            Name = personSubscription.Name,
-                            TheMovieDbId = personSubscription.TheMovieDbId,
-                            Birthday = DateTime.Parse(personInfo.Birthday)
-                        });
-
-                        usersRepository.Insert(new User
-                        {
-                            Email = personSubscription.EmailUser,
-                            Persons = new Collection<Person> { person }
-                        });
+                        person = AddPerson(personSubscription, personInfo);
+                        AddUser(personSubscription, person);
                     }
                     else
                     {
-                        usersRepository.Insert(new User
-                        {
-                            Email = personSubscription.EmailUser,
-                            Persons = new Collection<Person> { person }
-                        });
+                        AddUser(personSubscription, person);
                     }
                 }
                 else
                 {
                     if (person == null)
                     {
-                        person = personRepository.Insert(new Person
-                        {
-                            Name = personSubscription.Name,
-                            TheMovieDbId = personSubscription.TheMovieDbId,
-                            Birthday = DateTime.Parse(personInfo.Birthday)
-                        });
+                        person = AddPerson(personSubscription, personInfo);
                         user.Persons.Add(person);
                     }
                     else
@@ -270,6 +251,28 @@ namespace Services
                 };
             }
         }
+
+        private Person AddPerson(PersonSubscription personSubscription, PersonDTO personInfo)
+        {
+            return personRepository.Insert(new Person
+            {
+                Name = personSubscription.Name,
+                TheMovieDbId = personSubscription.TheMovieDbId,
+                Birthday = DateTime.Parse(personInfo.Birthday),
+                ProductionName = personInfo.ProductionName,
+                ReleaseDate = personInfo.ReleaseDate
+            });
+        }
+
+        private void AddUser(PersonSubscription personSubscription, Person person)
+        {
+            usersRepository.Insert(new User
+            {
+                Email = personSubscription.EmailUser,
+                Persons = new Collection<Person> {person}
+            });
+        }
+
         #endregion
 
         public void Unsubscribe()
