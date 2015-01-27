@@ -183,7 +183,7 @@ namespace BLL
 
                 if (dto.ReleaseDate.HasValue && dto.ReleaseDate.Value.Date < DateTime.UtcNow.Date)
                 {
-                    var number = i == personInfo.Count ? i : i - 1;
+                    var number = i == personInfo.Count ? i : (i - 1 < 0 ? 0 : i - 1);
 
                     personDto.ProductionName = personInfo[number].ProductionName;
                     personDto.ReleaseDate = personInfo[number].ReleaseDate;
