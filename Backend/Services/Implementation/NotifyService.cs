@@ -73,7 +73,7 @@ namespace Services
                 }
                 if (user.Persons != null)
                 {
-                    // implement later
+                    AddPerson(user, notificationList, notifyDayLater);
                 }
 
                 if (notificationList.Count > 0)
@@ -87,7 +87,7 @@ namespace Services
                             Subject = "New releases!"
                         });
                     }
-                    catch (Exception e) { }
+                    catch (Exception) { }
 
                     if (!string.IsNullOrEmpty(user.NotifyMyAndroidKey))
                     {
@@ -106,7 +106,7 @@ namespace Services
         {
             notificationList.AddRange(
                 from movie in user.Movies
-                where movie.ReleaseDate.HasValue && 
+                where movie.ReleaseDate.HasValue &&
                 (notifyDayLater ? movie.ReleaseDate.Value.Date.AddDays(1) == DateTime.UtcNow.Date : movie.ReleaseDate.Value.Date == DateTime.UtcNow.Date)
                 select movie.Name);
         }
@@ -117,7 +117,16 @@ namespace Services
                 from show in user.Shows
                 where show.ReleaseNextEpisode.HasValue &&
                 (notifyDayLater ? show.ReleaseNextEpisode.Value.Date.AddDays(1) == DateTime.UtcNow.Date : show.ReleaseNextEpisode.Value.Date == DateTime.UtcNow.Date)
-                select show.Name);
+                select string.Format("{0} season: {1} Episode nr: {2}", show.Name, show.CurrentSeason, show.NextEpisode));
+        }
+
+        private static void AddPerson(User user, List<string> notificationList, bool notifyDayLater)
+        {
+            notificationList.AddRange(
+                from person in user.Persons
+                where person.ReleaseDate.HasValue &&
+                (notifyDayLater ? person.ReleaseDate.Value.Date.AddDays(1) == DateTime.UtcNow.Date : person.ReleaseDate.Value.Date == DateTime.UtcNow.Date)
+                select string.Format("{0} {1}", person.Name, person.ProductionName));
         }
     }
 }

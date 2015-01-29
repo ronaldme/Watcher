@@ -5,7 +5,6 @@ using BLL;
 using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
-using Repository.Repositories.Interfaces;
 using Services.Interfaces;
 
 namespace Services
@@ -14,13 +13,11 @@ namespace Services
     {
         private List<IDisposable> disposables;
         private readonly IBus bus;
-        private readonly IMovieRepository movieRepository;
         private readonly ITheMovieDb theMovieDb;
 
-        public MovieService(IBus bus, IMovieRepository movieRepository, ITheMovieDb theMovieDb)
+        public MovieService(IBus bus, ITheMovieDb theMovieDb)
         {
             this.bus = bus;
-            this.movieRepository = movieRepository;
             this.theMovieDb = theMovieDb;
         }
 
@@ -32,7 +29,6 @@ namespace Services
         public void Search()
         {
             disposables.Add(bus.Respond<MovieSearch, List<MovieDTO>>(x => new List<MovieDTO>(theMovieDb.SearchMovie(x.Search))));
-
         }
 
         public void SearchByPerson()

@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-using System.Data.Entity;
 using BLL;
 using BLL.Notifier;
 using Castle.MicroKernel.Registration;
@@ -23,9 +22,9 @@ namespace Services.DependencyInjection
 
             var emailNotifier = new MailNotifier();
             container.Register(Component.For<INotifyUser>().Instance(emailNotifier));
-
+            
             container.Register(Component.For<WatcherData>().LifeStyle.Singleton);
-
+            
             container.Register(
                 Classes.FromAssemblyContaining<TvShowService>()
                     .Where(type => true)

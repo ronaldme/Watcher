@@ -84,7 +84,7 @@ namespace Services
                         Name = x.Name,
                         ReleaseDate = x.ReleaseDate.Value
                     }).ToList()
-                };    
+                };
             }
             return new MovieListDTO();
         }
