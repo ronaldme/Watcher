@@ -73,8 +73,8 @@
     <Compile Include="Entities\Show.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Repositories\Interfaces\IUsersRepository.cs" />
-    <Compile Include="WatcherData.cs" />
     <Compile Include="UOW\UnitOfWork.cs" />
+    <Compile Include="WatcherContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

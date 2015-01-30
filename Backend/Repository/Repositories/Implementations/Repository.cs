@@ -3,52 +3,52 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Repository.Repositories.Interfaces;
+using Repository.UOW;
 
 namespace Repository.Repositories.Implementations
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected DbSet<T> DbSet;
-        private readonly DbContext dbContext;
-
-        public Repository(DbContext dataContext)
+        protected DbContext dbContext
         {
-            DbSet = dataContext.Set<T>();
-            dbContext = dataContext;
+            get
+            {
+                return UnitOfWork.Current.DbContext;
+            }
         }
 
         public T Insert(T entity)
         {
-            DbSet.Add(entity);
+            dbContext.Set<T>().Add(entity);
             dbContext.SaveChanges();
 
             return entity;
         }
 
-        public void Update()
+        public void Update(T entity)
         {
+            dbContext.Entry(entity).State = EntityState.Modified;
             dbContext.SaveChanges();
         }
 
         public void Delete(T entity)
         {
-            DbSet.Remove(entity);
-            dbContext.SaveChanges();
+            dbContext.Set<T>().Remove(entity);
+        }
+        
+        public IQueryable<T> All()
+        {
+            return dbContext.Set<T>();
         }
 
         public IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate)
         {
-            return DbSet.Where(predicate);
+            return dbContext.Set<T>().Where(predicate);
         }
-
-        public IQueryable<T> All()
-        {
-            return DbSet;
-        }
-
+        
         public T GetById(int id)
         {
-            return DbSet.Find(id);
+            return dbContext.Set<T>().Find(id);
         }
     }
 }

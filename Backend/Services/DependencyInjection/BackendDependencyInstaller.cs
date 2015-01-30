@@ -23,7 +23,7 @@ namespace Services.DependencyInjection
             var emailNotifier = new MailNotifier();
             container.Register(Component.For<INotifyUser>().Instance(emailNotifier));
             
-            container.Register(Component.For<WatcherData>().LifeStyle.Singleton);
+            container.Register(Component.For<WatcherContext>().LifeStyle.Singleton);
             
             container.Register(
                 Classes.FromAssemblyContaining<TvShowService>()

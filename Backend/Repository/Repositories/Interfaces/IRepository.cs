@@ -8,7 +8,7 @@ namespace Repository.Repositories.Interfaces
     {
         T Insert(T entity);
         void Delete(T entity);
-        void Update();
+        void Update(T entity);
         T GetById(int id);
         IQueryable<T> All();
         IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate);

@@ -3,11 +3,12 @@ using Repository.Entities;
 
 namespace Repository
 {
-    public class WatcherData : DbContext
+    public class WatcherContext : DbContext
     {
-        public WatcherData()
+        public WatcherContext()
             : base("name=WatcherData")
         {
+            Database.SetInitializer(new CreateDatabaseIfNotExists<WatcherContext>());
         }
 
         public virtual DbSet<Person> Persons { get; set; }

@@ -51,7 +51,7 @@ namespace Services
                     user.Email = request.Email;
                     user.NotifyDayLater = request.NotifyDayLater;
                     user.NotifyMyAndroidKey = request.NotifyMyAndroidKey;
-                    usersRepository.Update();
+                    usersRepository.Update(user);
                     
                     return new ManagementResponse { Success = true };
                 }

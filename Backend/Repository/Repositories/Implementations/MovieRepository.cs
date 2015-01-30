@@ -5,9 +5,5 @@ namespace Repository.Repositories.Implementations
 {
     public class MovieRepository : Repository<Movie>, IMovieRepository
     {
-        public MovieRepository(WatcherData dataContext)
-            : base(dataContext)
-        {
-        }
     }
 }
