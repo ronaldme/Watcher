@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Timers;
 using BLL.Notifier;
+using Repository;
 using Repository.Entities;
 using Repository.Repositories.Interfaces;
+using Repository.UOW;
 using Services.Interfaces;
 using Timer = System.Timers.Timer;
 
@@ -56,43 +58,57 @@ namespace Services
 
         private void Notify(object sender, ElapsedEventArgs args)
         {
-            var users = usersRepository.All();
-
-            foreach (User user in users.Where(x => x.NotifyHoursPastMidnight == DateTime.UtcNow.Hour))
+            using (var watcherContext = new WatcherContext())
             {
-                var notificationList = new List<string>();
-                bool notifyDayLater = user.NotifyDayLater;
+                UnitOfWork.Current = new UnitOfWork(watcherContext);
+                UnitOfWork.Current.BeginTransaction();
+                try
+                {
+                    var users = usersRepository.All();
 
-                if (user.Movies != null)
-                {
-                    AddMovie(user, notificationList, notifyDayLater);
-                }
-                if (user.Shows != null)
-                {
-                    AddShow(user, notificationList, notifyDayLater);
-                }
-                if (user.Persons != null)
-                {
-                    AddPerson(user, notificationList, notifyDayLater);
-                }
-
-                if (notificationList.Count > 0)
-                {
-                    try
+                    foreach (User user in users.Where(x => x.NotifyHoursPastMidnight == DateTime.UtcNow.Hour))
                     {
-                        notifyService.NotifyUser(new UserNotification
+                        var notificationList = new List<string>();
+                        bool notifyDayLater = user.NotifyDayLater;
+
+                        if (user.Movies != null)
                         {
-                            Destination = user.Email,
-                            Message = GetSubject(notificationList),
-                            Subject = "New releases!"
-                        });
-                    }
-                    catch (Exception) { }
+                            AddMovie(user, notificationList, notifyDayLater);
+                        }
+                        if (user.Shows != null)
+                        {
+                            AddShow(user, notificationList, notifyDayLater);
+                        }
+                        if (user.Persons != null)
+                        {
+                            AddPerson(user, notificationList, notifyDayLater);
+                        }
 
-                    if (!string.IsNullOrEmpty(user.NotifyMyAndroidKey))
-                    {
-                        NotifyMyAndroid.NotifyUser(notificationList, user.NotifyMyAndroidKey);
+                        if (notificationList.Count > 0)
+                        {
+                            try
+                            {
+                                notifyService.NotifyUser(new UserNotification
+                                {
+                                    Destination = user.Email,
+                                    Message = GetSubject(notificationList),
+                                    Subject = "New releases!"
+                                });
+                            }
+                            catch (Exception)
+                            {
+                            }
+
+                            if (!string.IsNullOrEmpty(user.NotifyMyAndroidKey))
+                            {
+                                NotifyMyAndroid.NotifyUser(notificationList, user.NotifyMyAndroidKey);
+                            }
+                        }
                     }
+                }
+                finally
+                {
+                    UnitOfWork.Current.Commit();
                 }
             }
         }

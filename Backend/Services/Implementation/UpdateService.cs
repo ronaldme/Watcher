@@ -3,8 +3,10 @@ using System.Configuration;
 using System.Timers;
 using BLL;
 using Messages.DTO;
+using Repository;
 using Repository.Entities;
 using Repository.Repositories.Interfaces;
+using Repository.UOW;
 using Services.Interfaces;
 using Convert = System.Convert;
 
@@ -53,32 +55,39 @@ namespace Services
 
         private void UpdateMoviesNow(object sender, ElapsedEventArgs args)
         {
-            try
+            using (var watcherContext = new WatcherContext())
             {
-                var movies = movieRepository.All();
-
-                foreach (Movie movie in movies)
+                UnitOfWork.Current = new UnitOfWork(watcherContext);
+                UnitOfWork.Current.BeginTransaction();
+                try
                 {
-                    MovieDTO movieInfo = theMovieDb.GetMovieBy(movie.TheMovieDbId);
+                    var movies = movieRepository.All();
 
-                    if (movie.ReleaseDate.HasValue)
+                    foreach (Movie movie in movies)
                     {
-                        if (movie.ReleaseDate.Value != movieInfo.ReleaseDate)
+                        MovieDTO movieInfo = theMovieDb.GetMovieBy(movie.TheMovieDbId);
+
+                        if (movie.ReleaseDate.HasValue)
                         {
-                            movie.ReleaseDate = movieInfo.ReleaseDate;
+                            if (movie.ReleaseDate.Value != movieInfo.ReleaseDate)
+                            {
+                                movie.ReleaseDate = movieInfo.ReleaseDate;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (movieInfo.ReleaseDate > DateTime.MinValue)
+                        else
                         {
-                            movie.ReleaseDate = movieInfo.ReleaseDate;
+                            if (movieInfo.ReleaseDate > DateTime.MinValue)
+                            {
+                                movie.ReleaseDate = movieInfo.ReleaseDate;
+                            }
                         }
                     }
                 }
-                movieRepository.Update();
+                finally
+                {
+                    UnitOfWork.Current.Commit();
+                }
             }
-            catch (Exception e) { }
         }
         
         public void UpdateEpisodes()
@@ -90,24 +99,30 @@ namespace Services
 
         private void UpdateShowsNow(object sender, ElapsedEventArgs args)
         {
-            try
+            using (var watcherContext = new WatcherContext())
             {
-                var shows = showRepository.All();
-
-                foreach (Show show in shows)
+                UnitOfWork.Current = new UnitOfWork(watcherContext);
+                UnitOfWork.Current.BeginTransaction();
+                try
                 {
-                    ShowDTO showInfo = theMovieDb.GetShowBy(show.TheMovieDbId);
-                    ShowDTO showDto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
+                    var shows = showRepository.All();
 
-                    if (showDto.ReleaseNextEpisode.HasValue && showDto.ReleaseNextEpisode != show.ReleaseNextEpisode)
+                    foreach (Show show in shows)
                     {
-                        show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
+                        ShowDTO showInfo = theMovieDb.GetShowBy(show.TheMovieDbId);
+                        ShowDTO showDto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
+
+                        if (showDto.ReleaseNextEpisode.HasValue && showDto.ReleaseNextEpisode != show.ReleaseNextEpisode)
+                        {
+                            show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
+                        }
                     }
                 }
-
-                showRepository.Update();
+                finally
+                {
+                    UnitOfWork.Current.Commit();
+                }
             }
-            catch (Exception e) { }
         }
     }
 }

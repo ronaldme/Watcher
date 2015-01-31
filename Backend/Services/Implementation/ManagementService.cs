@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyNetQ;
 using Messages.Request;
+using Repository;
 using Repository.Entities;
 using Repository.Repositories.Interfaces;
+using Repository.UOW;
 using Services.Interfaces;
 
 namespace Services
@@ -41,37 +43,49 @@ namespace Services
 
         private ManagementResponse Manage(ManagementRequest request)
         {
-            var user = usersRepository.All().FirstOrDefault(x => x.Email == request.OldEmail);
-
-            if (user != null)
+            using (var watcherContext = new WatcherContext())
             {
-                if (request.SetData)
+                UnitOfWork.Current = new UnitOfWork(watcherContext);
+                UnitOfWork.Current.BeginTransaction();
+                try
                 {
-                    user.NotifyHoursPastMidnight = request.NotifyHour;
-                    user.Email = request.Email;
-                    user.NotifyDayLater = request.NotifyDayLater;
-                    user.NotifyMyAndroidKey = request.NotifyMyAndroidKey;
-                    usersRepository.Update(user);
-                    
-                    return new ManagementResponse { Success = true };
+                    var user = usersRepository.All().FirstOrDefault(x => x.Email == request.OldEmail);
+
+                    if (user != null)
+                    {
+                        if (request.SetData)
+                        {
+                            user.NotifyHoursPastMidnight = request.NotifyHour;
+                            user.Email = request.Email;
+                            user.NotifyDayLater = request.NotifyDayLater;
+                            user.NotifyMyAndroidKey = request.NotifyMyAndroidKey;
+                            usersRepository.Update(user);
+
+                            return new ManagementResponse {Success = true};
+                        }
+                        return new ManagementResponse
+                        {
+                            NotifyHour = user.NotifyHoursPastMidnight,
+                            NotifyDayLater = user.NotifyDayLater,
+                            NotifyMyAndroidKey = user.NotifyMyAndroidKey
+                        };
+                    }
+
+                    usersRepository.Insert(new User
+                    {
+                        Email = request.Email,
+                        NotifyHoursPastMidnight = request.NotifyHour,
+                        NotifyMyAndroidKey = request.NotifyMyAndroidKey,
+                        NotifyDayLater = request.NotifyDayLater
+                    });
+
+                    return new ManagementResponse();
                 }
-                return new ManagementResponse
+                finally
                 {
-                    NotifyHour = user.NotifyHoursPastMidnight,
-                    NotifyDayLater = user.NotifyDayLater,
-                    NotifyMyAndroidKey = user.NotifyMyAndroidKey
-                };
+                    UnitOfWork.Current.Commit();
+                }
             }
-
-            usersRepository.Insert(new User
-            {
-                Email = request.Email,
-                NotifyHoursPastMidnight = request.NotifyHour,
-                NotifyMyAndroidKey = request.NotifyMyAndroidKey,
-                NotifyDayLater = request.NotifyDayLater
-            });
-
-            return new ManagementResponse();
         }
     }
 }
