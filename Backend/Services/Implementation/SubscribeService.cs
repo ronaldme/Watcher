@@ -234,8 +234,7 @@ namespace Services
                 try
                 {
                     User user = usersRepository.All().FirstOrDefault(x => x.Email == personSubscription.EmailUser);
-                    Person person =
-                        personRepository.All().FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
+                    Person person = personRepository.All().FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
                     PersonDTO personInfo = theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
 
                     if (user == null)
@@ -286,7 +285,7 @@ namespace Services
             {
                 Name = personSubscription.Name,
                 TheMovieDbId = personSubscription.TheMovieDbId,
-                Birthday = DateTime.Parse(personInfo.Birthday),
+                Birthday = !string.IsNullOrEmpty(personInfo.Birthday) ? DateTime.Parse(personInfo.Birthday) : (DateTime?)null,
                 ProductionName = personInfo.ProductionName,
                 ReleaseDate = personInfo.ReleaseDate
             });

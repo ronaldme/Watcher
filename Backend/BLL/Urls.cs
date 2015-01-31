@@ -45,7 +45,7 @@ namespace BLL
 
         public static string PersonCredits(int personId)
         {
-            return string.Format("{0}{1}/{2}/{3}{4}", PreFixUrl, "person", personId, "movie_credits", SuffixUrl);
+            return string.Format("{0}{1}/{2}/{3}{4}", PreFixUrl, "person", personId, "combined_credits", SuffixUrl);
         }
 
         public static string SearchBy(string searchUrl, int id)
