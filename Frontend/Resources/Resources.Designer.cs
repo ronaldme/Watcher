@@ -70,6 +70,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not change settings!.
+        /// </summary>
+        public static string CouldNotChangeSettings {
+            get {
+                return ResourceManager.GetString("CouldNotChangeSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The password and confirmation password do not match..
         /// </summary>
         public static string DoNotMatch {
@@ -111,6 +120,15 @@ namespace Resources {
         public static string EpisodeNumber {
             get {
                 return ResourceManager.GetString("EpisodeNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get email notifications.
+        /// </summary>
+        public static string GetEmailNotifications {
+            get {
+                return ResourceManager.GetString("GetEmailNotifications", resourceCulture);
             }
         }
         

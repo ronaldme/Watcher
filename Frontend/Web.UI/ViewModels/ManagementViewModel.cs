@@ -17,6 +17,9 @@ namespace Web.UI.ViewModels
         [EmailAddress]
         public string Email { get; set; }
 
+        [Display(ResourceType = typeof(Resources.Resources), Name = "GetEmailNotifications")]
+        public bool GetEmailNotifications { get; set; }
+
         public string OldEmail { get; set; }
 
         [Display(ResourceType = typeof(Resources.Resources), Name = "NotifyDayLater")]

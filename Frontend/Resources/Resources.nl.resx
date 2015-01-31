@@ -120,6 +120,9 @@
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Bevestig wachtwoord</value>
   </data>
+  <data name="CouldNotChangeSettings" xml:space="preserve">
+    <value>Instellingen konden niet worden aangepast</value>
+  </data>
   <data name="DoNotMatch" xml:space="preserve">
     <value>De wachtwoorden komen niet overeen</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="EpisodeNumber" xml:space="preserve">
     <value>Aflevering nummer</value>
+  </data>
+  <data name="GetEmailNotifications" xml:space="preserve">
+    <value>Ontvang email notificaties</value>
   </data>
   <data name="Movie" xml:space="preserve">
     <value>Film(s)</value>

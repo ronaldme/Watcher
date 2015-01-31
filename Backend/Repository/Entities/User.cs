@@ -18,9 +18,8 @@ namespace Repository.Entities
         [Required]
         [StringLength(255)]
         public string Email { get; set; }
-
+        public bool GetEmailNotifications { get; set; }
         public int NotifyHoursPastMidnight { get; set; }
-
         public string NotifyMyAndroidKey { get; set; }
         public bool NotifyDayLater { get; set; }
 

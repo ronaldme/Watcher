@@ -66,7 +66,8 @@ namespace Services
                 {
                     var users = usersRepository.All();
 
-                    foreach (User user in users.Where(x => x.NotifyHoursPastMidnight == DateTime.UtcNow.Hour))
+                    foreach (User user in users.Where(x => x.NotifyHoursPastMidnight == DateTime.UtcNow.Hour && 
+                        (x.GetEmailNotifications || !string.IsNullOrEmpty(x.NotifyMyAndroidKey))))
                     {
                         var notificationList = new List<string>();
                         bool notifyDayLater = user.NotifyDayLater;
@@ -88,12 +89,15 @@ namespace Services
                         {
                             try
                             {
-                                notifyService.NotifyUser(new UserNotification
+                                if (user.GetEmailNotifications)
                                 {
-                                    Destination = user.Email,
-                                    Message = GetSubject(notificationList),
-                                    Subject = "New releases!"
-                                });
+                                    notifyService.NotifyUser(new UserNotification
+                                    {
+                                        Destination = user.Email,
+                                        Message = GetSubject(notificationList),
+                                        Subject = "New releases!"
+                                    });
+                                }
                             }
                             catch (Exception)
                             {

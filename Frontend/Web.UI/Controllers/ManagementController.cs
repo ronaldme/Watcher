@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EasyNetQ;
@@ -36,7 +35,8 @@ namespace Web.UI.Controllers
                 Email = email,
                 OldEmail = email,
                 NotifyDayLater = response.NotifyDayLater,
-                NotifyMyAndroidKey = response.NotifyMyAndroidKey
+                NotifyMyAndroidKey = response.NotifyMyAndroidKey,
+                GetEmailNotifications = response.GetEmailNotifications
             });
         }
 
@@ -51,7 +51,8 @@ namespace Web.UI.Controllers
                     Email = viewModel.Email,
                     SetData = true,
                     NotifyDayLater = viewModel.NotifyDayLater,
-                    NotifyMyAndroidKey = viewModel.NotifyMyAndroidKey
+                    NotifyMyAndroidKey = viewModel.NotifyMyAndroidKey,
+                    GetEmailNotifications = viewModel.GetEmailNotifications
                 });
 
                 if (response.Success)
@@ -66,9 +67,11 @@ namespace Web.UI.Controllers
                     SetEmailCookie();
                 }
 
+                TempData["result"] = "Success";
                 return RedirectToAction("Index");
             }
 
+            TempData["result"] = Resources.Resources.CouldNotChangeSettings;
             return RedirectToAction("Index", viewModel);
         }
     }

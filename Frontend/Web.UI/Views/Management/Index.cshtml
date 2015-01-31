@@ -10,32 +10,51 @@
     {
         @Html.HiddenFor(x => x.OldEmail)
 
-        <div>
-            <p>@Html.LabelFor(x => x.SelectedNotifyHour)</p>
-            <p>@Html.DropDownListFor(x => x.SelectedNotifyHour, Model.Hours)</p>
-            <p style="color:red">@Html.ValidationMessageFor(x => x.SelectedNotifyHour)</p>
-        </div>
-
-        <div>
-            <p>@Html.LabelFor(x => x.NotifyDayLater)</p>
-            <p>@Html.CheckBoxFor(x => x.NotifyDayLater)</p>
-            <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyDayLater)</p>
-        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-sm-3">
+                <p>@Html.LabelFor(x => x.Email)</p>
+                <p>@Html.TextBoxFor(x => x.Email)</p>
+                <p style="color:red">@Html.ValidationMessageFor(x => x.Email)</p>
+            </div>
         
-        <div>
-            <p>@Html.LabelFor(x => x.NotifyMyAndroidKey)</p>
-            <p>@Html.TextBoxFor(x => x.NotifyMyAndroidKey)</p>
-            <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyMyAndroidKey)</p>
-        </div>
-            
-        <div>
-            <p>@Html.LabelFor(x => x.Email)</p>
-            <p>@Html.TextBoxFor(x => x.Email)</p>
-            <p style="color:red">@Html.ValidationMessageFor(x => x.Email)</p>
+            <div class="col-sm-3">
+                <p>@Html.LabelFor(x => x.NotifyMyAndroidKey)</p>
+                <p>@Html.TextBoxFor(x => x.NotifyMyAndroidKey)</p>
+                <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyMyAndroidKey)</p>
+            </div>
         </div>
 
-        <div>
-            <input type="submit" value="@Resources.Save" />
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-sm-3">
+                <p>@Html.LabelFor(x => x.GetEmailNotifications)</p>
+                <p>@Html.CheckBoxFor(x => x.GetEmailNotifications)</p>
+                <p style="color:red">@Html.ValidationMessageFor(x => x.GetEmailNotifications)</p>
+            </div>
+            <div class="col-sm-3">
+                <p>@Html.LabelFor(x => x.NotifyDayLater)</p>
+                <p>@Html.CheckBoxFor(x => x.NotifyDayLater)</p>
+                <p style="color:red">@Html.ValidationMessageFor(x => x.NotifyDayLater)</p>
+            </div>
         </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-sm-3">
+                <p>@Html.LabelFor(x => x.SelectedNotifyHour)</p>
+                <p>@Html.DropDownListFor(x => x.SelectedNotifyHour, Model.Hours)</p>
+                <p style="color:red">@Html.ValidationMessageFor(x => x.SelectedNotifyHour)</p>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-sm-3">
+                <input type="submit" value="@Resources.Save" />
+            </div>
+        </div>
+    }
+    
+    @if (TempData["result"] != null)
+    {
+        <div class="alert alert-success" style="margin-top:10px;" role="alert">@TempData["result"]</div>
+
     }
 </div>
