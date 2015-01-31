@@ -27,7 +27,9 @@ namespace Web.UI.Controllers
         {
             var subscriptionsList = bus.Request<ShowSubscriptionRequest, ShowSubscriptionListDto>(new ShowSubscriptionRequest
             {
-                Email = GetEmail()
+                Email = GetEmail(),
+                Start = requestModel.Start,
+                Length = requestModel.Length
             });
 
             var data = subscriptionsList.Subscriptions.Select(x => new
@@ -40,14 +42,16 @@ namespace Web.UI.Controllers
                 Remaining = x.RemainingEpisodes == 0 ? "" : x.RemainingEpisodes.ToString()
             }).ToList();
 
-            return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(requestModel.Draw, data, subscriptionsList.Filter.Filtered, subscriptionsList.Filter.Total), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetMovieSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
             var subscriptionsList = bus.Request<MovieSubscriptionRequest, MovieSubscriptionListDto>(new MovieSubscriptionRequest
             {
-                Email = GetEmail()
+                Email = GetEmail(),
+                Start = requestModel.Start,
+                Length = requestModel.Length
             });
 
             var data = subscriptionsList.Subscriptions.Select(x => new
@@ -57,14 +61,16 @@ namespace Web.UI.Controllers
                 ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown"
             }).ToList();
 
-            return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(requestModel.Draw, data, subscriptionsList.Filter.Filtered, subscriptionsList.Filter.Total), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetPersonSubscriptions([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
             var subscriptionsList = bus.Request<PersonSubscriptionRequest, PersonSubscriptionListDto>(new PersonSubscriptionRequest
             {
-                Email = GetEmail()
+                Email = GetEmail(),
+                Start = requestModel.Start,
+                Length = requestModel.Length
             });
 
             var data = subscriptionsList.Subscriptions.Select(x => new
@@ -75,7 +81,7 @@ namespace Web.UI.Controllers
                 ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown"
             }).ToList();
 
-            return Json(new DataTablesResponse(requestModel.Draw, data, data.Count(), subscriptionsList.Filtered), JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(requestModel.Draw, data, subscriptionsList.Filter.Filtered, subscriptionsList.Filter.Total), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Unsubscribe(int id, string name)

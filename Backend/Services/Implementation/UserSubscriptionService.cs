@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Messages;
 using Messages.DTO;
 using Messages.Request;
 using Repository;
@@ -29,10 +30,6 @@ namespace Services
 
             // Run all methods implemented from the ISearchTV interface
             typeof(IUserSubscriptionService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
-
-            disposables.Add(bus.Respond<ShowSubscriptionRequest, ShowSubscriptionListDto>(GetShowSubscriptions));
-            disposables.Add(bus.Respond<MovieSubscriptionRequest, MovieSubscriptionListDto>(GetMovieSubscriptions));
-            disposables.Add(bus.Respond<PersonSubscriptionRequest, PersonSubscriptionListDto>(GetPersonSubscriptions));
         }
         
         public void Stop()
@@ -42,136 +39,44 @@ namespace Services
 
         public void GetShows()
         {
-            disposables.Add(bus.Respond<TvList, TvShowListDTO>(GetUsersShows));
+            disposables.Add(bus.Respond<ShowSubscriptionRequest, ShowSubscriptionListDto>(GetShowSubscriptions));
         }
 
         public void GetMovies()
         {
-            disposables.Add(bus.Respond<MovieList, MovieListDTO>(GetUsersMovies));
+            disposables.Add(bus.Respond<MovieSubscriptionRequest, MovieSubscriptionListDto>(GetMovieSubscriptions));
         }
 
         public void GetPersons()
         {
-            disposables.Add(bus.Respond<PersonList, PersonListDTO>(GetUsersPersons));
+            disposables.Add(bus.Respond<PersonSubscriptionRequest, PersonSubscriptionListDto>(GetPersonSubscriptions));
         }
-        
-        private TvShowListDTO GetUsersShows(TvList tvList)
+
+        #region Persons
+        private PersonSubscriptionListDto GetPersonSubscriptions(PersonSubscriptionRequest request)
         {
+            var personListDto = new PersonListDTO();
+            int personCount = 0;
+
             using (var watcherContext = new WatcherContext())
             {
                 UnitOfWork.Current = new UnitOfWork(watcherContext);
                 UnitOfWork.Current.BeginTransaction();
                 try
                 {
-                    var user = usersRepository.All().FirstOrDefault(x => x.Email == tvList.Email);
+                    var user = usersRepository.All().FirstOrDefault(x => x.Email == request.Email);
 
                     if (user != null)
                     {
-                        return new TvShowListDTO
+                        personCount = user.Persons.Count;
+
+                        personListDto.Persons = user.Persons.Select(x => new PersonDTO
                         {
-                            TvShows = user.Shows.Select(x => new ShowDTO
-                            {
-                                Id = x.Id,
-                                Name = x.Name,
-                                ReleaseNextEpisode = x.ReleaseNextEpisode,
-                                CurrentSeason = x.CurrentSeason,
-                                NextEpisode = x.NextEpisode,
-                                EpisodeCount = x.EpisodeCount
-                            }).ToList()
-                        };
-                    }
-                }
-                finally
-                {
-                    UnitOfWork.Current.Commit();
-                }
-            }
-            return new TvShowListDTO();
-        }
-
-        private MovieListDTO GetUsersMovies(MovieList movieList)
-        {
-            using (var watcherContext = new WatcherContext())
-            {
-                UnitOfWork.Current = new UnitOfWork(watcherContext);
-                UnitOfWork.Current.BeginTransaction();
-                try
-                {
-                    var user = usersRepository.All().FirstOrDefault(x => x.Email == movieList.Email);
-
-                    if (user != null)
-                    {
-                        return new MovieListDTO
-                        {
-                            Movies = user.Movies.Select(x => new MovieDTO
-                            {
-                                Id = x.Id,
-                                Name = x.Name,
-                                ReleaseDate = x.ReleaseDate.Value
-                            }).ToList()
-                        };
-                    }
-                }
-                finally
-                {
-                    UnitOfWork.Current.Commit();
-                }
-            }
-            return new MovieListDTO();
-        }
-
-        private PersonListDTO GetUsersPersons(PersonList personList)
-        {
-            using (var watcherContext = new WatcherContext())
-            {
-                UnitOfWork.Current = new UnitOfWork(watcherContext);
-                UnitOfWork.Current.BeginTransaction();
-                try
-                {
-                    var user = usersRepository.All().FirstOrDefault(x => x.Email == personList.Email);
-
-                    if (user != null)
-                    {
-                        return new PersonListDTO
-                        {
-                            Persons = user.Persons.Select(x => new PersonDTO
-                            {
-                                Id = x.Id,
-                                Name = x.Name
-                            }).ToList()
-                        };
-                    }
-                }
-                finally
-                {
-                    UnitOfWork.Current.Commit();
-                }
-            }
-            return new PersonListDTO();
-        }
-
-        private PersonListDTO GetPersonMovies(string email)
-        {
-            using (var watcherContext = new WatcherContext())
-            {
-                UnitOfWork.Current = new UnitOfWork(watcherContext);
-                UnitOfWork.Current.BeginTransaction();
-                try
-                {
-                    var user = usersRepository.All().FirstOrDefault(x => x.Email == email);
-
-                    if (user != null)
-                    {
-                        return new PersonListDTO
-                        {
-                            Persons = user.Persons.Select(x => new PersonDTO
-                            {
-                                Id = x.Id,
-                                Name = x.Name,
-                                ProductionName = x.ProductionName,
-                                ReleaseDate = x.ReleaseDate
-                            }).ToList()
-                        };
+                            Id = x.Id,
+                            Name = x.Name,
+                            ProductionName = x.ProductionName,
+                            ReleaseDate = x.ReleaseDate,
+                        }).Skip(request.Start).Take(request.Length).ToList();
                     }
                 }
                 finally
@@ -179,18 +84,71 @@ namespace Services
                     UnitOfWork.Current.Commit();
                 }
 
-                return new PersonListDTO();
+                var personList = new List<PersonSubscriptionsDTO>();
+
+                if (personListDto.Persons != null)
+                {
+                    personList.AddRange(personListDto.Persons.Select(person => new PersonSubscriptionsDTO
+                    {
+                        Id = person.Id,
+                        Name = person.Name,
+                        ReleaseDate = person.ReleaseDate,
+                        ProductionName = person.ProductionName
+                    }).ToList().OrderByDescending(x => x.ReleaseDate));
+                }
+
+                return new PersonSubscriptionListDto
+                {
+                    Subscriptions = personList,
+                    Filter = new Filter
+                    {
+                        Filtered = personCount,
+                        Total = personList.Count
+                    }
+                };
             }
         }
+        #endregion
 
-        private ShowSubscriptionListDto GetShowSubscriptions(ShowSubscriptionRequest subscriptionRequest)
+        #region Shows
+        private ShowSubscriptionListDto GetShowSubscriptions(ShowSubscriptionRequest request)
         {
-            var shows = GetUsersShows(new TvList {Email = subscriptionRequest.Email}).TvShows;
-            var resultSet = new List<ShowSubscriptionsDTO>();
+            var showListDto = new TvShowListDTO();
+            int showCount = 0;
 
-            if (shows != null)
+            using (var watcherContext = new WatcherContext())
             {
-                resultSet.AddRange(shows.Select(show => new ShowSubscriptionsDTO
+                UnitOfWork.Current = new UnitOfWork(watcherContext);
+                UnitOfWork.Current.BeginTransaction();
+                try
+                {
+                    var user = usersRepository.All().FirstOrDefault(x => x.Email == request.Email);
+                    
+                    if (user != null)
+                    {
+                        showCount = user.Shows.Count();
+                        showListDto.TvShows = user.Shows.Select(x => new ShowDTO
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            ReleaseNextEpisode = x.ReleaseNextEpisode,
+                            CurrentSeason = x.CurrentSeason,
+                            NextEpisode = x.NextEpisode,
+                            EpisodeCount = x.EpisodeCount
+                        }).Skip(request.Start).Take(request.Length).ToList();
+                    }
+                }
+                finally
+                {
+                    UnitOfWork.Current.Commit();
+                }
+            }
+
+            var data = new List<ShowSubscriptionsDTO>();
+
+            if (showListDto.TvShows != null)
+            {
+                data.AddRange(showListDto.TvShows.Select(show => new ShowSubscriptionsDTO
                 {
                     Id = show.Id,
                     Name = show.Name,
@@ -198,81 +156,78 @@ namespace Services
                     EpisodeNumber = show.NextEpisode,
                     CurrentSeason = show.CurrentSeason,
                     RemainingEpisodes = show.EpisodeCount - show.NextEpisode + 1 // also count next episode
-                }).ToList());
+                })
+                .OrderByDescending(x => x.ReleaseDate)
+                .ThenBy(x => x.CurrentSeason).ThenBy(x => x.EpisodeNumber)
+                .ToList());
             }
-
-            var data = resultSet.Select(x => new ShowSubscriptionsDTO
-            {
-                Id = x.Id,
-                Name = x.Name,
-                ReleaseDate = x.ReleaseDate,
-                EpisodeNumber = x.EpisodeNumber,
-                CurrentSeason = x.CurrentSeason,
-                RemainingEpisodes = x.RemainingEpisodes
-            }).OrderByDescending(x => x.ReleaseDate)
-            .ThenBy(x => x.CurrentSeason)
-            .ThenBy(x => x.EpisodeNumber)
-            .ToList();
 
             return new ShowSubscriptionListDto
             {
                 Subscriptions = data,
-                Filtered = resultSet.Count
+                Filter = new Filter
+                {
+                    Filtered = showCount,
+                    Total = data.Count
+                }
             };
         }
+        #endregion
 
-        private MovieSubscriptionListDto GetMovieSubscriptions(MovieSubscriptionRequest subscriptionRequest)
+        #region Movies
+        private MovieSubscriptionListDto GetMovieSubscriptions(MovieSubscriptionRequest request)
         {
-            var movies = GetUsersMovies(new MovieList { Email = subscriptionRequest.Email }).Movies;
-            var resultSet = new List<MovieSubscriptionsDTO>();
+            var movieListDto = new MovieListDTO();
+            int movieCount = 0;
 
-            if (movies != null)
+            using (var watcherContext = new WatcherContext())
             {
-                resultSet.AddRange(movies.Select(movie => new MovieSubscriptionsDTO
+                UnitOfWork.Current = new UnitOfWork(watcherContext);
+                UnitOfWork.Current.BeginTransaction();
+                try
+                {
+                    var user = usersRepository.All().FirstOrDefault(x => x.Email == request.Email);
+                   
+                    if (user != null)
+                    {
+                        movieCount = user.Movies.Count();
+                        movieListDto.Movies = user.Movies.Select(x => new MovieDTO
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value : DateTime.MinValue
+                        }).Skip(request.Start).Take(request.Length).ToList();
+                    }
+                }
+                finally
+                {
+                    UnitOfWork.Current.Commit();
+                }
+            }
+
+            var data = new List<MovieSubscriptionsDTO>();
+
+            if (movieListDto.Movies != null)
+            {
+                data.AddRange(movieListDto.Movies.Select(movie => new MovieSubscriptionsDTO
                 {
                     Id = movie.Id,
                     Name = movie.Name,
                     ReleaseDate = movie.ReleaseDate
-                }).ToList());
+                }) 
+                .OrderByDescending(x => x.ReleaseDate).ToList());
             }
-
-            var data = resultSet.Select(x => new MovieSubscriptionsDTO
-            {
-                Id = x.Id,
-                Name = x.Name,
-                ReleaseDate = x.ReleaseDate
-            })
-            .OrderByDescending(x => x.ReleaseDate)
-            .ToList();
 
             return new MovieSubscriptionListDto
             {
                 Subscriptions = data,
-                Filtered = resultSet.Count
-            };
-        }
-
-        private PersonSubscriptionListDto GetPersonSubscriptions(PersonSubscriptionRequest request)
-        {
-            var persons = GetPersonMovies(request.Email).Persons;
-            var data = new List<PersonSubscriptionsDTO>();
-
-            if (persons != null)
-            {
-                data.AddRange(persons.Select(person => new PersonSubscriptionsDTO
+                Filter = new Filter
                 {
-                    Id = person.Id,
-                    Name = person.Name,
-                    ReleaseDate = person.ReleaseDate,
-                    ProductionName = person.ProductionName
-                }).ToList().OrderByDescending(x => x.ReleaseDate));
-            }
-
-            return new PersonSubscriptionListDto
-            {
-                Subscriptions = data,
-                Filtered = data.Count
+                    Filtered = movieCount,
+                    Total = data.Count
+                }
             };
         }
+        #endregion
     }
 }

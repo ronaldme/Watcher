@@ -5,6 +5,6 @@ namespace Messages.DTO
     public class ShowSubscriptionListDto
     {
         public List<ShowSubscriptionsDTO> Subscriptions { get; set; }
-        public int Filtered { get; set; }
+        public Filter Filter { get; set; }
     }
 }
