@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Timers;
 using BLL;
 using log4net;
@@ -18,33 +17,40 @@ namespace Services
         private readonly ITheMovieDb theMovieDb;
         private readonly IMovieRepository movieRepository;
         private readonly IShowRepository showRepository;
+        private readonly IPersonRepository personRepository;
 
-        private readonly int intervalMovie;
-        private readonly int intervalShow;
         private Timer movieInterval;
         private Timer showInterval;
+        private Timer personInterval;
+        private readonly int intervalMovie;
+        private readonly int intervalShow;
+        private readonly int intervalPerson;
         private static readonly ILog log = LogManager.GetLogger(typeof(UpdateService));
 
-        public UpdateService(ITheMovieDb theMovieDb, IMovieRepository movieRepository, IShowRepository showRepository)
+        public UpdateService(ITheMovieDb theMovieDb, IMovieRepository movieRepository, IShowRepository showRepository, IPersonRepository personRepository)
         {
             this.theMovieDb = theMovieDb;
             this.movieRepository = movieRepository;
             this.showRepository = showRepository;
+            this.personRepository = personRepository;
 
-            intervalMovie = Convert.ToInt32(ConfigurationManager.AppSettings.Get("movieIntervalHours"));
-            intervalShow = Convert.ToInt32(ConfigurationManager.AppSettings.Get("showIntervalHours"));
+            intervalMovie = Convert.ToInt32(ConfigurationManager.AppSettings.Get("movieInterval"));
+            intervalShow = Convert.ToInt32(ConfigurationManager.AppSettings.Get("showInterval"));
+            intervalPerson = Convert.ToInt32(ConfigurationManager.AppSettings.Get("personInterval"));
         }
 
         public void Start()
         {
             UpdateMovies();
-            UpdateEpisodes();
+            UpdateShows();
+            UpdatePersons();
         }
 
         public void Stop()
         {
             movieInterval.Enabled = false;
             showInterval.Enabled = false;
+            personInterval.Enabled = false;
         }
 
         public void UpdateMovies()
@@ -71,16 +77,18 @@ namespace Services
 
                         if (movie.ReleaseDate.HasValue)
                         {
-                            if (movie.ReleaseDate.Value != movieInfo.ReleaseDate)
+                            if (movieInfo.ReleaseDate < movie.ReleaseDate.Value)
                             {
                                 movie.ReleaseDate = movieInfo.ReleaseDate;
+                                movie.Name = movieInfo.Name;
                             }
                         }
                         else
                         {
-                            if (movieInfo.ReleaseDate > DateTime.MinValue)
+                            if (movieInfo.ReleaseDate.HasValue)
                             {
                                 movie.ReleaseDate = movieInfo.ReleaseDate;
+                                movie.Name = movieInfo.Name;
                             }
                         }
                     }
@@ -93,7 +101,7 @@ namespace Services
             }
         }
         
-        public void UpdateEpisodes()
+        public void UpdateShows()
         {
             showInterval = new Timer(intervalShow);
             showInterval.Elapsed += UpdateShowsNow;
@@ -116,15 +124,71 @@ namespace Services
                         ShowDTO showInfo = theMovieDb.GetShowBy(show.TheMovieDbId);
                         ShowDTO showDto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
-                        if (showDto.ReleaseNextEpisode.HasValue && showDto.ReleaseNextEpisode != show.ReleaseNextEpisode)
+                        if (show.ReleaseNextEpisode.HasValue && showDto.ReleaseNextEpisode.HasValue && show.ReleaseNextEpisode < showDto.ReleaseNextEpisode)
                         {
                             show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
+                            show.CurrentSeason = showDto.CurrentSeason;
+                            show.EpisodeCount = showDto.EpisodeCount;
+                            show.NextEpisode = showDto.NextEpisode;
+                        }
+                        else if (showDto.ReleaseNextEpisode.HasValue)
+                        {
+                            show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
+                            show.CurrentSeason = showDto.CurrentSeason;
+                            show.EpisodeCount = showDto.EpisodeCount;
+                            show.NextEpisode = showDto.NextEpisode;
                         }
                     }
                 }
                 finally
                 {
                     log.Info("Movies updated");
+                    UnitOfWork.Current.Commit();
+                }
+            }
+        }
+
+        private void UpdatePersons()
+        {
+            personInterval = new Timer(intervalPerson);
+            personInterval.Elapsed += UpdatePersonsNow;
+            personInterval.Enabled = true;
+        }
+
+        private void UpdatePersonsNow(object sender, ElapsedEventArgs e)
+        {
+            log.Info("Updating persons");
+            using (var watcherContext = new WatcherContext())
+            {
+                UnitOfWork.Current = new UnitOfWork(watcherContext);
+                UnitOfWork.Current.BeginTransaction();
+                try
+                {
+                    var persons = personRepository.All();
+
+                    foreach (Person person in persons)
+                    {
+                        PersonDTO personInfo = theMovieDb.GetPersonBy(person.TheMovieDbId);
+
+                        if (person.ReleaseDate.HasValue && personInfo.ReleaseDate.HasValue)
+                        {
+                            if (personInfo.ReleaseDate < person.ReleaseDate)
+                            {
+                                // Update to a new release date with possibly a new production name.
+                                person.ReleaseDate = personInfo.ReleaseDate;
+                                person.ProductionName = personInfo.ProductionName;
+                            }
+                        }
+                        else if (personInfo.ReleaseDate.HasValue)
+                        {
+                            person.ReleaseDate = personInfo.ReleaseDate;
+                            person.ProductionName = personInfo.ProductionName;
+                        }
+                    }
+                }
+                finally
+                {
+                    log.Info("Persons updated");
                     UnitOfWork.Current.Commit();
                 }
             }

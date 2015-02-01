@@ -3,6 +3,6 @@
     public interface IUpdateService
     {
         void UpdateMovies();
-        void UpdateEpisodes();
+        void UpdateShows();
     }
 }

@@ -64,7 +64,7 @@ namespace BLL.Json
             {
                 Id = deserialized.Id,
                 Name = deserialized.Title,
-                ReleaseDate = !string.IsNullOrEmpty(deserialized.Release_Date) ? DateTime.Parse(deserialized.Release_Date) : DateTime.MinValue
+                ReleaseDate = !string.IsNullOrEmpty(deserialized.Release_Date) ? DateTime.Parse(deserialized.Release_Date) : (DateTime?)null
             };
         }
 
