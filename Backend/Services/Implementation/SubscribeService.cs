@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using BLL;
 using EasyNetQ;
+using log4net;
 using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
@@ -24,6 +25,7 @@ namespace Services
         private readonly IShowRepository showRepository;
         private readonly IPersonRepository personRepository;
         private readonly ITheMovieDb theMovieDb;
+        private static readonly ILog log = LogManager.GetLogger(typeof(SubscribeService));
 
         public SubscribeService(IBus bus, IUsersRepository usersRepository, IMovieRepository movieRepository, IShowRepository showRepository, IPersonRepository personRepository, ITheMovieDb theMovieDb)
         {
@@ -125,6 +127,7 @@ namespace Services
                 }
                 catch (Exception e)
                 {
+                    log.WarnFormat("Subscribing to show failed: {0}", e.Message);
                     return new Subscription
                     {
                         IsSuccess = false,
@@ -205,6 +208,7 @@ namespace Services
                 }
                 catch (Exception e)
                 {
+                    log.WarnFormat("Subscribing to movie failed: {0} ", e.Message);
                     return new Subscription
                     {
                         IsSuccess = false,
@@ -266,6 +270,8 @@ namespace Services
                 }
                 catch (Exception e)
                 {
+                    log.WarnFormat("Subscribing to person failed: {0} ", e.Message);
+
                     return new Subscription
                     {
                         IsSuccess = false,
@@ -320,9 +326,8 @@ namespace Services
                 {
                     if (user != null)
                     {
-                        Person person =
-                            personRepository.All()
-                                .FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+                        Person person = personRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+
                         if (person != null)
                         {
                             user.Persons.Remove(person);
@@ -331,18 +336,16 @@ namespace Services
                             return CreateUnsubscription(true);
                         }
 
-                        Movie movie =
-                            movieRepository.All()
-                                .FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+                        Movie movie = movieRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+                        
                         if (movie != null)
                         {
                             user.Movies.Remove(movie);
                             movieRepository.Delete(movie);
                         }
 
-                        Show show =
-                            showRepository.All()
-                                .FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+                        Show show = showRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
+
                         if (show != null)
                         {
                             user.Shows.Remove(show);

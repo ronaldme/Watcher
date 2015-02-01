@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Timers;
 using BLL.Notifier;
+using log4net;
 using Repository;
 using Repository.Entities;
 using Repository.Repositories.Interfaces;
@@ -18,6 +19,7 @@ namespace Services
         private readonly IUsersRepository usersRepository;
         private readonly INotifyUser notifyService;
         private Thread Thread { get; set; }
+        private static readonly ILog log = LogManager.GetLogger(typeof(NotifyService));
 
         public NotifyService(IUsersRepository usersRepository, INotifyUser notifyService)
         {
@@ -58,6 +60,7 @@ namespace Services
 
         private void Notify(object sender, ElapsedEventArgs args)
         {
+            log.Info("Notify");
             using (var watcherContext = new WatcherContext())
             {
                 UnitOfWork.Current = new UnitOfWork(watcherContext);
@@ -99,8 +102,9 @@ namespace Services
                                     });
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception e)
                             {
+                                log.WarnFormat("Sending email notification failed: {0} ", e.Message);
                             }
 
                             if (!string.IsNullOrEmpty(user.NotifyMyAndroidKey))

@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Timers;
 using BLL;
+using log4net;
 using Messages.DTO;
 using Repository;
 using Repository.Entities;
@@ -20,9 +21,9 @@ namespace Services
 
         private readonly int intervalMovie;
         private readonly int intervalShow;
-
         private Timer movieInterval;
         private Timer showInterval;
+        private static readonly ILog log = LogManager.GetLogger(typeof(UpdateService));
 
         public UpdateService(ITheMovieDb theMovieDb, IMovieRepository movieRepository, IShowRepository showRepository)
         {
@@ -55,6 +56,7 @@ namespace Services
 
         private void UpdateMoviesNow(object sender, ElapsedEventArgs args)
         {
+            log.Info("Updating movies");
             using (var watcherContext = new WatcherContext())
             {
                 UnitOfWork.Current = new UnitOfWork(watcherContext);
@@ -85,6 +87,7 @@ namespace Services
                 }
                 finally
                 {
+                    log.Info("Movies updated");
                     UnitOfWork.Current.Commit();
                 }
             }
@@ -99,6 +102,7 @@ namespace Services
 
         private void UpdateShowsNow(object sender, ElapsedEventArgs args)
         {
+            log.Info("Updating shows");
             using (var watcherContext = new WatcherContext())
             {
                 UnitOfWork.Current = new UnitOfWork(watcherContext);
@@ -120,6 +124,7 @@ namespace Services
                 }
                 finally
                 {
+                    log.Info("Movies updated");
                     UnitOfWork.Current.Commit();
                 }
             }
