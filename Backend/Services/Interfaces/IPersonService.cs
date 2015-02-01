@@ -4,6 +4,5 @@
     {
         void Popular();
         void Search();
-        void SearchById();
     }
 }

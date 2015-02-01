@@ -14,9 +14,9 @@ namespace BLL.Json
         #region Tv shows
         public static List<ShowDTO> ToShows(string json)
         {
-            var root = JsonConvert.DeserializeObject<Root>(json);
+            var deserialized = JsonConvert.DeserializeObject<Root>(json);
 
-            return root.Results.Select(tvShow => new ShowDTO
+            return deserialized.Results.Select(tvShow => new ShowDTO
             {
                 Id = tvShow.Id,
                 Name = tvShow.Name
@@ -44,7 +44,7 @@ namespace BLL.Json
         #endregion
 
         #region Movies
-        public static List<MovieDTO> toNew(string json)
+        public static List<MovieDTO> ToUpcoming(string json)
         {
             var deserialized = JsonConvert.DeserializeObject<RootObjectMovies>(json);
 
@@ -58,7 +58,7 @@ namespace BLL.Json
 
         public static MovieDTO ToMovie(string json)
         {
-            var deserialized = JsonConvert.DeserializeObject<Result>(json);
+            var deserialized = JsonConvert.DeserializeObject<MovieObject>(json);
 
             return new MovieDTO
             {

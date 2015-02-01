@@ -24,8 +24,6 @@ namespace Services
         public void Start()
         {
             disposables = new List<IDisposable>();
-
-            // Run all methods implemented from the ITvShow interface
             typeof(ITvShowService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
         }
 
@@ -36,33 +34,12 @@ namespace Services
 
         public void TopRated()
         {
-            disposables.Add(bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO
-            {
-                TvShows = theMovieDb.TopRated()
-            }));
-        }
-
-        public void AiringToday()
-        {
-        }
-
-        public void New()
-        {
+            disposables.Add(bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.TopRated()}));
         }
 
         public void Search()
         {
             disposables.Add(bus.Respond<TvShowSearch, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Search) }));
-        }
-
-        public void SearchByPerson()
-        {
-            disposables.Add(bus.Respond<TvShowSearchByPerson, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Person) }));
-        }
-
-        public void SearchById()
-        {
-            //disposables.Add(bus.Respond<TvShowSearchById, TvShowDTO>(request => theMovieDb.GetShowBy(request.Id)));
         }
     }
 }

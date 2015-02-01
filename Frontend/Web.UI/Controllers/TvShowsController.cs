@@ -4,7 +4,6 @@ using EasyNetQ;
 using Messages.DTO;
 using Messages.Request;
 using Messages.Response;
-using Messages.Types;
 
 namespace Web.UI.Controllers
 {
@@ -25,10 +24,7 @@ namespace Web.UI.Controllers
 
         public JsonResult TopRated()
         {
-            var response = bus.Request<TvShow, TvShowListDTO>(new TvShow
-            {
-                ShowRequest = ShowRequest.TopRated
-            });
+            var response = bus.Request<TvShow, TvShowListDTO>(new TvShow());
             
             return Json(response.TvShows, JsonRequestBehavior.AllowGet);
         }

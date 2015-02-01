@@ -17,6 +17,6 @@ namespace BLL
         MovieDTO GetMovieBy(int id);
         PersonDTO GetPersonBy(int id);
 
-        ShowDTO GetLatestEpisode(int tvId, List<Messages.DTO.Season> seasons);
+        ShowDTO GetLatestEpisode(int tvId, List<Season> seasons);
     }
 }

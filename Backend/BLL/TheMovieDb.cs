@@ -14,7 +14,7 @@ namespace BLL
         #region Search
         public List<ShowDTO> SearchTv(string search)
         {
-            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchTv + "&query=" + ReplaceSpaces(search) + "&vote_count.gte=10" + "&sort_by=popularity.desc");
+            var request = (HttpWebRequest)WebRequest.Create(Urls.SearchTv + "&query=" + ReplaceSpaces(search));
             string json = GetResponse(request);
 
             return Convert.ToShows(json);
@@ -59,7 +59,7 @@ namespace BLL
             var request = (HttpWebRequest)WebRequest.Create(Urls.UpcomingMovies);
             string json = GetResponse(request);
 
-            return Convert.toNew(json);
+            return Convert.ToUpcoming(json);
         }
         #endregion
 

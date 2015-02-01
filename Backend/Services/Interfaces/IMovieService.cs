@@ -4,7 +4,5 @@
     {
         void Upcoming();
         void Search();
-        void SearchByPerson();
-        void SearchById();
     }
 }

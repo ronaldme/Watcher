@@ -48,25 +48,18 @@
   <ItemGroup>
     <Compile Include="CurrentNextSeason.cs" />
     <Compile Include="ITheMovieDb.cs" />
-    <Compile Include="Json\Movies\Dates.cs" />
     <Compile Include="Json\Movies\RootObjectMovies.cs" />
     <Compile Include="Json\Persons\Cast.cs" />
     <Compile Include="Json\Persons\PersonObject.cs" />
     <Compile Include="Json\Persons\RootObjectInfo.cs" />
     <Compile Include="Json\Persons\RootObjectPerson.cs" />
-    <Compile Include="Json\Persons\KnownFor.cs" />
-    <Compile Include="Json\Persons\ResultAct.cs" />
     <Compile Include="Json\Shows\Crew.cs" />
     <Compile Include="Json\Shows\Episode.cs" />
-    <Compile Include="Json\Shows\GuestStar.cs" />
     <Compile Include="Json\Shows\RootObject.cs" />
-    <Compile Include="Json\Shows\CreatedBy.cs" />
     <Compile Include="Json\Shows\Genre.cs" />
     <Compile Include="Json\Shows\Item.cs" />
     <Compile Include="Json\Convert.cs" />
-    <Compile Include="Json\Movies\Result.cs" />
-    <Compile Include="Json\Shows\Network.cs" />
-    <Compile Include="Json\Shows\ProductionCompany.cs" />
+    <Compile Include="Json\Movies\MovieObject.cs" />
     <Compile Include="Json\Shows\Root.cs" />
     <Compile Include="Json\Shows\Season.cs" />
     <Compile Include="Json\Shows\SeasonRootObject.cs" />

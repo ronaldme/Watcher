@@ -47,6 +47,7 @@
     <Compile Include="DTO\Person\PersonListDTO.cs" />
     <Compile Include="DTO\Person\PersonSubscriptionListDto.cs" />
     <Compile Include="DTO\Person\PersonSubscriptionsDTO.cs" />
+    <Compile Include="DTO\Show\Season.cs" />
     <Compile Include="DTO\Show\ShowSubscriptionListDto.cs" />
     <Compile Include="DTO\Show\ShowDTO.cs" />
     <Compile Include="DTO\Show\ShowSubscriptionsDTO.cs" />
@@ -55,9 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\ManagementRequest.cs" />
     <Compile Include="Request\ManagementResponse.cs" />
-    <Compile Include="Request\Person\PersonList.cs" />
     <Compile Include="Request\Person\PersonRequest.cs" />
-    <Compile Include="Request\Movies\MovieList.cs" />
     <Compile Include="Request\Movies\MovieRequest.cs" />
     <Compile Include="Request\Movies\MovieSearch.cs" />
     <Compile Include="Request\Movies\MovieSubscription.cs" />
@@ -66,16 +65,12 @@
     <Compile Include="Request\Subscription\MovieSubscriptionRequest.cs" />
     <Compile Include="Request\Subscription\PersonSubscriptionRequest.cs" />
     <Compile Include="Request\Subscription\ShowSubscriptionRequest.cs" />
-    <Compile Include="Request\Show\TvList.cs" />
     <Compile Include="Request\Show\TvShowSearch.cs" />
     <Compile Include="Request\Show\TvShow.cs" />
-    <Compile Include="Request\Show\TvShowSearchByPerson.cs" />
-    <Compile Include="Request\Show\TvShowSearchById.cs" />
     <Compile Include="Request\Subscription\TvSubscription.cs" />
     <Compile Include="Request\Unsubscribe.cs" />
     <Compile Include="Response\Unsubscription.cs" />
     <Compile Include="Response\Subscription.cs" />
-    <Compile Include="Request\Show\ShowRequest.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,6 @@
 ﻿namespace BLL.Json.Movies
 {
-    public class Result
+    public class MovieObject
     {
         public bool Adult { get; set; }
         public string Backdrop_Path { get; set; }

@@ -7,7 +7,6 @@ namespace BLL.Json.Shows
         public string Air_Date { get; set; }
         public List<Crew> Crew { get; set; }
         public int Episode_Number { get; set; }
-        public List<GuestStar> Guest_Stars { get; set; }
         public string Name { get; set; }
         public string Overview { get; set; }
         public int Id { get; set; }

@@ -109,7 +109,14 @@ namespace Services
 
                             if (!string.IsNullOrEmpty(user.NotifyMyAndroidKey))
                             {
-                                NotifyMyAndroid.NotifyUser(notificationList, user.NotifyMyAndroidKey);
+                                try
+                                {
+                                    NotifyMyAndroid.NotifyUser(notificationList, user.NotifyMyAndroidKey);
+                                }
+                                catch (Exception e)
+                                {
+                                    log.WarnFormat("Sending NotifyMyAndroid notification failed: {0} ", e.Message);
+                                }
                             }
                         }
                     }

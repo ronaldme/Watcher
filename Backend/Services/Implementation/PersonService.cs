@@ -24,8 +24,6 @@ namespace Services
         public void Start()
         {
             disposables = new List<IDisposable>();
-
-            // Run all methods implemented from the ISearchTV interface
             typeof(IPersonService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
         }
 
@@ -42,11 +40,6 @@ namespace Services
         public void Search()
         {
             disposables.Add(bus.Respond<PersonSearch, List<PersonDTO>>(x => new List<PersonDTO>(theMovieDb.SearchPerson(x.Search))));
-        }
-
-        public void SearchById()
-        {
-            
         }
     }
 }

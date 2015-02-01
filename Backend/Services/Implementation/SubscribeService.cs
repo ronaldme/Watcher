@@ -40,8 +40,6 @@ namespace Services
         public void Start()
         {
             disposables = new List<IDisposable>();
-
-            // Run all methods implemented from the ISearchTV interface
             typeof(ISubscriptionService).GetMethods().ToList().ForEach(x => x.Invoke(this, null));
         }
 
