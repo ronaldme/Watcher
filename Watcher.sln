@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTables.Mvc", "Frontend\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Startup.WindowsService", "Backend\Startup.WindowsService\Startup.WindowsService\Startup.WindowsService.csproj", "{DA38DF68-90CB-40D7-A872-8D671421A0AD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4F0F2386-49E2-4D1F-9587-12094BE1C6EA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{14C6270D-EC77-48D5-9968-B7896A6F00E9}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
