@@ -34,12 +34,20 @@ namespace Services
 
         public void TopRated()
         {
-            disposables.Add(bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.TopRated()}));
+            disposables.Add(bus.Respond<TvShow, TvShowListDTO>(request => new TvShowListDTO
+            {
+                TvShows = theMovieDb.TopRated(),
+                PrefixPath = Urls.PrefixImages
+            }));
         }
 
         public void Search()
         {
-            disposables.Add(bus.Respond<TvShowSearch, TvShowListDTO>(request => new TvShowListDTO { TvShows = theMovieDb.SearchTv(request.Search) }));
+            disposables.Add(bus.Respond<TvShowSearch, TvShowListDTO>(request => new TvShowListDTO
+            {
+                TvShows = theMovieDb.SearchTv(request.Search),
+                PrefixPath = Urls.PrefixImages
+            }));
         }
     }
 }

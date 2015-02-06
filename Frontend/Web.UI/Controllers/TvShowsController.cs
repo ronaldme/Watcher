@@ -26,7 +26,7 @@ namespace Web.UI.Controllers
         {
             var response = bus.Request<TvShow, TvShowListDTO>(new TvShow());
             
-            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Search(string input)
@@ -36,7 +36,7 @@ namespace Web.UI.Controllers
                 Search = input
             });
             
-            return Json(response.TvShows, JsonRequestBehavior.AllowGet);
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Subscribe(int id, string name)

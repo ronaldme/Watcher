@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Mvc;
 using EasyNetQ;
 using Messages.DTO;
@@ -25,14 +24,14 @@ namespace Web.UI.Controllers
 
         public JsonResult Upcoming()
         {
-            var response = bus.Request<MovieRequest, List<MovieDTO>>(new MovieRequest());
+            var response = bus.Request<MovieRequest, MovieListDTO>(new MovieRequest());
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Search(string input)
         {
-            var response = bus.Request<MovieSearch, List<MovieDTO>>(new MovieSearch
+            var response = bus.Request<MovieSearch, MovieListDTO>(new MovieSearch
             {
                 Search = input
             });

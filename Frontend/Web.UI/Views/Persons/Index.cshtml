@@ -10,7 +10,7 @@
         <div style="margin-top: 10px; margin-bottom: 10px;">
             <ul id="searchList" data-bind="foreach: searchResults">
                 <li>
-                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }, value: poster"> </a>
                 </li>
             </ul>
         </div>
@@ -19,7 +19,7 @@
         <div style="margin-top: 10px; margin-bottom: 10px;">
             <ul id="popular" data-bind="foreach: popular">
                 <li>
-                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }, value: poster"> </a>
                 </li>
             </ul>
         </div>
@@ -38,7 +38,8 @@
             <div class="modal-body">
                 <p id="personId" class="hidden"></p>
                 <p id="personName" class="hidden"></p>
-                <p id="modal-content"></p>
+                <p id="modal-content" style="text-align: center;"></p>
+                <div id="poster-image"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -52,6 +53,8 @@
     $(document).ready(function () {
         var viewModel = new ViewModel();
         ko.applyBindings(viewModel);
+
+        var prefix = null;
 
         function ViewModel() {
             var self = this;
@@ -67,10 +70,13 @@
             });
 
             function popular(data) {
+                prefix = data.PrefixPath;
+                data = data.Persons;
+
                 var movies = new Array();
 
                 for (var i = 0; i < data.length; i++) {
-                    movies.push(new Person(data[i].Id, data[i].Name));
+                    movies.push(new Person(data[i].Id, data[i].Name, data[i].ProfilePath));
                 }
 
                 self.popular(movies);
@@ -91,22 +97,25 @@
             });
 
             function displaySearchResults(data) {
+                prefix = data.PrefixPath;
+                data = data.Persons;
+
                 var movies = new Array();
 
                 for (var i = 0; i < data.length; i++) {
-                    movies.push(new Person(data[i].Id, data[i].Name));
+                    movies.push(new Person(data[i].Id, data[i].Name, data[i].ProfilePath));
                 }
 
                 self.searchResults(movies);
             }
         }
 
-        function Person(id, name, releaseDate) {
+        function Person(id, name, profilePath) {
             var self = this;
 
             self.id = ko.observable(id);
             self.name = ko.observable(name);
-            self.releaseDate = ko.observable(releaseDate);
+            self.poster = ko.observable(profilePath);
         }
 
         $('#subscribe').click(function () {
@@ -128,19 +137,27 @@
         });
 
         $('#popular').on('click', 'a', function () {
-            displayInfo(this.id, this.text);
+            displayInfo(this.id, this.text, this.value);
         });
 
         $('#searchList').on('click', 'a', function () {
-            displayInfo(this.id, this.text);
+            displayInfo(this.id, this.text, this.value);
         });
 
-        function displayInfo(id, name) {
+        function displayInfo(id, name, poster) {
             $('#succesMessage').addClass('hidden');
             $('#modal-content').text('Subscribe to: ' + name);
 
             $('#personId').text(id);
             $('#personName').text(name);
+
+            $('#poster-image').removeAttr('style');
+            if (prefix != poster && poster) {
+                $('#poster-image')
+                    .css('background-image', 'url(' + prefix + poster + ')')
+                    .css('height', '19em').css('width', '13em')
+                    .css('margin', '0 auto');
+            }
 
             $('#myModal').modal('show');
         }

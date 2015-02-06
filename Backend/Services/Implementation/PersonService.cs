@@ -34,12 +34,20 @@ namespace Services
 
         public void Popular()
         {
-            disposables.Add(bus.Respond<PersonRequest, List<PersonDTO>>(x => new List<PersonDTO>(theMovieDb.Populair())));
+            disposables.Add(bus.Respond<PersonRequest, PersonListDTO>(x => new PersonListDTO
+            {
+                Persons = theMovieDb.Populair(),
+                PrefixPath = Urls.PrefixImages
+            }));
         }
 
         public void Search()
         {
-            disposables.Add(bus.Respond<PersonSearch, List<PersonDTO>>(x => new List<PersonDTO>(theMovieDb.SearchPerson(x.Search))));
+            disposables.Add(bus.Respond<PersonSearch, PersonListDTO>(x => new PersonListDTO
+            {
+                Persons = theMovieDb.SearchPerson(x.Search),
+                PrefixPath = Urls.PrefixImages
+            }));
         }
     }
 }

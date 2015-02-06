@@ -5,5 +5,6 @@ namespace Messages.DTO
     public class TvShowListDTO
     {
         public List<ShowDTO> TvShows { get; set; }
+        public string PrefixPath { get; set; }
     }
 }

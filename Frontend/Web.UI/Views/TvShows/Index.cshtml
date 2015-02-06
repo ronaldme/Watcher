@@ -10,7 +10,7 @@
         <div style="margin-top: 10px; margin-bottom: 10px;">
             <ul id="searchList" data-bind="foreach: searchResults">
                 <li>
-                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }, value: poster"> </a>
                 </li>
             </ul>
         </div>
@@ -19,7 +19,7 @@
         <div style="margin-top: 10px; margin-bottom: 10px;">
             <ul id="topRated" data-bind="foreach: topRated">
                 <li>
-                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }"> </a>
+                    <a href="javascript:void(0)" data-bind="text: name, attr: { id: id }, value: poster"> </a>
                 </li>
             </ul>
         </div>
@@ -38,7 +38,8 @@
             <div class="modal-body">
                 <p id="showId" class="hidden"></p>
                 <p id="showName" class="hidden"></p>
-                <p id="modal-content"></p>
+                <p id="modal-content" style="text-align: center;"></p>
+                <div id="poster-image"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -52,6 +53,8 @@
     $(document).ready(function () {
         var viewModel = new ViewModel();
         ko.applyBindings(viewModel);
+
+        var prefix = null;
 
         function ViewModel() {
             var self = this;
@@ -67,10 +70,13 @@
             });
 
             function topRated(data) {
+                prefix = data.PrefixPath;
+                data = data.TvShows;
+
                 var shows = new Array();
 
                 for (var i = 0; i < data.length; i++) {
-                    shows.push(new TvShow(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                    shows.push(new TvShow(data[i].Id, data[i].Name, data[i].PosterPath));
                 }
 
                 self.topRated(shows);
@@ -91,21 +97,25 @@
             });
 
             function displaySearchResults(data) {
+                prefix = data.PrefixPath;
+                data = data.TvShows;
+
                 var shows = new Array();
 
                 for (var i = 0; i < data.length; i++) {
-                    shows.push(new TvShow(data[i].Id, data[i].Name, data[i].ReleaseDate));
+                    shows.push(new TvShow(data[i].Id, data[i].Name, data[i].PosterPath));
                 }
 
                 self.searchResults(shows);
             }
         }
 
-        function TvShow(id, name) {
+        function TvShow(id, name, posterPath) {
             var self = this;
 
             self.id = ko.observable(id);
             self.name = ko.observable(name);
+            self.poster = ko.observable(posterPath);
         }
 
         $('#subscribe').click(function () {
@@ -127,20 +137,28 @@
         });
 
         $('#topRated').on('click', 'a', function () {
-            displayInfo(this.id, this.text);
+            displayInfo(this.id, this.text, this.value);
         });
 
         $('#searchList').on('click', 'a', function () {
-            displayInfo(this.id, this.text);
+            displayInfo(this.id, this.text, this.value);
         });
 
-        function displayInfo(id, name) {
+        function displayInfo(id, name, poster) {
             $('#succesMessage').addClass('hidden');
             $('#modal-content').text('Subscribe to: ' + name);
 
             $('#showId').text(id);
             $('#showName').text(name);
 
+            $('#poster-image').removeAttr('style');
+            if (prefix != poster && poster) {
+                $('#poster-image')
+                    .css('background-image', 'url(' + prefix + poster + ')')
+                    .css('height', '19em').css('width', '13em')
+                    .css('margin', '0 auto');
+            }
+            
             $('#myModal').modal('show');
         }
     });

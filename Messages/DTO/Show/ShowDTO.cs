@@ -7,6 +7,7 @@ namespace Messages.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string PosterPath { get; set; }
         public int CurrentSeason { get; set; }
         public int NextEpisode { get; set; }
         public int EpisodeCount { get; set; }

@@ -34,12 +34,20 @@ namespace Services
 
         public void Upcoming()
         {
-            disposables.Add(bus.Respond<MovieRequest, List<MovieDTO>>(x => new List<MovieDTO>(theMovieDb.Upcoming())));
+            disposables.Add(bus.Respond<MovieRequest, MovieListDTO>(x => new MovieListDTO
+            {
+                Movies = theMovieDb.Upcoming(),
+                PrefixPath = Urls.PrefixImages
+            }));
         }
 
         public void Search()
         {
-            disposables.Add(bus.Respond<MovieSearch, List<MovieDTO>>(x => new List<MovieDTO>(theMovieDb.SearchMovie(x.Search))));
+            disposables.Add(bus.Respond<MovieSearch, MovieListDTO>(x => new MovieListDTO
+            {
+                Movies = theMovieDb.SearchMovie(x.Search),
+                PrefixPath = Urls.PrefixImages
+            }));
         }
     }
 }

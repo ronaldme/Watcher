@@ -30,6 +30,8 @@ namespace BLL
         public static string SearchPersonById = "person/";
         public static string PopularPersons = FormatUrl("person/popular");
 
+        public static string PrefixImages = "http://image.tmdb.org/t/p/w185";
+
         /// <summary>
         /// NotifyMyAndroid URL
         /// </summary>

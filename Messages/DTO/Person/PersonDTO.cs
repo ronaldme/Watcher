@@ -9,5 +9,6 @@ namespace Messages.DTO
         public string ProductionName { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public string Birthday { get; set; }
+        public string ProfilePath { get; set; }
     }
 }

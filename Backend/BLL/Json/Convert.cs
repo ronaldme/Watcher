@@ -19,7 +19,8 @@ namespace BLL.Json
             return deserialized.Results.Select(tvShow => new ShowDTO
             {
                 Id = tvShow.Id,
-                Name = tvShow.Name
+                Name = tvShow.Name,
+                PosterPath = tvShow.Poster_Path
             }).ToList();
         }
 
@@ -37,7 +38,8 @@ namespace BLL.Json
                     Air_Date = x.Air_Date,
                     Season_Number = x.Season_Number
                 }).ToList(),
-                NumberOfSeasons = deserialized.Number_Of_Seasons
+                NumberOfSeasons = deserialized.Number_Of_Seasons,
+                PosterPath = deserialized.Poster_Path
             };
         }
 
@@ -52,7 +54,8 @@ namespace BLL.Json
             {
                 Id = rootObjectMovie.Id,
                 Name = rootObjectMovie.Title,
-                ReleaseDate = !string.IsNullOrEmpty(rootObjectMovie.Release_Date) ? DateTime.Parse(rootObjectMovie.Release_Date) : DateTime.MinValue
+                ReleaseDate = !string.IsNullOrEmpty(rootObjectMovie.Release_Date) ? DateTime.Parse(rootObjectMovie.Release_Date) : DateTime.MinValue,
+                PosterPath = rootObjectMovie.Poster_Path
             }).ToList();
         }
 
@@ -77,7 +80,8 @@ namespace BLL.Json
             {
                 Id = result.Id,
                 Name = result.Title,
-                ReleaseDate = !string.IsNullOrEmpty(result.Release_Date) ? DateTime.Parse(result.Release_Date) : DateTime.MinValue
+                ReleaseDate = !string.IsNullOrEmpty(result.Release_Date) ? DateTime.Parse(result.Release_Date) : DateTime.MinValue,
+                PosterPath = result.Poster_Path
             }).ToList();
         }
         #endregion
@@ -90,7 +94,8 @@ namespace BLL.Json
             return deserialized.Results.Select(result => new PersonDTO
             {
                 Id = result.Id,
-                Name = result.Name
+                Name = result.Name,
+                ProfilePath = result.Profile_Path
             }).ToList();
         }
 

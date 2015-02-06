@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
 using System.Web.Configuration;
-using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -21,14 +20,12 @@ namespace Web.UI.DI
             }
 
             var connectionString = WebConfigurationManager.AppSettings.Get("rabbitMq");
-
+            
             IBus bus = RabbitHutch.CreateBus(connectionString);
 
             container.Register(
                 Component.For<IBus>().Instance(bus)
             );
-
-
         }
     }
 }

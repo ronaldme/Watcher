@@ -25,14 +25,14 @@ namespace Web.UI.Controllers
 
         public JsonResult Popular()
         {
-            var response = bus.Request<PersonRequest, List<PersonDTO>>(new PersonRequest());
+            var response = bus.Request<PersonRequest, PersonListDTO>(new PersonRequest());
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Search(string input)
         {
-            var response = bus.Request<PersonSearch, List<PersonDTO>>(new PersonSearch{Search = input});
+            var response = bus.Request<PersonSearch, PersonListDTO>(new PersonSearch { Search = input });
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
