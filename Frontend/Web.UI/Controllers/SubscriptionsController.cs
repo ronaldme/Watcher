@@ -39,7 +39,9 @@ namespace Web.UI.Controllers
                 ReleaseDate = x.ReleaseDate.Year != 1 ? x.ReleaseDate.ToString("dd-MM-yyyy") : "Unknown",
                 CurrentSeason = x.CurrentSeason == 0 ? "" : x.CurrentSeason.ToString(),
                 EpisodeNumber = x.EpisodeNumber == 0 ? "" : x.EpisodeNumber.ToString(),
-                Remaining = x.RemainingEpisodes == 0 ? "" : x.RemainingEpisodes.ToString()
+                Remaining = x.RemainingEpisodes == 0 ? "" : x.RemainingEpisodes.ToString(),
+                subscriptionsList.PrefixPath,
+                x.PosterPath
             }).ToList();
 
             return Json(new DataTablesResponse(requestModel.Draw, data, subscriptionsList.Filter.Filtered, subscriptionsList.Filter.Total), JsonRequestBehavior.AllowGet);
@@ -58,7 +60,9 @@ namespace Web.UI.Controllers
             {
                 x.Id,
                 x.Name,
-                ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown"
+                ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown",
+                subscriptionsList.PrefixPath,
+                x.PosterPath
             }).ToList();
 
             return Json(new DataTablesResponse(requestModel.Draw, data, subscriptionsList.Filter.Filtered, subscriptionsList.Filter.Total), JsonRequestBehavior.AllowGet);
@@ -78,7 +82,9 @@ namespace Web.UI.Controllers
                 x.Id,
                 x.Name,
                 x.ProductionName,
-                ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown"
+                ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value.Year != 1 ? x.ReleaseDate.Value.ToString("dd-MM-yyyy") : "Unknown" : "Unkown",
+                subscriptionsList.PrefixPath,
+                x.PosterPath
             }).ToList();
 
             return Json(new DataTablesResponse(requestModel.Draw, data, subscriptionsList.Filter.Filtered, subscriptionsList.Filter.Total), JsonRequestBehavior.AllowGet);

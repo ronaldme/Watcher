@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BLL;
 using Messages;
 using Messages.DTO;
 using Messages.Request;
@@ -74,6 +75,7 @@ namespace Services
                             Name = x.Name,
                             ProductionName = x.ProductionName,
                             ReleaseDate = x.ReleaseDate,
+                            ProfilePath = x.PosterPath
                         }).Skip(request.Start).Take(request.Length).ToList();
                     }
                 }
@@ -91,13 +93,15 @@ namespace Services
                         Id = person.Id,
                         Name = person.Name,
                         ReleaseDate = person.ReleaseDate,
-                        ProductionName = person.ProductionName
+                        ProductionName = person.ProductionName,
+                        PosterPath = person.ProfilePath
                     }).ToList().OrderByDescending(x => x.ReleaseDate));
                 }
 
                 return new PersonSubscriptionListDto
                 {
                     Subscriptions = personList,
+                    PrefixPath = Urls.PrefixImages,
                     Filter = new Filter
                     {
                         Filtered = personCount,
@@ -132,7 +136,8 @@ namespace Services
                             ReleaseNextEpisode = x.ReleaseNextEpisode,
                             CurrentSeason = x.CurrentSeason,
                             NextEpisode = x.NextEpisode,
-                            EpisodeCount = x.EpisodeCount
+                            EpisodeCount = x.EpisodeCount,
+                            PosterPath = x.PosterPath
                         }).Skip(request.Start).Take(request.Length).ToList();
                     }
                 }
@@ -153,7 +158,8 @@ namespace Services
                     ReleaseDate = show.ReleaseNextEpisode.HasValue ? show.ReleaseNextEpisode.Value : new DateTime(1),
                     EpisodeNumber = show.NextEpisode,
                     CurrentSeason = show.CurrentSeason,
-                    RemainingEpisodes = show.EpisodeCount - show.NextEpisode + 1 // also count next episode
+                    RemainingEpisodes = show.EpisodeCount - show.NextEpisode + 1, // also count next episode
+                    PosterPath = show.PosterPath
                 })
                 .OrderByDescending(x => x.ReleaseDate)
                 .ThenBy(x => x.CurrentSeason).ThenBy(x => x.EpisodeNumber)
@@ -163,6 +169,7 @@ namespace Services
             return new ShowSubscriptionListDto
             {
                 Subscriptions = data,
+                PrefixPath = Urls.PrefixImages,
                 Filter = new Filter
                 {
                     Filtered = showCount,
@@ -193,7 +200,8 @@ namespace Services
                         {
                             Id = x.Id,
                             Name = x.Name,
-                            ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value : DateTime.MinValue
+                            ReleaseDate = x.ReleaseDate.HasValue ? x.ReleaseDate.Value : DateTime.MinValue,
+                            PosterPath = x.PosterPath
                         }).Skip(request.Start).Take(request.Length).ToList();
                     }
                 }
@@ -211,7 +219,8 @@ namespace Services
                 {
                     Id = movie.Id,
                     Name = movie.Name,
-                    ReleaseDate = movie.ReleaseDate
+                    ReleaseDate = movie.ReleaseDate,
+                    PosterPath = movie.PosterPath
                 }) 
                 .OrderByDescending(x => x.ReleaseDate).ToList());
             }
@@ -219,6 +228,7 @@ namespace Services
             return new MovieSubscriptionListDto
             {
                 Subscriptions = data,
+                PrefixPath = Urls.PrefixImages,
                 Filter = new Filter
                 {
                     Filtered = movieCount,

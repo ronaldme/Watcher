@@ -6,6 +6,6 @@ namespace Messages.DTO
     {
         public List<MovieSubscriptionsDTO> Subscriptions { get; set; }
         public Filter Filter { get; set; }
-
+        public string PrefixPath { get; set; }
     }
 }

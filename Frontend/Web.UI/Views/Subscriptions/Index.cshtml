@@ -16,6 +16,8 @@
                 <th>@Resources.Resources.Season</th>
                 <th>@Resources.Resources.EpisodeNumber</th>
                 <th>@Resources.Resources.RemainingEpisodes</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
     </table>
@@ -27,6 +29,8 @@
                 <th>Id</th>
                 <th>@Resources.Resources.Name</th>
                 <th>@Resources.Resources.ReleaseDate</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
     </table>
@@ -39,6 +43,8 @@
                 <th>@Resources.Resources.Name</th>
                 <th>@Resources.Resources.ProductionName</th>
                 <th>@Resources.Resources.ReleaseDate</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
     </table>
@@ -54,7 +60,8 @@
             <div class="modal-body">
                 <p id="itemId" class="hidden"></p>
                 <p id="itemName" class="hidden"></p>
-                <p id="modal-content"></p>
+                <p id="modal-content" style="text-align: center;"></p>
+                <div id="poster-image"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -76,17 +83,18 @@
             columns: [
                 { data: 'Id', orderable: false, visible: false },
                 { data: 'Name', orderable: false },
-                { data: 'ReleaseDate', orderable: false },
+                { data: 'ReleaseDate', orderable: true },
                 { data: 'CurrentSeason', orderable: false },
                 { data: 'EpisodeNumber', orderable: false },
-                { data: 'Remaining', orderable: false }
+                { data: 'Remaining', orderable: false },
+                { data: 'PrefixPath', orderable: false, visible: false },
+                { data: 'PosterPath', orderable: false, visible: false }
             ]
         });
 
         $('#showTable tbody').on('click', 'tr', function () {
             var rowData = $('#showTable').DataTable().row(this).data();
-
-            displayInfo(rowData.Id, rowData.Name);
+            displayInfo(rowData.Id, rowData.Name, rowData.PrefixPath, rowData.PosterPath);
         });
 
         $('#movieTable').dataTable({
@@ -99,14 +107,15 @@
             columns: [
                 { data: 'Id', orderable: false, visible: false },
                 { data: 'Name', orderable: false },
-                { data: 'ReleaseDate', orderable: false }
+                { data: 'ReleaseDate', orderable: true },
+                { data: 'PrefixPath', orderable: false, visible: false },
+                { data: 'PosterPath', orderable: false, visible: false }
             ]
         });
 
         $('#movieTable tbody').on('click', 'tr', function () {
             var rowData = $('#movieTable').DataTable().row(this).data();
-
-            displayInfo(rowData.Id, rowData.Name);
+            displayInfo(rowData.Id, rowData.Name, rowData.PrefixPath, rowData.PosterPath);
         });
 
         $('#personTable').dataTable({
@@ -120,21 +129,30 @@
                 { data: 'Id', orderable: false, visible: false },
                 { data: 'Name', orderable: false },
                 { data: 'ProductionName', orderable: false },
-                { data: 'ReleaseDate', orderable: false }
+                { data: 'ReleaseDate', orderable: true },
+                { data: 'PrefixPath', orderable: false, visible: false },
+                { data: 'PosterPath', orderable: false, visible: false }
             ]
         });
 
         $('#personTable tbody').on('click', 'tr', function () {
             var rowData = $('#personTable').DataTable().row(this).data();
-
-            displayInfo(rowData.Id, rowData.Name);
+            displayInfo(rowData.Id, rowData.Name, rowData.PrefixPath, rowData.PosterPath);
         });
         
-        function displayInfo(id, name) {
+        function displayInfo(id, name, prefix, poster) {
             $('#modal-content').text('Unsubscribe: ' + name);
 
             $('#itemId').text(id);
             $('#itemName').text(name);
+
+            $('#poster-image').removeAttr('style');
+            if (prefix != poster && poster) {
+                $('#poster-image')
+                    .css('background-image', 'url(' + prefix + poster + ')')
+                    .css('height', '19em').css('width', '13em')
+                    .css('margin', '0 auto');
+            }
 
             $('#myModal').modal('show');
         }

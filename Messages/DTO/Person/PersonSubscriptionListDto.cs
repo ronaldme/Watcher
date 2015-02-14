@@ -6,5 +6,6 @@ namespace Messages.DTO
     {
         public List<PersonSubscriptionsDTO> Subscriptions { get; set; }
         public Filter Filter { get; set; }
+        public string PrefixPath { get; set; }
     }
 }
