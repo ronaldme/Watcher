@@ -67,7 +67,8 @@ namespace BLL.Json
             {
                 Id = deserialized.Id,
                 Name = deserialized.Title,
-                ReleaseDate = !string.IsNullOrEmpty(deserialized.Release_Date) ? DateTime.Parse(deserialized.Release_Date) : (DateTime?)null
+                ReleaseDate = !string.IsNullOrEmpty(deserialized.Release_Date) ? DateTime.Parse(deserialized.Release_Date) : (DateTime?)null,
+                PosterPath = deserialized.Poster_Path
             };
         }
 
@@ -107,7 +108,8 @@ namespace BLL.Json
             {
                 Id = deserialized.Id,
                 Name = deserialized.Name,
-                Birthday = deserialized.Birthday
+                Birthday = deserialized.Birthday,
+                ProfilePath = deserialized.Profile_Path
             };
         }
 

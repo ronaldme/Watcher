@@ -25,5 +25,6 @@ namespace Repository.Entities
         public int TheMovieDbId { get; set; }
 
         public virtual ICollection<User> Users { get; set; }
+        public string PosterPath { get; set; }
     }
 }

@@ -17,11 +17,9 @@ namespace Repository.Entities
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
-
         public DateTime? ReleaseDate { get; set; }
-
         public int TheMovieDbId { get; set; }
-
         public virtual ICollection<User> Users { get; set; }
+        public string PosterPath { get; set; }
     }
 }
