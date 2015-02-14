@@ -65,78 +65,47 @@ namespace Services
                 {
                     User user = usersRepository.All().FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
                     Show show = showRepository.All().FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
+                    
                     ShowDTO showInfo = theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
-
                     ShowDTO dto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
                     if (user == null)
                     {
-                        if (show == null)
-                        {
-                            show = showRepository.Insert(new Show
-                            {
-                                TheMovieDbId = tvSubscription.TheMovieDbId,
-                                Name = showInfo.Name,
-                                CurrentSeason = dto.CurrentSeason,
-                                ReleaseNextEpisode = dto.ReleaseNextEpisode,
-                                EpisodeCount = dto.EpisodeCount,
-                                NextEpisode = dto.NextEpisode
-                            });
-
-                            usersRepository.Insert(new User
-                            {
-                                Email = tvSubscription.EmailUser,
-                                Shows = new Collection<Show> {show},
-                                NotifyHoursPastMidnight = 9
-                            });
-                        }
-                        else
-                        {
-                            usersRepository.Insert(new User
-                            {
-                                Email = tvSubscription.EmailUser,
-                                Shows = new Collection<Show> {show},
-                                NotifyHoursPastMidnight = 9
-                            });
-                        }
+                        user = CreateUser(tvSubscription, show);
                     }
-                    else
+                    if (show == null)
                     {
-                        if (show == null)
-                        {
-                            show = showRepository.Insert(new Show
-                            {
-                                TheMovieDbId = tvSubscription.TheMovieDbId,
-                                Name = showInfo.Name,
-                                CurrentSeason = dto.CurrentSeason,
-                                ReleaseNextEpisode = dto.ReleaseNextEpisode,
-                                EpisodeCount = dto.EpisodeCount,
-                                NextEpisode = dto.NextEpisode
-                            });
-                            user.Shows.Add(show);
-                        }
-                        else
-                        {
-                            user.Shows.Add(show);
-                        }
+                        show = CreateShow(tvSubscription, showInfo, dto);
                     }
 
+                    user.Shows.Add(show);
                     return new Subscription {IsSuccess = true};
                 }
                 catch (Exception e)
                 {
                     log.WarnFormat("Subscribing to show failed: {0}", e.Message);
-                    return new Subscription
-                    {
-                        IsSuccess = false,
-                        Message = e.InnerException.ToString()
-                    };
+                    
+                    return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
                 }
                 finally
                 {
                     UnitOfWork.Current.Commit();
                 }
             }
+        }
+
+        private Show CreateShow(TvSubscription tvSubscription, ShowDTO showInfo, ShowDTO dto)
+        {
+            return showRepository.Insert(new Show
+            {
+                TheMovieDbId = tvSubscription.TheMovieDbId,
+                Name = showInfo.Name,
+                CurrentSeason = dto.CurrentSeason,
+                ReleaseNextEpisode = dto.ReleaseNextEpisode,
+                EpisodeCount = dto.EpisodeCount,
+                NextEpisode = dto.NextEpisode,
+                PosterPath = showInfo.PosterPath
+            });
         }
         #endregion
 
@@ -158,60 +127,17 @@ namespace Services
                     Movie movie = movieRepository.All().FirstOrDefault(x => x.TheMovieDbId == movieSubscription.TheMovieDbId);
                     MovieDTO movieInfo = theMovieDb.GetMovieBy(movieSubscription.TheMovieDbId);
 
-                    if (user == null)
-                    {
-                        if (movie == null)
-                        {
-                            movie = movieRepository.Insert(new Movie
-                            {
-                                TheMovieDbId = movieSubscription.TheMovieDbId,
-                                Name = movieInfo.Name,
-                                ReleaseDate = movieInfo.ReleaseDate
-                            });
-
-                            usersRepository.Insert(new User
-                            {
-                                Email = movieSubscription.EmailUser,
-                                Movies = new Collection<Movie> {movie}
-                            });
-                        }
-                        else
-                        {
-                            usersRepository.Insert(new User
-                            {
-                                Email = movieSubscription.EmailUser,
-                                Movies = new Collection<Movie> {movie}
-                            });
-                        }
-                    }
-                    else
-                    {
-                        if (movie == null)
-                        {
-                            movie = movieRepository.Insert(new Movie
-                            {
-                                TheMovieDbId = movieSubscription.TheMovieDbId,
-                                Name = movieInfo.Name,
-                                ReleaseDate = movieInfo.ReleaseDate
-                            });
-                            user.Movies.Add(movie);
-                        }
-                        else
-                        {
-                            user.Movies.Add(movie);
-                        }
-                    }
+                    user = user ?? CreateUser(movieSubscription, movie);
+                    movie = movie ?? CreateMovie(movieSubscription, movieInfo);
+                    user.Movies.Add(movie);
 
                     return new Subscription {IsSuccess = true};
                 }
                 catch (Exception e)
                 {
                     log.WarnFormat("Subscribing to movie failed: {0} ", e.Message);
-                    return new Subscription
-                    {
-                        IsSuccess = false,
-                        Message = e.InnerException.ToString()
-                    };
+
+                    return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
                 }
                 finally
                 {
@@ -219,6 +145,18 @@ namespace Services
                 }
             }
         }
+
+        private Movie CreateMovie(MovieSubscription movieSubscription, MovieDTO movieInfo)
+        {
+            return movieRepository.Insert(new Movie
+            {
+                TheMovieDbId = movieSubscription.TheMovieDbId,
+                Name = movieInfo.Name,
+                ReleaseDate = movieInfo.ReleaseDate,
+                PosterPath = movieInfo.PosterPath
+            });
+        }
+
         #endregion
 
         #region Persons
@@ -239,30 +177,9 @@ namespace Services
                     Person person = personRepository.All().FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
                     PersonDTO personInfo = theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
 
-                    if (user == null)
-                    {
-                        if (person == null)
-                        {
-                            person = AddPerson(personSubscription, personInfo);
-                            AddUser(personSubscription, person);
-                        }
-                        else
-                        {
-                            AddUser(personSubscription, person);
-                        }
-                    }
-                    else
-                    {
-                        if (person == null)
-                        {
-                            person = AddPerson(personSubscription, personInfo);
-                            user.Persons.Add(person);
-                        }
-                        else
-                        {
-                            user.Persons.Add(person);
-                        }
-                    }
+                    user = user ?? CreateUser(personSubscription, person);
+                    person = person ?? CreatePerson(personSubscription, personInfo);
+                    user.Persons.Add(person);
 
                     return new Subscription {IsSuccess = true};
                 }
@@ -270,11 +187,7 @@ namespace Services
                 {
                     log.WarnFormat("Subscribing to person failed: {0} ", e.Message);
 
-                    return new Subscription
-                    {
-                        IsSuccess = false,
-                        Message = e.InnerException.ToString()
-                    };
+                    return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
                 }
                 finally
                 {
@@ -283,7 +196,7 @@ namespace Services
             }
         }
 
-        private Person AddPerson(PersonSubscription personSubscription, PersonDTO personInfo)
+        private Person CreatePerson(PersonSubscription personSubscription, PersonDTO personInfo)
         {
             return personRepository.Insert(new Person
             {
@@ -291,19 +204,10 @@ namespace Services
                 TheMovieDbId = personSubscription.TheMovieDbId,
                 Birthday = !string.IsNullOrEmpty(personInfo.Birthday) ? DateTime.Parse(personInfo.Birthday) : (DateTime?)null,
                 ProductionName = personInfo.ProductionName,
-                ReleaseDate = personInfo.ReleaseDate
+                ReleaseDate = personInfo.ReleaseDate,
+                PosterPath = personInfo.ProfilePath
             });
         }
-
-        private void AddUser(PersonSubscription personSubscription, Person person)
-        {
-            usersRepository.Insert(new User
-            {
-                Email = personSubscription.EmailUser,
-                Persons = new Collection<Person> {person}
-            });
-        }
-
         #endregion
 
         public void Unsubscribe()
@@ -329,9 +233,7 @@ namespace Services
                         if (person != null)
                         {
                             user.Persons.Remove(person);
-                            personRepository.Delete(person);
-
-                            return CreateUnsubscription(true);
+                            return new Unsubscription { IsSuccess = true };
                         }
 
                         Movie movie = movieRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
@@ -339,19 +241,19 @@ namespace Services
                         if (movie != null)
                         {
                             user.Movies.Remove(movie);
-                            movieRepository.Delete(movie);
+                            return new Unsubscription { IsSuccess = true };
                         }
 
                         Show show = showRepository.All().FirstOrDefault(x => x.Id == unsubscribe.Id && x.Name == unsubscribe.Name);
-
                         if (show != null)
                         {
                             user.Shows.Remove(show);
-                            showRepository.Delete(show);
+                            return new Unsubscription { IsSuccess = true };
                         }
-                        return CreateUnsubscription(false, "No subscription found.");
+
+                        return new Unsubscription { IsSuccess = false, Message = "No subscription found." };
                     }
-                    return CreateUnsubscription(false, "User not found.");
+                    return new Unsubscription { IsSuccess = false, Message = "No user found."};
                 }
                 finally
                 {
@@ -360,9 +262,31 @@ namespace Services
             }
         }
 
-        private Unsubscription CreateUnsubscription(bool succes, string message = null)
+        private User CreateUser(PersonSubscription personSubscription, Person person)
         {
-            return new Unsubscription { IsSuccess = succes, Message = message};
+            return usersRepository.Insert(new User
+            {
+                Email = personSubscription.EmailUser,
+                Persons = new Collection<Person> { person }
+            });
+        }
+
+        private User CreateUser(MovieSubscription movieSubscription, Movie movie)
+        {
+            return usersRepository.Insert(new User
+            {
+                Email = movieSubscription.EmailUser,
+                Movies = new Collection<Movie> { movie }
+            });
+        }
+
+        private User CreateUser(TvSubscription tvSubscription, Show show)
+        {
+            return usersRepository.Insert(new User
+            {
+                Email = tvSubscription.EmailUser,
+                Shows = new Collection<Show> { show }
+            });
         }
     }
 }

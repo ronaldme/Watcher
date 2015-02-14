@@ -76,13 +76,15 @@ namespace BLL
         {
             CurrentNextSeason currentNextSeason = GetCurrentNextSeason(seasons);
 
+            if(currentNextSeason.Current == null) return new ShowDTO();
+
             var requestCurrent = (HttpWebRequest)WebRequest.Create(Urls.SearchTvSeasons(tvId, currentNextSeason.Current.Season_Number));
             string jsonCurrent = GetResponse(requestCurrent);
 
             var episodes = Convert.ToSeasons(jsonCurrent).Episodes; // episodes current season
 
             // True: this season is finished
-            if (!string.IsNullOrEmpty(episodes[episodes.Count - 1].Air_Date) && DateTime.Parse(episodes[episodes.Count - 1].Air_Date).Date < DateTime.UtcNow.Date)
+            if (episodes.Count > 0 && !string.IsNullOrEmpty(episodes[episodes.Count - 1].Air_Date) && DateTime.Parse(episodes[episodes.Count - 1].Air_Date).Date < DateTime.UtcNow.Date)
             {
                 if (currentNextSeason.Next != null)
                 {
