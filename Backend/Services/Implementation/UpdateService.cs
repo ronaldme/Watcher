@@ -77,7 +77,7 @@ namespace Services
 
                         if (movie.ReleaseDate.HasValue)
                         {
-                            if (movieInfo.ReleaseDate < movie.ReleaseDate.Value)
+                            if (movie.ReleaseDate.Value != movieInfo.ReleaseDate)
                             {
                                 movie.ReleaseDate = movieInfo.ReleaseDate;
                                 movie.Name = movieInfo.Name;
@@ -124,25 +124,29 @@ namespace Services
                         ShowDTO showInfo = theMovieDb.GetShowBy(show.TheMovieDbId);
                         ShowDTO showDto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
-                        if (show.ReleaseNextEpisode.HasValue && showDto.ReleaseNextEpisode.HasValue && show.ReleaseNextEpisode < showDto.ReleaseNextEpisode)
+                        if (showDto.ReleaseNextEpisode.HasValue)
                         {
-                            show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
-                            show.CurrentSeason = showDto.CurrentSeason;
-                            show.EpisodeCount = showDto.EpisodeCount;
-                            show.NextEpisode = showDto.NextEpisode;
-                        }
-                        else if (showDto.ReleaseNextEpisode.HasValue)
-                        {
-                            show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
-                            show.CurrentSeason = showDto.CurrentSeason;
-                            show.EpisodeCount = showDto.EpisodeCount;
-                            show.NextEpisode = showDto.NextEpisode;
+                            if (show.NextEpisode == showDto.NextEpisode && show.ReleaseNextEpisode != showDto.ReleaseNextEpisode)
+                            {
+                                show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
+                                show.CurrentSeason = showDto.CurrentSeason;
+                                show.EpisodeCount = showDto.EpisodeCount;
+                                show.NextEpisode = showDto.NextEpisode;
+                            }
+                            // if release next episode is two days old we can update it
+                            else if (DateTime.UtcNow.AddDays(2) > show.ReleaseNextEpisode && showDto.ReleaseNextEpisode.Value > show.ReleaseNextEpisode)
+                            {
+                                show.ReleaseNextEpisode = showDto.ReleaseNextEpisode.Value;
+                                show.CurrentSeason = showDto.CurrentSeason;
+                                show.EpisodeCount = showDto.EpisodeCount;
+                                show.NextEpisode = showDto.NextEpisode;
+                            }
                         }
                     }
                 }
                 finally
                 {
-                    log.Info("Movies updated");
+                    log.Info("Shows updated");
                     UnitOfWork.Current.Commit();
                 }
             }
@@ -172,7 +176,7 @@ namespace Services
 
                         if (person.ReleaseDate.HasValue && personInfo.ReleaseDate.HasValue)
                         {
-                            if (personInfo.ReleaseDate < person.ReleaseDate)
+                            if (personInfo.ReleaseDate != person.ReleaseDate)
                             {
                                 // Update to a new release date with possibly a new production name.
                                 person.ReleaseDate = personInfo.ReleaseDate;
