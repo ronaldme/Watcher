@@ -77,8 +77,16 @@ namespace Services
                     {
                         show = CreateShow(tvSubscription, showInfo, dto);
                     }
+                    else
+                    {
+                        // update show info
+                        show.ReleaseNextEpisode = dto.ReleaseNextEpisode;
+                        show.NextEpisode = dto.NextEpisode;
+                        show.PosterPath = dto.PosterPath;
+                    }
 
                     user.Shows.Add(show);
+
                     return new Subscription {IsSuccess = true};
                 }
                 catch (Exception e)
@@ -128,7 +136,18 @@ namespace Services
                     MovieDTO movieInfo = theMovieDb.GetMovieBy(movieSubscription.TheMovieDbId);
 
                     user = user ?? CreateUser(movieSubscription, movie);
-                    movie = movie ?? CreateMovie(movieSubscription, movieInfo);
+
+                    if (movie == null)
+                    {
+                        movie = CreateMovie(movieSubscription, movieInfo);
+                    }
+                    else
+                    {
+                        // update movie info
+                        movie.ReleaseDate = movieInfo.ReleaseDate;
+                        movie.PosterPath = movieInfo.PosterPath;
+                    }
+
                     user.Movies.Add(movie);
 
                     return new Subscription {IsSuccess = true};
@@ -178,7 +197,20 @@ namespace Services
                     PersonDTO personInfo = theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
 
                     user = user ?? CreateUser(personSubscription, person);
-                    person = person ?? CreatePerson(personSubscription, personInfo);
+
+                    if (person == null)
+                    {
+                        person = CreatePerson(personSubscription, personInfo);
+                    }
+                    else
+                    {
+                        // update person info
+                        person.Birthday = !string.IsNullOrEmpty(personInfo.Birthday)
+                            ? DateTime.Parse(personInfo.Birthday) : (DateTime?) null;
+                        person.PosterPath = personInfo.ProfilePath;
+                        person.ReleaseDate = personInfo.ReleaseDate;
+                    }
+
                     user.Persons.Add(person);
 
                     return new Subscription {IsSuccess = true};
