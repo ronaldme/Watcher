@@ -1,0 +1,33 @@
+﻿@using Watcher.Web.Translations
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">@Resources.Close</span></button>
+                <h4 class="modal-title">@Resources.Subscribe</h4>
+            </div>
+
+            <div class="modal-body">
+                <p id="the-movie-db-id" class="hidden"></p>
+                <p id="name" class="hidden"></p>
+
+                <p id="modal-content" style="text-align: center;">
+                </p>
+
+                <div id="poster-image"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@Resources.Cancel</button>
+                <button type="button" class="btn btn-primary" id="subscribe">@Resources.Subscribe!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="succes-message" class="row hidden">
+    <div class="col-md-12">
+        <div class="alert alert-success">@Resources.Success!</div>
+    </div>
+</div>
