@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{14C627
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Backend.DAL", "Watcher.Backend.DAL\Watcher.Backend.DAL.csproj", "{56EB723E-025A-4555-9C2C-2242C156FAA2}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Web", "Watcher.Web\Watcher.Web.csproj", "{CFE0189A-056B-44C8-9E10-CAE7C748AD2A}"
 EndProject
 Global
