@@ -1,0 +1,154 @@
+﻿@using System.Web.Configuration
+@using Watcher.Shared.Common
+@using Watcher.Web.Translations
+
+@{
+    ViewBag.Title = "Subscriptions";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="row" data-example-id="striped-table">
+    <div class="col-md-12">
+        <h3>Movies</h3>
+        <table id="movies" class="table table-striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+
+        <ul id="pagination-movies" class="pagination-sm"></ul>
+    </div>
+</div>
+
+<div class="row" data-example-id="striped-table">
+    <div class="col-md-12">
+        <h3>Tv shows</h3>
+        <table id="tv-shows" class="table table-striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+
+        <ul id="pagination-shows" class="pagination-sm"></ul>
+    </div>
+</div>
+
+<div class="row" data-example-id="striped-table">
+    <div class="col-md-12">
+        <h3>Persons</h3>
+        <table id="persons" class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+
+        <ul id="pagination-persons" class="pagination-sm"></ul>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery.twbsPagination.js"></script>
+
+<script>
+    var pageCount = 10;
+    var prefixPath = '@Urls.PrefixImages';
+
+    getMovies(0, true);
+    getTvShows(0, true);
+    getPersons(0, true);
+
+    function getMovies(skip, initialLoad) {
+        $.get("@Url.Action("GetMovieSubscriptions")", { skip: skip, take: pageCount },
+        function (data) {
+            if (initialLoad)
+                addPagination(data.Total, pageCount, 'pagination-movies', getMovies);
+
+            displayData(data.Subscriptions, $('#movies'), 1);
+        });
+    }
+    
+    function getTvShows(skip, initialLoad) {
+        $.get("@Url.Action("GetTvShowSubscriptions")", { skip: skip, take: pageCount },
+        function (data) {
+            if (initialLoad)
+                addPagination(data.Total, pageCount, 'pagination-shows', getTvShows);
+
+            displayData(data.Subscriptions, $('#tv-shows'), 2);
+        });
+    }
+
+    function getPersons(skip, initialLoad) {
+        $.get("@Url.Action("GetPersonSubscriptions")", { skip: skip, take: pageCount },
+        function (data) {
+            if (initialLoad)
+                addPagination(data.Total, pageCount, 'pagination-persons', getPersons);
+
+            displayData(data.Subscriptions, $('#persons'), 3);
+        });
+    }
+
+    function displayData(subscriptions, element, type) {
+        element.children('tbody').empty();
+        var tbody = element.children('tbody');
+
+        if (subscriptions.length === 0) {
+            tbody.append($('<tr>').append($('<td>').attr('colspan','3').text('@Resources.NoData')));
+            return;
+        }
+
+        for (var key in subscriptions) {
+            if (subscriptions.hasOwnProperty(key)) {
+                var subscription = subscriptions[key];
+
+                var name = td().text(subscription.Name);
+                var unsubscribe = td();
+                var button = getButton();
+                button.append($('<a>').text('Unsubscribe').attr('href', '@Url.Action("Unsubscribe")/' + subscription.Id + '?Type=' + type));
+
+                unsubscribe.append(button);
+                tbody.append($('<tr>').append(name).append(unsubscribe));
+            }
+        }
+    }
+
+    function td() {
+        return $('<td>');
+    }
+
+    function getButton() {
+        return $('<button>').addClass('btn btn-default');
+    }
+
+    function addPagination(count, pageCount, id, func) {
+        var totalPages = Math.ceil(count / pageCount);
+
+        if (totalPages === 0) totalPages = 1;
+        $(document.getElementById(id))
+            .twbsPagination({
+                totalPages: totalPages,
+                visiblePages: 7,
+                initiateStartPageClick: false,
+                onPageClick: function (event, page) {
+                    func(page * pageCount - pageCount, false);
+                }
+            });
+    }
+</script>

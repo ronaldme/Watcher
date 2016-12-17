@@ -31,3 +31,37 @@
         <div class="alert alert-success">@Resources.Success!</div>
     </div>
 </div>
+
+<script>
+    function handleSubscribeClick(el) {
+        var element = $(el);
+        displayInfo(element.attr('data-id'), element.text(), element.attr('data-poster-path'));
+    }
+
+    function displayInfo(id, name, poster) {
+        $('#succes-message').addClass('hidden');
+        $('#modal-content').text('Subscribe to: ' + name);
+
+        $('#the-movie-db-id').text(id);
+        $('#name').text(name);
+
+        $('#poster-image').removeAttr('style');
+        if (prefix !== poster && poster) {
+            $('#poster-image')
+                .css('background-image', 'url(' + prefix + poster + ')')
+                .css('height', '19em').css('width', '13em')
+                .css('margin', '0 auto');
+        }
+
+        $('#myModal').modal('show');
+    }
+
+    function subscribe(url) {
+        $.get(url, { id: $('#the-movie-db-id').text() }, function (data) {
+            if (data.IsSuccess) {
+                $('#myModal').modal('hide');
+                $('#succes-message').removeClass('hidden');
+            }
+        });
+    }
+</script>

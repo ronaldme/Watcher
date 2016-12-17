@@ -1,0 +1,71 @@
+﻿@using Watcher.Shared.Common
+@using Watcher.Web.Translations
+
+@{
+    ViewBag.Title = "Tv shows";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="search" placeholder="Search..">
+        <div style="margin-top: 10px;">
+            <ul id="search-results"></ul>
+        </div>
+
+        <h2>@Resources.TopRated</h2>
+        <div>
+            <ul id="top-rated"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $.get('@Url.Action("TopRated")', showTopRatedShows);
+    var prefix = '@Urls.PrefixImages';
+
+    function showTopRatedShows(tvShows) {
+        showTvShows(tvShows, $('#top-rated'));
+    }
+
+    function showTvShows(tvShows, containerElement) {
+        for (var i = 0; i < tvShows.length; i++) {
+            var tvShow = tvShows[i];
+
+            var li = $('<li>');
+            var a = $('<a>')
+                .text(tvShow.Name)
+                .attr('data-id', tvShow.Id)
+                .attr('data-poster-path', tvShow.PosterPath)
+                .attr('data-release-date', tvShow.ReleaseDate)
+                .attr('href', '#');
+            li.append(a);
+
+            containerElement.append(li);
+        }
+    }
+
+    $('#top-rated').on('click', 'a', function () {
+        window.handleSubscribeClick(this);
+    });
+
+    $('#search-results').on('click', 'a', function () {
+        window.handleSubscribeClick(this);
+    });
+
+    $('#search').on('input', function () {
+        if ($('#search').val().length > 0) {
+            $.get('@Url.Action("Search")', { input: $('#search').val() }, displaySearchResults);
+        }
+    });
+
+    function displaySearchResults(searchResults) {
+        $('#search-results').children().remove();
+        showTvShows(searchResults, $('#search-results'));
+    }
+
+    $('#subscribe').click(function () {
+        window.subscribe('@Url.Action("Subscribe")');
+    });
+</script>

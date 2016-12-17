@@ -13,9 +13,16 @@
     <div class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
+                @Html.ActionLink("Watcher", "Index", "Home", null, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Tv shows", "Index", "TvShows")</li>
+                        <li>@Html.ActionLink("Movies", "Index", "Movies")</li>
+                        <li>@Html.ActionLink("Persons", "Index", "Persons")</li>
+                    }
                 </ul>
 
                 @if (Request.IsAuthenticated)
