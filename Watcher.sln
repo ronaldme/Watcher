@@ -12,12 +12,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{14C627
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Web", "Watcher.Web\Watcher.Web.csproj", "{CFE0189A-056B-44C8-9E10-CAE7C748AD2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFE0189A-056B-44C8-9E10-CAE7C748AD2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFE0189A-056B-44C8-9E10-CAE7C748AD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFE0189A-056B-44C8-9E10-CAE7C748AD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFE0189A-056B-44C8-9E10-CAE7C748AD2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
