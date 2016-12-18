@@ -67,8 +67,6 @@
     <Compile Include="Subscription\PersonSubscriptionRequest.cs" />
     <Compile Include="Subscription\ShowSubscriptionRequest.cs" />
     <Compile Include="Subscription\Subscription.cs" />
-    <Compile Include="Subscription\SubscriptionRequest.cs" />
-    <Compile Include="Subscription\SubscriptionResponse.cs" />
     <Compile Include="Subscription\TvSubscription.cs" />
     <Compile Include="Subscription\Unsubscription.cs" />
     <Compile Include="Unsubscribe.cs" />

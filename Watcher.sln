@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Backend.Startup", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Backend.DAL", "Watcher.Backend.DAL\Watcher.Backend.DAL.csproj", "{56EB723E-025A-4555-9C2C-2242C156FAA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Backend.Domain", "Watcher.Backend.Domain\Watcher.Backend.Domain.csproj", "{C91B4A94-4C9C-4D1F-ACBE-0D88F3C005A7}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Messages", "Watcher.Messages\Watcher.Messages.csproj", "{EB07D192-D30C-4BEC-9E73-05416E5ED470}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Web", "Watcher.Web\Watcher.Web.csproj", "{CFE0189A-056B-44C8-9E10-CAE7C748AD2A}"
