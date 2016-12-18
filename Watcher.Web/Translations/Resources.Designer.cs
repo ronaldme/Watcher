@@ -151,7 +151,7 @@ namespace Watcher.Web.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Username/password.
+        ///   Looks up a localized string similar to Invalid username/password.
         /// </summary>
         public static string InvalidUserNameOrPassword {
             get {
@@ -196,11 +196,11 @@ namespace Watcher.Web.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NoData.
+        ///   Looks up a localized string similar to No subscriptions.
         /// </summary>
-        public static string NoData {
+        public static string NoSubscriptions {
             get {
-                return ResourceManager.GetString("NoData", resourceCulture);
+                return ResourceManager.GetString("NoSubscriptions", resourceCulture);
             }
         }
         
@@ -223,7 +223,7 @@ namespace Watcher.Web.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NotifyMyAndroid Key.
+        ///   Looks up a localized string similar to NotifyMyAndroid key.
         /// </summary>
         public static string NotifyMyAndroidKey {
             get {

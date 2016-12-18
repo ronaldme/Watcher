@@ -148,7 +148,7 @@
     <value>Get email notifications</value>
   </data>
   <data name="InvalidUserNameOrPassword" xml:space="preserve">
-    <value>Invalid Username/password</value>
+    <value>Invalid username/password</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Log in</value>
@@ -162,8 +162,8 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="NoData" xml:space="preserve">
-    <value>NoData</value>
+  <data name="NoSubscriptions" xml:space="preserve">
+    <value>No subscriptions</value>
   </data>
   <data name="NotifyDayLater" xml:space="preserve">
     <value>Get notified a day after the release</value>
@@ -172,7 +172,7 @@
     <value>Hours past midnight (UTC)</value>
   </data>
   <data name="NotifyMyAndroidKey" xml:space="preserve">
-    <value>NotifyMyAndroid Key</value>
+    <value>NotifyMyAndroid key</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
