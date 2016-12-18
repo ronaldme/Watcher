@@ -109,8 +109,8 @@
         element.children('tbody').empty();
         var tbody = element.children('tbody');
 
-        if (subscriptions.length === 0) {
-            tbody.append($('<tr>').append($('<td>').attr('colspan','3').text('@Resources.NoData')));
+        if (subscriptions == null || subscriptions.length === 0) {
+            tbody.append($('<tr>').append($('<td>').attr('colspan','3').text('@Resources.NoSubscriptions')));
             return;
         }
 
