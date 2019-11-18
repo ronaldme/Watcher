@@ -82,10 +82,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Watcher.Backend.Domain\Watcher.Backend.Domain.csproj">
-      <Project>{C91B4A94-4C9C-4D1F-ACBE-0D88F3C005A7}</Project>
-      <Name>Watcher.Backend.Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Watcher.Shared\Watcher.Shared.csproj">
       <Project>{CB4FA4F9-E10C-4BF4-8453-BE8953A7E2AF}</Project>
       <Name>Watcher.Shared</Name>
