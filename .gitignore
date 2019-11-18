@@ -20,3 +20,4 @@ bld/
 [Oo]bj/
 *.jpg
 packages/
+.vs

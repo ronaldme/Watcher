@@ -128,10 +128,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Watcher.Backend.DAL\Watcher.Backend.DAL.csproj">
-      <Project>{56EB723E-025A-4555-9C2C-2242C156FAA2}</Project>
-      <Name>Watcher.Backend.DAL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Watcher.Messages\Watcher.Messages.csproj">
       <Project>{EB07D192-D30C-4BEC-9E73-05416E5ED470}</Project>
       <Name>Watcher.Messages</Name>
