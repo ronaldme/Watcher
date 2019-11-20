@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Watcher.Backend.DAL.Infrastructure
+namespace Watcher.DAL.Infrastructure
 {
     public class Entity
     {

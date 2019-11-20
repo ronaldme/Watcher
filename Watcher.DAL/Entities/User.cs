@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Watcher.Backend.DAL.Infrastructure;
+using Watcher.DAL.Infrastructure;
 
-namespace Watcher.Backend.DAL.Entities
+namespace Watcher.DAL.Entities
 {
     public class User : Entity
     {
@@ -13,8 +13,8 @@ namespace Watcher.Backend.DAL.Entities
         public int NotifyAtHoursPastMidnight { get; set; }
         public string NotifyMyAndroidKey { get; set; }
         public bool NotifyDayLater { get; set; }
-        public virtual ICollection<Movie> Movies { get; set; }
-        public virtual ICollection<Show> Shows { get; set; }
-        public virtual ICollection<Person> Persons { get; set; }
+        public virtual ICollection<UserMovie> UserMovies { get; set; }
+        public virtual ICollection<UserShow> UserShows { get; set; }
+        public virtual ICollection<UserPerson> UserPersons { get; set; }
     }
 }

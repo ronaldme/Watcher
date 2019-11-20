@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Watcher.Backend.DAL.Infrastructure;
+using Watcher.DAL.Infrastructure;
 
-namespace Watcher.Backend.DAL.Entities
+namespace Watcher.DAL.Entities
 {
     public class Show : Entity
     {
@@ -16,6 +16,6 @@ namespace Watcher.Backend.DAL.Entities
         public int EpisodeCount { get; set; }
         public DateTime? ReleaseNextEpisode { get; set; }
         public int TheMovieDbId { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<UserShow> UserShows { get; set; }
     }
 }
