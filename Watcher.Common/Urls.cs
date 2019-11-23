@@ -1,6 +1,7 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
-namespace Watcher.Shared.Common
+namespace Watcher.Common
 {
     public class Urls
     {
@@ -42,7 +43,7 @@ namespace Watcher.Shared.Common
 
         public static string SearchTvSeasons(int tvId, int season)
         {
-            return $"{PreFixUrl}tv/{tvId}/season/{season}{SuffixUrl}"; 
+            return $"{PreFixUrl}tv/{tvId}/season/{season}{SuffixUrl}";
         }
 
         public static string PersonCredits(int personId)
@@ -52,7 +53,7 @@ namespace Watcher.Shared.Common
 
         public static string SearchBy(string searchUrl, int id)
         {
-            return $"{PreFixUrl}{searchUrl}{id}{SuffixUrl}"; 
+            return $"{PreFixUrl}{searchUrl}{id}{SuffixUrl}";
         }
 
         private static string FormatUrl(string urlMiddlePart)

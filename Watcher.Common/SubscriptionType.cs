@@ -1,4 +1,4 @@
-﻿namespace Watcher.Shared.Common
+﻿namespace Watcher.Common
 {
     public enum SubscriptionType
     {
