@@ -7,7 +7,16 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Windsor" Version="5.0.1" />
+    <PackageReference Include="EasyNetQ" Version="3.7.1" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Quartz" Version="3.0.7" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
     <PackageReference Include="Topshelf" Version="4.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Watcher.DAL\Watcher.DAL.csproj" />
+    <ProjectReference Include="..\Watcher.Messages\Watcher.Messages.csproj" />
   </ItemGroup>
 
 </Project>
