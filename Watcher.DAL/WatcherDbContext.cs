@@ -3,6 +3,9 @@ using Watcher.DAL.Entities;
 
 namespace Watcher.DAL
 {
+    /// <summary>
+    /// Add-Migration NAME -StartupProject Watcher.Service -Project Watcher.DAL
+    /// </summary>
     public class WatcherDbContext : DbContext
     {
         public virtual DbSet<Person> Persons { get; set; }
