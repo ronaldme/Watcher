@@ -8,6 +8,10 @@ namespace Watcher.DAL
     /// </summary>
     public class WatcherDbContext : DbContext
     {
+        public WatcherDbContext(DbContextOptions options) : base(options)
+        {
+        }
+
         public virtual DbSet<Person> Persons { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Show> Shows { get; set; }

@@ -1,4 +1,9 @@
-﻿using Topshelf;
+﻿using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Watcher.Common;
+using Watcher.DAL;
 
 namespace Watcher.Service
 {
@@ -6,21 +11,19 @@ namespace Watcher.Service
     {
         static void Main(string[] args)
         {
-            HostFactory.Run(hf =>
-            {
-                hf.Service<WatcherService>(s =>
-                {
-                    s.WhenStarted(tc => tc.Start());
-                    s.WhenStopped(tc => tc.Stop());
-                });
-
-                hf.DependsOnMsSql();
-                hf.RunAsLocalSystem();
-
-                hf.SetDescription("Keep track of your favorite shows & movies");
-                hf.SetDisplayName("Watcher");
-                hf.SetServiceName("Watcher");
-            });
+            CreateHostBuilder(args)
+                .UseWindowsService()
+                .Build()
+                .Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<WatcherService>();
+                    services.AddDbContext<WatcherDbContext>();
+                    
+                });
     }
 }
