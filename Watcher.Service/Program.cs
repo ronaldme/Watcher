@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Watcher.Common;
 using Watcher.DAL;
@@ -23,7 +21,10 @@ namespace Watcher.Service
                 {
                     services.AddHostedService<WatcherService>();
                     services.AddDbContext<WatcherDbContext>();
-                    
+
+                    var config = hostContext.Configuration;
+                    services.Configure<AppSettings>(config.GetSection("AppSettings"));
+                    services.Configure<ConnectionString>(config.GetSection("ConnectionStrings"));
                 });
     }
 }
