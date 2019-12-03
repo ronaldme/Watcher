@@ -14,8 +14,8 @@ namespace Watcher.Service.Infrastructure
             container.Register(Component.For<ITheMovieDb>()
                 .ImplementedBy<TheMovieDb.TheMovieDb>().LifestyleTransient());
 
-            container.Register(Component.For<INotifyService>()
-                .ImplementedBy<NotifyService>());
+            container.Register(Component.For<INotifyScheduler>()
+                .ImplementedBy<NotifyScheduler>());
 
             container.Register(Component.For<IUpdateService>()
                 .ImplementedBy<UpdateService>());

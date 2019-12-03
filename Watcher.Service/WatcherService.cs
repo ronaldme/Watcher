@@ -1,13 +1,33 @@
-﻿namespace Watcher.Service
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Watcher.Common;
+using Watcher.Service.Services;
+
+namespace Watcher.Service
 {
-    internal class WatcherService
+    class WatcherService : IHostedService
     {
-        public void Start()
+        private readonly IOptions<AppSettings> _config;
+        private readonly INotifyScheduler _notifyScheduler;
+
+        public WatcherService(
+            IOptions<AppSettings> config,
+            INotifyScheduler notifyScheduler)
         {
+            _config = config;
+            _notifyScheduler = notifyScheduler;
         }
 
-        public void Stop()
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
+            await _notifyScheduler.Start();
+        }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await _notifyScheduler.Stop();
         }
     }
 }

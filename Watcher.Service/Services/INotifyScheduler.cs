@@ -2,7 +2,7 @@
 
 namespace Watcher.Service.Services
 {
-    public interface IUpdateService
+    public interface INotifyScheduler
     {
         Task Start();
         Task Stop();

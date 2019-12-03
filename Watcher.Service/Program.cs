@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Watcher.Common;
 using Watcher.DAL;
+using Watcher.Service.Services;
 
 namespace Watcher.Service
 {
@@ -21,6 +22,8 @@ namespace Watcher.Service
                 {
                     services.AddHostedService<WatcherService>();
                     services.AddDbContext<WatcherDbContext>();
+
+                    services.AddSingleton<INotifyScheduler, NotifyScheduler>();
 
                     var config = hostContext.Configuration;
                     services.Configure<AppSettings>(config.GetSection("AppSettings"));
