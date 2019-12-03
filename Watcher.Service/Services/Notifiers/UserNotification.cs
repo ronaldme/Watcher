@@ -1,4 +1,4 @@
-﻿namespace Watcher.Service.Notifier
+﻿namespace Watcher.Service.Services.Notifiers
 {
     public class UserNotification
     {

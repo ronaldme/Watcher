@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Quartz;
 using Quartz.Impl;
 
-namespace Watcher.Service.Services
+namespace Watcher.Service.Services.Notifiers
 {
     public class NotifyScheduler : INotifyScheduler
     {

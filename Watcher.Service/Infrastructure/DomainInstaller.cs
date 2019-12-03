@@ -3,6 +3,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Watcher.DAL;
 using Watcher.Service.Services;
+using Watcher.Service.Services.Notifiers;
 using Watcher.Service.TheMovieDb;
 
 namespace Watcher.Service.Infrastructure

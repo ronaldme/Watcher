@@ -6,7 +6,7 @@ using System.Net;
 using log4net;
 using Watcher.Common;
 
-namespace Watcher.Service.Notifier
+namespace Watcher.Service.Services.Notifiers
 {
    public static class NotifyMyAndroid
     {

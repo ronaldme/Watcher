@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Watcher.Common;
 using Watcher.DAL;
 using Watcher.Service.Services;
+using Watcher.Service.Services.Notifiers;
 
 namespace Watcher.Service
 {
