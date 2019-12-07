@@ -11,7 +11,7 @@ using Watcher.Service.Json.Shows;
 using Convert = Watcher.Service.Json.Convert;
 using Season = Watcher.Messages.Show.Season;
 
-namespace Watcher.Service.TheMovieDb
+namespace Watcher.Service.API
 {
     public class TheMovieDb : ITheMovieDb
     {

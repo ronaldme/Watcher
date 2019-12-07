@@ -1,6 +1,6 @@
 ﻿using Watcher.Messages.Show;
 
-namespace Watcher.Service.TheMovieDb
+namespace Watcher.Service.API
 {
     public class CurrentNextSeason
     {
