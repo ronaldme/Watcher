@@ -12,6 +12,16 @@ namespace Watcher.DAL
         {
         }
 
+        public WatcherDbContext()
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // TODO: Use ConnectionString options
+            optionsBuilder.UseSqlServer("Server=(local);Database=Watcher;User Id=guest;Password=guest;MultipleActiveResultSets=True");
+        }
+
         public virtual DbSet<Person> Persons { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Show> Shows { get; set; }

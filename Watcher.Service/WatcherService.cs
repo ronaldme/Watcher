@@ -2,9 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Watcher.Common;
+using Watcher.DAL;
 using Watcher.Service.Services;
 using Watcher.Service.Services.Notifiers;
 using Timer = System.Timers.Timer;
@@ -32,6 +34,8 @@ namespace Watcher.Service
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            await Migrate();
+
             await _notifyScheduler.Start();
             InitAndStartUpdateIntervals();
         }
@@ -40,6 +44,12 @@ namespace Watcher.Service
         {
             await _notifyScheduler.Stop();
             StopIntervals();
+        }
+
+        private async Task Migrate()
+        {
+            await using var db = new WatcherDbContext();
+            await db.Database.MigrateAsync();
         }
 
         #region Timers (TODO: Refactor this)
