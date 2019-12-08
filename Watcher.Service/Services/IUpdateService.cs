@@ -4,7 +4,8 @@ namespace Watcher.Service.Services
 {
     public interface IUpdateService
     {
-        Task Start();
-        Task Stop();
+        Task UpdateMovies();
+        Task UpdateShows();
+        Task UpdatePersons();
     }
 }
