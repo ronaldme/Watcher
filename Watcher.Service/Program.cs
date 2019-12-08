@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Watcher.Common;
 using Watcher.DAL;
+using Watcher.Service.API;
 using Watcher.Service.Services;
 using Watcher.Service.Services.Notifiers;
 
@@ -26,6 +27,9 @@ namespace Watcher.Service
                     services.AddDbContext<WatcherDbContext>();
 
                     services.AddSingleton<INotifyScheduler, NotifyScheduler>();
+                    services.AddSingleton<ITheMovieDb, TheMovieDb>();
+
+                    services.AddTransient< IUpdateService, UpdateService>();
 
                     var config = hostContext.Configuration;
                     services.Configure<AppSettings>(config.GetSection("AppSettings"));
