@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using log4net;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using Watcher.DAL;
 using Watcher.DAL.Entities;
@@ -11,26 +12,27 @@ namespace Watcher.Service.Services.Notifiers
 {
     public class NotifyJob : IJob
     {
-        private readonly ILog _log;
+        private readonly MailNotifier _mailNotifier;
+        private readonly ILogger<NotifyJob> _logger;
         private readonly WatcherDbContext _db;
 
-        public NotifyJob(ILog log,
+        public NotifyJob(MailNotifier mailNotifier,
+            ILogger<NotifyJob> logger,
             WatcherDbContext db)
         {
-            _log = log;
+            _mailNotifier = mailNotifier;
+            _logger = logger;
             _db = db;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var users = _db.Users
-                .Where(user => user.GetEmailNotifications || !string.IsNullOrEmpty(user.NotifyMyAndroidKey) &&
+            var users = await _db.Users
+                .Where(user => user.GetEmailNotifications &&
                                user.NotifyAtHoursPastMidnight == DateTime.UtcNow.Hour)
-                .ToList();
+                .ToListAsync();
 
-            var mailNotifier = new MailNotifier();
-
-            foreach (User user in users)
+            foreach (var user in users)
             {
                 var notificationList = new List<string>();
                 bool notifyDayLater = user.NotifyDayLater;
@@ -50,23 +52,8 @@ namespace Watcher.Service.Services.Notifiers
 
                 if (notificationList.Any())
                 {
-                    HandleMailNotifications(user, mailNotifier, notificationList);
-                    HandleNotifyMyAndroidNotifications(user, notificationList);
+                    HandleMailNotifications(user, _mailNotifier, notificationList);
                 }
-            }
-        }
-
-        private void HandleNotifyMyAndroidNotifications(User user, List<string> notificationList)
-        {
-            if (string.IsNullOrEmpty(user.NotifyMyAndroidKey)) return;
-
-            try
-            {
-                NotifyMyAndroid.NotifyUser(notificationList, user.NotifyMyAndroidKey);
-            }
-            catch (Exception e)
-            {
-                _log.Error("Sending NotifyMyAndroid notification failed", e);
             }
         }
 
@@ -85,7 +72,7 @@ namespace Watcher.Service.Services.Notifiers
             }
             catch (Exception e)
             {
-                _log.Error("Sending email notification failed", e);
+                _logger.LogError("Sending email notification failed", e);
             }
         }
 

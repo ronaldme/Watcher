@@ -5,7 +5,6 @@
         public int NotifyHour { get; set; }
         public bool NotifyDayLater { get; set; }
         public bool GetEmailNotifications { get; set; }
-        public string NotifyMyAndroidKey { get; set; }
         public bool Success { get; set; }
     }
 }

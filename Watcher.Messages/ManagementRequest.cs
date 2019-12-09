@@ -8,6 +8,5 @@
         public bool SetData { get; set; }
         public bool NotifyDayLater { get; set; }
         public bool GetEmailNotifications { get; set; }
-        public string NotifyMyAndroidKey { get; set; }
     }
 }

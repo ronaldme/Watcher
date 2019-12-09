@@ -33,14 +33,6 @@ namespace Watcher.Common
 
         public static string PrefixImages = "http://image.tmdb.org/t/p/w185";
 
-        /// <summary>
-        /// NotifyMyAndroid URL
-        /// </summary>
-        public static string GetNotifyMyAndroidUrl(string apiKey)
-        {
-            return PreFixUrlNotify + apiKey + "&application=Watcher&event=New%20Releases&description=";
-        }
-
         public static string SearchTvSeasons(int tvId, int season)
         {
             return $"{PreFixUrl}tv/{tvId}/season/{season}{SuffixUrl}";

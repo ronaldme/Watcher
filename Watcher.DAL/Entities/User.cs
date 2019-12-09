@@ -11,7 +11,6 @@ namespace Watcher.DAL.Entities
         public string Email { get; set; }
         public bool GetEmailNotifications { get; set; }
         public int NotifyAtHoursPastMidnight { get; set; }
-        public string NotifyMyAndroidKey { get; set; }
         public bool NotifyDayLater { get; set; }
         public virtual ICollection<UserMovie> UserMovies { get; set; }
         public virtual ICollection<UserShow> UserShows { get; set; }
