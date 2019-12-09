@@ -1,0 +1,17 @@
+{
+  "Version": 3,
+  "ListAllProjects": false,
+  "MultiProjectConfigurations": {
+    "Backend service": {
+      "Projects": {
+        "Watcher.Service": {}
+      }
+    },
+    "Backend service / web": {
+      "Projects": {
+        "Watcher.Service": {},
+        "Watcher.Web": {}
+      }
+    }
+  }
+}
