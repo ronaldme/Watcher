@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using EasyNetQ;
-using log4net;
 using Watcher.Common;
 using Watcher.DAL;
 using Watcher.DAL.Entities;
@@ -11,110 +10,104 @@ using Watcher.Messages.Movie;
 using Watcher.Messages.Person;
 using Watcher.Messages.Show;
 using Watcher.Messages.Subscription;
-using Watcher.Service.Infrastructure;
-using Watcher.Service.TheMovieDb;
+using Watcher.Service.API;
 
 namespace Watcher.Service.Services
 {
-    public class SubscribeService : IService
+    public class SubscribeService : IMqService
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ITheMovieDb theMovieDb;
-        private readonly IBus bus;
+        private readonly ITheMovieDb _theMovieDb;
+        private readonly IBus _bus;
 
         public SubscribeService(IBus bus,
             ITheMovieDb theMovieDb)
         {
-            this.bus = bus;
-            this.theMovieDb = theMovieDb;
+            _bus = bus;
+            _theMovieDb = theMovieDb;
         }
 
         public void HandleRequests()
         {
-            bus.Respond<TvSubscription, Subscription>(SubscribeToShow);
-            bus.Respond<MovieSubscription, Subscription>(SubscribeToMovie);
-            bus.Respond<PersonSubscription, Subscription>(SubscribeToPerson);
-            bus.Respond<Unsubscribe, Unsubscription>(Unsubscribe);
+            _bus.Respond<TvSubscription, Subscription>(SubscribeToShow);
+            _bus.Respond<MovieSubscription, Subscription>(SubscribeToMovie);
+            _bus.Respond<PersonSubscription, Subscription>(SubscribeToPerson);
+            _bus.Respond<Unsubscribe, Unsubscription>(Unsubscribe);
         }
 
         private Subscription SubscribeToShow(TvSubscription tvSubscription)
         {
-            using (var context = new WatcherDbContext())
+            using var context = new WatcherDbContext();
+            try
             {
-                try
-                {
-                    var user = context.Users.FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
-                    var show = context.Shows.FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
+                var user = context.Users.FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
+                var show = context.Shows.FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
                     
-                    ShowDto showInfo = theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
-                    ShowDto dto = theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
+                ShowDto showInfo = _theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
+                ShowDto dto = _theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
-                    if (user == null)
-                    {
-                        user = CreateUser(tvSubscription, show);
-                    }
-                    if (show == null)
-                    {
-                        show = CreateShow(tvSubscription, showInfo, dto);
-                    }
-                    else
-                    {
-                        // update show info
-                        show.ReleaseNextEpisode = dto.ReleaseNextEpisode;
-                        show.NextEpisode = dto.NextEpisode;
-                        show.PosterPath = dto.PosterPath;
-                    }
-
-                    //user.Shows.Add(show);
-                    //context.Users.AddOrUpdate(user);
-                    context.SaveChanges();
-
-                    return new Subscription {IsSuccess = true};
-                }
-                catch (Exception e)
+                if (user == null)
                 {
-                    log.WarnFormat("Subscribing to show failed: {0}", e.Message);
-                    
-                    return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
+                    user = CreateUser(tvSubscription, show);
                 }
+                if (show == null)
+                {
+                    show = CreateShow(tvSubscription, showInfo, dto);
+                }
+                else
+                {
+                    // update show info
+                    show.ReleaseNextEpisode = dto.ReleaseNextEpisode;
+                    show.NextEpisode = dto.NextEpisode;
+                    show.PosterPath = dto.PosterPath;
+                }
+
+                //user.Shows.Add(show);
+                //context.Users.AddOrUpdate(user);
+                context.SaveChanges();
+
+                return new Subscription {IsSuccess = true};
+            }
+            catch (Exception e)
+            {
+                //log.WarnFormat("Subscribing to show failed: {0}", e.Message);
+                    
+                return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
             }
         }
 
         private Subscription SubscribeToMovie(MovieSubscription movieSubscription)
         {
-            using (var context = new WatcherDbContext())
+            using var context = new WatcherDbContext();
+            try
             {
-                try
+                User user = context.Users.FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
+                Movie movie = context.Movies.FirstOrDefault(x => x.TheMovieDbId == movieSubscription.TheMovieDbId);
+                MovieDto movieInfo = _theMovieDb.GetMovieBy(movieSubscription.TheMovieDbId);
+
+                user = user ?? CreateUser(movieSubscription, movie);
+
+                if (movie == null)
                 {
-                    User user = context.Users.FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
-                    Movie movie = context.Movies.FirstOrDefault(x => x.TheMovieDbId == movieSubscription.TheMovieDbId);
-                    MovieDto movieInfo = theMovieDb.GetMovieBy(movieSubscription.TheMovieDbId);
-
-                    user = user ?? CreateUser(movieSubscription, movie);
-
-                    if (movie == null)
-                    {
-                        movie = CreateMovie(movieSubscription, movieInfo);
-                    }
-                    else
-                    {
-                        // update movie info
-                        movie.ReleaseDate = movieInfo.ReleaseDate;
-                        movie.PosterPath = movieInfo.PosterPath;
-                    }
-
-                    //user.Movies.Add(movie);
-                    //context.Users.AddOrUpdate(user);
-                    context.SaveChanges();
-
-                    return new Subscription {IsSuccess = true};
+                    movie = CreateMovie(movieSubscription, movieInfo);
                 }
-                catch (Exception e)
+                else
                 {
-                    log.WarnFormat("Subscribing to movie failed: {0} ", e.Message);
-
-                    return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
+                    // update movie info
+                    movie.ReleaseDate = movieInfo.ReleaseDate;
+                    movie.PosterPath = movieInfo.PosterPath;
                 }
+
+                //user.Movies.Add(movie);
+                //context.Users.AddOrUpdate(user);
+                context.SaveChanges();
+
+                return new Subscription {IsSuccess = true};
+            }
+            catch (Exception e)
+            {
+                //log.WarnFormat("Subscribing to movie failed: {0} ", e.Message);
+
+                return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
             }
         }
 
@@ -126,7 +119,7 @@ namespace Watcher.Service.Services
                 {
                     User user = context.Users.FirstOrDefault(x => x.Email == personSubscription.EmailUser);
                     Person person = context.Persons.FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
-                    PersonDto personInfo = theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
+                    PersonDto personInfo = _theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
 
                     user = user ?? CreateUser(personSubscription, person);
 
@@ -151,7 +144,7 @@ namespace Watcher.Service.Services
                 }
                 catch (Exception e)
                 {
-                    log.WarnFormat("Subscribing to person failed: {0} ", e.Message);
+                    //log.WarnFormat("Subscribing to person failed: {0} ", e.Message);
 
                     return new Subscription { IsSuccess = false, Message = e.InnerException.ToString() };
                 }
@@ -160,38 +153,36 @@ namespace Watcher.Service.Services
 
         private Unsubscription Unsubscribe(Unsubscribe unsubscribe)
         {
-            using (var context = new WatcherDbContext())
+            using var context = new WatcherDbContext();
+            var user = context.Users.FirstOrDefault(x => x.Email == unsubscribe.Email);
+
+            if (user != null)
             {
-                var user = context.Users.FirstOrDefault(x => x.Email == unsubscribe.Email);
-
-                if (user != null)
+                switch (unsubscribe.SubscriptionType)
                 {
-                    /*switch (unsubscribe.SubcriptionType)
-                    {
-                        case SubscriptionType.Movie:
-                            var movie = context.Movies.Find(unsubscribe.Id);
-                            user.Movies.Remove(movie);
-                            break;
-                        case SubscriptionType.TvShow:
-                            var show = context.Shows.Find(unsubscribe.Id);
-                            user.Shows.Remove(show);
-                            break;
-                        case SubscriptionType.Person:
-                            var person = context.Persons.Find(unsubscribe.Id);
-                            user.Persons.Remove(person);
-                            break;
-                    }*/
-
-                    context.SaveChanges();
-                    return new Unsubscription { IsSuccess = true };
+                    case SubscriptionType.Movie:
+                        var movie = context.Movies.Find(unsubscribe.Id);
+                        //user.Movies.Remove(movie);
+                        break;
+                    case SubscriptionType.TvShow:
+                        var show = context.Shows.Find(unsubscribe.Id);
+                        //user.Shows.Remove(show);
+                        break;
+                    case SubscriptionType.Person:
+                        var person = context.Persons.Find(unsubscribe.Id);
+                        //user.Persons.Remove(person);
+                        break;
                 }
 
-                return new Unsubscription
-                {
-                    IsSuccess = false,
-                    Message = "No user found."
-                };
+                context.SaveChanges();
+                return new Unsubscription { IsSuccess = true };
             }
+
+            return new Unsubscription
+            {
+                IsSuccess = false,
+                Message = "No user found."
+            };
         }
 
         private Movie CreateMovie(MovieSubscription movieSubscription, MovieDto movieInfo)

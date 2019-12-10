@@ -4,7 +4,6 @@ using MimeKit;
 namespace Watcher.Service.Services.Notifiers
 {
     // TODO: DI
-
     public class MailNotifier
     {
         private readonly SmtpSettings _settings;
@@ -12,7 +11,6 @@ namespace Watcher.Service.Services.Notifiers
         public MailNotifier(SmtpSettings settings)
         {
             _settings = settings;
-            // TODO: Implement using MailKit
         }
 
         public void NotifyUser(UserNotification notification)

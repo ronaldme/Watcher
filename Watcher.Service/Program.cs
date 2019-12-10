@@ -28,6 +28,9 @@ namespace Watcher.Service
 
                     services.AddSingleton<INotifyScheduler, NotifyScheduler>();
                     services.AddSingleton<ITheMovieDb, TheMovieDb>();
+                    
+                    // MQ services
+                    AddMqServices(services);
 
                     services.AddTransient< IUpdateService, UpdateService>();
 
@@ -41,5 +44,10 @@ namespace Watcher.Service
                     logging.AddConsole();
                     logging.SetMinimumLevel(LogLevel.Debug);
                 });
+
+        private static void AddMqServices(IServiceCollection services)
+        {
+            services.AddSingleton<IMqService, OverviewService>();
+        }
     }
 }

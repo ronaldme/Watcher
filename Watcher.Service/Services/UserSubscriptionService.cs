@@ -6,36 +6,34 @@ using Watcher.Messages.Movie;
 using Watcher.Messages.Person;
 using Watcher.Messages.Show;
 using Watcher.Messages.Subscription;
-using Watcher.Service.Infrastructure;
 
 namespace Watcher.Service.Services
 {
-    public class UserSubscriptionService : IService
+    public class UserSubscriptionService : IMqService
     {
-        private readonly IBus bus;
+        private readonly IBus _bus;
         
         public UserSubscriptionService(IBus bus)
         {
-            this.bus = bus;
+            _bus = bus;
         }
 
         public void HandleRequests()
         {
-            bus.Respond<ShowSubscriptionRequest, ShowSubscriptionListDto>(GetShowSubscriptions);
-            bus.Respond<MovieSubscriptionRequest, MovieSubscriptionListDto>(GetMovieSubscriptions);
-            bus.Respond<PersonSubscriptionRequest, PersonSubscriptionListDto>(GetPersonSubscriptions);
+            _bus.Respond<ShowSubscriptionRequest, ShowSubscriptionListDto>(GetShowSubscriptions);
+            _bus.Respond<MovieSubscriptionRequest, MovieSubscriptionListDto>(GetMovieSubscriptions);
+            _bus.Respond<PersonSubscriptionRequest, PersonSubscriptionListDto>(GetPersonSubscriptions);
         }
 
         private PersonSubscriptionListDto GetPersonSubscriptions(PersonSubscriptionRequest request)
         {
-            using (var context = new WatcherDbContext())
-            {
-                var user = context.Users.FirstOrDefault(x => x.Email == request.Email);
+            using var context = new WatcherDbContext();
+            var user = context.Users.FirstOrDefault(x => x.Email == request.Email);
 
-                if (user != null)
-                {
-                   var subscriptions = user.UserPersons.Select(x => new PersonSubscriptionsDto
-                   {
+            if (user != null)
+            {
+                var subscriptions = user.UserPersons.Select(x => new PersonSubscriptionsDto
+                    {
                         Id = x.Person.Id,
                         Name = x.Person.Name,
                         ProductionName = x.Person.ProductionName,
@@ -47,26 +45,24 @@ namespace Watcher.Service.Services
                     .Take(request.Take)
                     .ToList();
 
-                    return new PersonSubscriptionListDto
-                    {
-                        Subscriptions = subscriptions,
-                        Total = user.UserPersons.Count
-                    };
-                }
-
-                return new PersonSubscriptionListDto();
+                return new PersonSubscriptionListDto
+                {
+                    Subscriptions = subscriptions,
+                    Total = user.UserPersons.Count
+                };
             }
+
+            return new PersonSubscriptionListDto();
         }
 
         private ShowSubscriptionListDto GetShowSubscriptions(ShowSubscriptionRequest request)
         {
-            using (var context = new WatcherDbContext())
-            {
-                var user = context.Users.FirstOrDefault(x => x.Email == request.Email);
+            using var context = new WatcherDbContext();
+            var user = context.Users.FirstOrDefault(x => x.Email == request.Email);
                     
-                if (user != null)
-                {
-                    var shows = user.UserShows
+            if (user != null)
+            {
+                var shows = user.UserShows
                     .Skip(request.Skip)
                     .Take(request.Take)
                     .Select(x => new ShowSubscriptionsDto
@@ -81,26 +77,24 @@ namespace Watcher.Service.Services
                     })
                     .ToList();
 
-                    return new ShowSubscriptionListDto
-                    {
-                        Subscriptions = shows,
-                        Total = user.UserShows.Count
-                    };
-                }
-
-                return new ShowSubscriptionListDto();
+                return new ShowSubscriptionListDto
+                {
+                    Subscriptions = shows,
+                    Total = user.UserShows.Count
+                };
             }
+
+            return new ShowSubscriptionListDto();
         }
 
         private MovieSubscriptionListDto GetMovieSubscriptions(MovieSubscriptionRequest request)
         {
-            using (var context = new WatcherDbContext())
-            {
-                var user = context.Users.FirstOrDefault(x => x.Email == request.Email);
+            using var context = new WatcherDbContext();
+            var user = context.Users.FirstOrDefault(x => x.Email == request.Email);
                    
-                if (user != null)
-                {
-                    var movies = user.UserMovies.Select(x => new MovieSubscriptionsDto
+            if (user != null)
+            {
+                var movies = user.UserMovies.Select(x => new MovieSubscriptionsDto
                     {
                         Id = x.Movie.Id,
                         Name = x.Movie.Name,
@@ -111,15 +105,14 @@ namespace Watcher.Service.Services
                     .Take(request.Take)
                     .ToList();
 
-                    return new MovieSubscriptionListDto
-                    {
-                        Subscriptions = movies,
-                        Total = user.UserMovies.Count
-                    };
-                }
-
-                return new MovieSubscriptionListDto();
+                return new MovieSubscriptionListDto
+                {
+                    Subscriptions = movies,
+                    Total = user.UserMovies.Count
+                };
             }
+
+            return new MovieSubscriptionListDto();
         }
     }
 }

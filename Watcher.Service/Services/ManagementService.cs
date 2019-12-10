@@ -1,67 +1,62 @@
-﻿using System.Linq;
+﻿using System.Threading.Tasks;
 using EasyNetQ;
+using Microsoft.EntityFrameworkCore;
 using Watcher.DAL;
 using Watcher.DAL.Entities;
 using Watcher.Messages;
-using Watcher.Service.Infrastructure;
 
 namespace Watcher.Service.Services
 {
-    public class ManagementService : IService
+    public class ManagementService : IMqService
     {
-        private readonly IBus bus;
+        private readonly IBus _bus;
 
         public ManagementService(IBus bus)
         {
-            this.bus = bus;
+            _bus = bus;
         }
 
         public void HandleRequests()
         {
-            bus.Respond<ManagementRequest, ManagementResponse>(Manage);
+            _bus.RespondAsync<ManagementRequest, ManagementResponse>(Manage);
         }
 
-        private ManagementResponse Manage(ManagementRequest request)
+        private async Task<ManagementResponse> Manage(ManagementRequest request)
         {
-            using (var context = new WatcherDbContext())
-            {
-                var user = context.Users.SingleOrDefault(x => x.Email == request.OldEmail);
+            await using var context = new WatcherDbContext();
+            var user = await context.Users.SingleOrDefaultAsync(x => x.Email == request.OldEmail);
                     
-                if (user != null)
+            if (user != null)
+            {
+                if (request.SetData)
                 {
-                    if (request.SetData)
-                    {
-                        user.NotifyAtHoursPastMidnight = request.NotifyHour;
-                        user.Email = request.Email;
-                        user.NotifyDayLater = request.NotifyDayLater;
-                        user.NotifyMyAndroidKey = request.NotifyMyAndroidKey;
-                        user.GetEmailNotifications = request.GetEmailNotifications;
-                        context.SaveChanges();
-                    }
-
-                    return new ManagementResponse
-                    {
-                        Success = true,
-                        NotifyHour = user.NotifyAtHoursPastMidnight,
-                        NotifyDayLater = user.NotifyDayLater,
-                        NotifyMyAndroidKey = user.NotifyMyAndroidKey,
-                        GetEmailNotifications = user.GetEmailNotifications
-                    };
+                    user.NotifyAtHoursPastMidnight = request.NotifyHour;
+                    user.Email = request.Email;
+                    user.NotifyDayLater = request.NotifyDayLater;
+                    user.GetEmailNotifications = request.GetEmailNotifications;
+                    await context.SaveChangesAsync();
                 }
 
-                context.Users.Add(new User
+                return new ManagementResponse
                 {
-                    Email = request.Email,
-                    NotifyAtHoursPastMidnight = request.NotifyHour,
-                    NotifyMyAndroidKey = request.NotifyMyAndroidKey,
-                    NotifyDayLater = request.NotifyDayLater,
-                    GetEmailNotifications = request.GetEmailNotifications
-                });
-
-                context.SaveChanges();
-
-                return new ManagementResponse {Success = true};
+                    Success = true,
+                    NotifyHour = user.NotifyAtHoursPastMidnight,
+                    NotifyDayLater = user.NotifyDayLater,
+                    GetEmailNotifications = user.GetEmailNotifications
+                };
             }
+
+            context.Users.Add(new User
+            {
+                Email = request.Email,
+                NotifyAtHoursPastMidnight = request.NotifyHour,
+                NotifyDayLater = request.NotifyDayLater,
+                GetEmailNotifications = request.GetEmailNotifications
+            });
+
+            await context.SaveChangesAsync();
+
+            return new ManagementResponse {Success = true};
         }
     }
 }
