@@ -7,7 +7,6 @@ namespace Watcher.Common
     {
         private const string PreFixUrl = "http://api.themoviedb.org/3/";
         private static readonly string SuffixUrl = "?api_key=" + ConfigurationManager.AppSettings.Get("theMovieDb");
-        private const string PreFixUrlNotify = "https://www.notifymyandroid.com/publicapi/notify?apikey=";
 
         /// <summary>
         /// Movie urls
