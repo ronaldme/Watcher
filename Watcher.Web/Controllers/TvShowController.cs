@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using EasyNetQ;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Watcher.Messages.Show;
 
 namespace Watcher.Web.Controllers
@@ -11,16 +9,14 @@ namespace Watcher.Web.Controllers
     [Route("[controller]")]
     public class TvShowController : ControllerBase
     {
-        // TODO: DI
-        private IBus bus = RabbitHutch.CreateBus("host=localhost;username=guest;password=guest");
-        private readonly ILogger<TvShowController> _logger;
+        private readonly IBus _bus;
 
-        public TvShowController(ILogger<TvShowController> logger)
+        public TvShowController(IBus bus)
         {
-            _logger = logger;
+            _bus = bus;
         }
 
         [HttpGet]
-        public List<ShowDto> Get() => bus.Request<TvShowRequest, List<ShowDto>>(new TvShowRequest());
+        public List<ShowDto> Get() => _bus.Request<TvShowRequest, List<ShowDto>>(new TvShowRequest());
     }
 }

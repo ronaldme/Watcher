@@ -1,3 +1,4 @@
+using EasyNetQ;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,7 +21,6 @@ namespace Watcher.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -44,6 +44,8 @@ namespace Watcher.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSingleton(RabbitHutch.CreateBus(Configuration.GetConnectionString("easynetq")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +59,6 @@ namespace Watcher.Web
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
