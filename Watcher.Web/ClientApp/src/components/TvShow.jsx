@@ -1,64 +1,47 @@
-import React, { Component } from 'react';
-import authService from './api-authorization/AuthorizeService'
+import React, { useState, useEffect } from 'react';
+import Loading from './shared/Loading';
 
-export class TvShow extends Component {
-    static displayName = TvShow.name;
-
-    constructor(props) {
-        super(props);
-        this.state = { shows: [], loading: true };
-    }
-
-    componentDidMount() {
-        this.populateWeatherData();
-    }
-
-    static renderShows(shows) {
-        return (
-            <table className='table table-striped' aria-labelledby="tabelLabel">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Next episode</th>
-                    <th>Number of seasons</th>
-                </tr>
-                </thead>
-                <tbody>
-                {shows.map(show =>
+function renderShows(shows) {
+    return (
+        <table className='table table-striped' aria-labelledby="tabelLabel">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {shows.map(show =>
                     <tr key={show.id}>
                         <td>{show.name}</td>
-                        <td>{show.nextEpisode}</td>
-                        <td>{show.numberOfSeasons}</td>
+                        <td>{show.description}</td>
                     </tr>
                 )}
-                </tbody>
-            </table>
-        );
+            </tbody>
+        </table>
+    );
+}
+
+export function TvShow() {
+    const [shows, setShows] = useState(null);
+
+    async function getData() {
+        const response = await fetch('tvshow');
+
+        const shows = await response.json();
+        setShows(shows);
     }
 
-    render() {
-        let contents = this.state.loading
-            ? <p>
-                  <em>Loading...</em>
-              </p>
-            : TvShow.renderShows(this.state.tvShows);
+    useEffect(() => {
+        getData();
+    },[]);
 
-        return (
-            <div>
-                <h1 id="tabelLabel">Weather forecast</h1>
-                <p>This component demonstrates fetching data from the server.</p>
-                {contents}
-            </div>
-        );
-    }
+    const contents = shows == null ? <Loading /> : renderShows(shows);
 
-    async populateWeatherData() {
-        const token = await authService.getAccessToken();
-        const response = await fetch('tvshow',
-            {
-                headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-            });
-        const tvShows = await response.json();
-        this.setState({ tvShows: tvShows, loading: false });
-    }
+    return (
+        <div>
+            <h1>Tv show overview</h1>
+            {contents}
+        </div>
+    );
 }
