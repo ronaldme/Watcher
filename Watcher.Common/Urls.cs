@@ -6,7 +6,7 @@ namespace Watcher.Common
     public class Urls
     {
         private static readonly string SuffixUrl = "?api_key=" + ConfigurationManager.AppSettings.Get("theMovieDb");
-        private const string PreFixUrl = "http://api.themoviedb.org/4/";
+        private const string PreFixUrl = "http://api.themoviedb.org/3/";
 
         /// <summary>
         /// Movie urls
