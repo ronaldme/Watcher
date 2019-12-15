@@ -14,6 +14,7 @@ namespace Watcher.Common
         public static string SearchMovie = FormatUrl("search/movie");
         public static string SearchMovieById = "movie/";
         public static string UpcomingMovies = FormatUrl("movie/upcoming");
+        public static string PopularMovies = FormatUrl("movie/popular");
 
         /// <summary>
         /// Tv urls
@@ -21,6 +22,7 @@ namespace Watcher.Common
         public static string SearchTv = FormatUrl("search/tv");
         public static string SearchTvById = "tv/";
         public static string TopRated = FormatUrl("tv/top_rated");
+        public static string PopularShows = FormatUrl("tv/popular");
         public static string Seasons = "tv/57243/season/8" + SuffixUrl;
 
         /// <summary>
