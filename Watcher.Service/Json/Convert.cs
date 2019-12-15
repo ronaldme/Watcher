@@ -21,7 +21,10 @@ namespace Watcher.Service.Json
             {
                 Id = tvShow.Id,
                 Name = tvShow.Name,
-                PosterPath = tvShow.Poster_Path
+                PosterPath = tvShow.Poster_Path,
+                Description = tvShow.Overview,
+                VoteAverage = tvShow.Vote_Average,
+
             }).ToList();
         }
 
@@ -53,7 +56,8 @@ namespace Watcher.Service.Json
                 Id = rootObjectMovie.Id,
                 Name = rootObjectMovie.Title,
                 ReleaseDate = !string.IsNullOrEmpty(rootObjectMovie.Release_Date) ? DateTime.Parse(rootObjectMovie.Release_Date) : DateTime.MinValue,
-                PosterPath = rootObjectMovie.Poster_Path
+                PosterPath = rootObjectMovie.Poster_Path,
+                Description = rootObjectMovie.Overview,
             }).ToList();
         }
 
@@ -66,7 +70,8 @@ namespace Watcher.Service.Json
                 Id = deserialized.Id,
                 Name = deserialized.Title,
                 ReleaseDate = !string.IsNullOrEmpty(deserialized.Release_Date) ? DateTime.Parse(deserialized.Release_Date) : (DateTime?)null,
-                PosterPath = deserialized.Poster_Path
+                PosterPath = deserialized.Poster_Path,
+                Description = deserialized.Overview,
             };
         }
 
@@ -80,7 +85,8 @@ namespace Watcher.Service.Json
                 Id = result.Id,
                 Name = result.Title,
                 ReleaseDate = !string.IsNullOrEmpty(result.Release_Date) ? DateTime.Parse(result.Release_Date) : DateTime.MinValue,
-                PosterPath = result.Poster_Path
+                PosterPath = result.Poster_Path,
+                Description = result.Overview
             }).ToList();
         }
 

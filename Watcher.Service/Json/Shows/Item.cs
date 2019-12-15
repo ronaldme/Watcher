@@ -14,5 +14,6 @@ namespace Watcher.Service.Json.Shows
         public string Name { get; set; }
         public double Vote_Average { get; set; }
         public int Vote_Count { get; set; }
+        public string Overview { get; set; }
     }
 }
