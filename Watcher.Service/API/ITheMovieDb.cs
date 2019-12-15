@@ -8,16 +8,16 @@ namespace Watcher.Service.API
     public interface ITheMovieDb
     {
         List<ShowDto> SearchTvShows(string search);
-        List<MovieDto> SearchMovie(string search);
-        List<PersonDto> SearchPerson(string search);
+        List<MovieDto> SearchMovies(string search);
+        List<PersonDto> SearchPersons(string search);
 
-        List<ShowDto> TopRated();
-        List<MovieDto> Upcoming();
-        List<PersonDto> Populair();
+        List<ShowDto> PopularShows();
+        List<PersonDto> PopularPersons();
+        List<MovieDto> PopularMovies();
 
-        ShowDto GetShowBy(int id);
-        MovieDto GetMovieBy(int id);
-        PersonDto GetPersonBy(int id);
+        ShowDto GetShowById(int id);
+        MovieDto GetMovieById(int id);
+        PersonDto GetPersonById(int id);
 
         ShowDto GetLatestEpisode(int tvId, List<Season> seasons);
     }

@@ -28,7 +28,7 @@ namespace Watcher.Service.Services
 
             foreach (var movie in movies)
             {
-                var movieInfo = _theMovieDb.GetMovieBy(movie.TheMovieDbId);
+                var movieInfo = _theMovieDb.GetMovieById(movie.TheMovieDbId);
 
                 if (movie.ReleaseDate.HasValue)
                 {
@@ -62,7 +62,7 @@ namespace Watcher.Service.Services
 
             foreach (var show in shows)
             {
-                var showInfo = _theMovieDb.GetShowBy(show.TheMovieDbId);
+                var showInfo = _theMovieDb.GetShowById(show.TheMovieDbId);
                 var showDto = _theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
                 if (showDto.ReleaseNextEpisode.HasValue)
@@ -105,7 +105,7 @@ namespace Watcher.Service.Services
 
             foreach (var person in persons)
             {
-                var personInfo = _theMovieDb.GetPersonBy(person.TheMovieDbId);
+                var personInfo = _theMovieDb.GetPersonById(person.TheMovieDbId);
 
                 if (person.ReleaseDate.HasValue && personInfo.ReleaseDate.HasValue)
                 {

@@ -23,7 +23,7 @@ namespace Watcher.Service.API
             return Convert.ToShows(json);
         }
 
-        public List<MovieDto> SearchMovie(string search)
+        public List<MovieDto> SearchMovies(string search)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchMovie + "&query=" + ReplaceSpaces(search));
             string json = GetResponse(request);
@@ -31,7 +31,7 @@ namespace Watcher.Service.API
             return Convert.ToMovies(json);
         }
 
-        public List<PersonDto> SearchPerson(string search)
+        public List<PersonDto> SearchPersons(string search)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchPerson + "&query=" + ReplaceSpaces(search));
             string json = GetResponse(request);
@@ -39,20 +39,28 @@ namespace Watcher.Service.API
             return Convert.ToPersons(json);
         }
 
-        public List<ShowDto> TopRated()
+        public List<ShowDto> PopularShows()
         {
-            var request = (HttpWebRequest)WebRequest.Create(Urls.TopRated);
+            var request = (HttpWebRequest)WebRequest.Create(Urls.PopularShows);
             string json = GetResponse(request);
 
             return Convert.ToShows(json);
         }
 
-        public List<PersonDto> Populair()
+        public List<PersonDto> PopularPersons()
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.PopularPersons);
             string json = GetResponse(request);
 
             return Convert.ToPersons(json);
+        }
+
+        public List<MovieDto> PopularMovies()
+        {
+            var request = (HttpWebRequest)WebRequest.Create(Urls.PopularMovies);
+            string json = GetResponse(request);
+
+            return Convert.ToMovies(json);
         }
 
         public List<MovieDto> Upcoming()
@@ -63,7 +71,7 @@ namespace Watcher.Service.API
             return Convert.ToUpcoming(json);
         }
 
-        public ShowDto GetShowBy(int id)
+        public ShowDto GetShowById(int id)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchTvById, id));
             string json = GetResponse(request);
@@ -159,7 +167,7 @@ namespace Watcher.Service.API
             return new ShowDto();
         }
 
-        public MovieDto GetMovieBy(int id)
+        public MovieDto GetMovieById(int id)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchMovieById, id));
             string json = GetResponse(request);
@@ -167,7 +175,7 @@ namespace Watcher.Service.API
             return Convert.ToMovie(json);
         }
 
-        public PersonDto GetPersonBy(int id)
+        public PersonDto GetPersonById(int id)
         {
             var request = (HttpWebRequest)WebRequest.Create(Urls.SearchBy(Urls.SearchPersonById, id));
             string json = GetResponse(request);

@@ -18,6 +18,7 @@ namespace Watcher.Service
         private readonly AppSettings _config;
         private readonly INotifyScheduler _notifyScheduler;
         private readonly IUpdateService _updateService;
+        private readonly IMqService _overviewService;
         private Timer _movieInterval;
         private Timer _showInterval;
         private Timer _personInterval;
@@ -25,11 +26,13 @@ namespace Watcher.Service
         public WatcherService(
             IOptions<AppSettings> config,
             INotifyScheduler notifyScheduler,
-            IUpdateService updateService)
+            IUpdateService updateService,
+            IMqService overviewService)
         {
             _config = config.Value;
             _notifyScheduler = notifyScheduler;
             _updateService = updateService;
+            _overviewService = overviewService;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -38,6 +41,7 @@ namespace Watcher.Service
 
             await _notifyScheduler.Start();
             InitAndStartUpdateIntervals();
+            _overviewService.HandleRequests();
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

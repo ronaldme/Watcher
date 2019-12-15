@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EasyNetQ;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Watcher.Common;
@@ -32,11 +34,13 @@ namespace Watcher.Service
                     // MQ services
                     AddMqServices(services);
 
-                    services.AddTransient< IUpdateService, UpdateService>();
+                    services.AddTransient<IUpdateService, UpdateService>();
 
                     var config = hostContext.Configuration;
                     services.Configure<AppSettings>(config.GetSection("AppSettings"));
                     services.Configure<ConnectionString>(config.GetSection("ConnectionStrings"));
+
+                    services.AddSingleton(RabbitHutch.CreateBus(config.GetConnectionString("easynetq")));
                 })
                 .ConfigureLogging(logging =>
                 {

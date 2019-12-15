@@ -42,7 +42,7 @@ namespace Watcher.Service.Services
                 var user = context.Users.FirstOrDefault(x => x.Email == tvSubscription.EmailUser);
                 var show = context.Shows.FirstOrDefault(x => x.TheMovieDbId == tvSubscription.TheMovieDbId);
                     
-                ShowDto showInfo = _theMovieDb.GetShowBy(tvSubscription.TheMovieDbId);
+                ShowDto showInfo = _theMovieDb.GetShowById(tvSubscription.TheMovieDbId);
                 ShowDto dto = _theMovieDb.GetLatestEpisode(showInfo.Id, showInfo.Seasons);
 
                 if (user == null)
@@ -82,7 +82,7 @@ namespace Watcher.Service.Services
             {
                 User user = context.Users.FirstOrDefault(x => x.Email == movieSubscription.EmailUser);
                 Movie movie = context.Movies.FirstOrDefault(x => x.TheMovieDbId == movieSubscription.TheMovieDbId);
-                MovieDto movieInfo = _theMovieDb.GetMovieBy(movieSubscription.TheMovieDbId);
+                MovieDto movieInfo = _theMovieDb.GetMovieById(movieSubscription.TheMovieDbId);
 
                 user = user ?? CreateUser(movieSubscription, movie);
 
@@ -119,7 +119,7 @@ namespace Watcher.Service.Services
                 {
                     User user = context.Users.FirstOrDefault(x => x.Email == personSubscription.EmailUser);
                     Person person = context.Persons.FirstOrDefault(x => x.TheMovieDbId == personSubscription.TheMovieDbId);
-                    PersonDto personInfo = _theMovieDb.GetPersonBy(personSubscription.TheMovieDbId);
+                    PersonDto personInfo = _theMovieDb.GetPersonById(personSubscription.TheMovieDbId);
 
                     user = user ?? CreateUser(personSubscription, person);
 

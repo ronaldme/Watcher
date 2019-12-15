@@ -14,5 +14,7 @@ namespace Watcher.Messages.Show
         public DateTime? ReleaseNextEpisode { get; set; }
         public List<Season> Seasons { get; set; }
         public int NumberOfSeasons { get; set; }
+        public string Description { get; set; }
+        public double VoteAverage { get; set; }
     }
 }

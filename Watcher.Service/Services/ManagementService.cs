@@ -7,7 +7,7 @@ using Watcher.Messages;
 
 namespace Watcher.Service.Services
 {
-    public class ManagementService : IMqService
+    class ManagementService : IMqService
     {
         private readonly IBus _bus;
 
