@@ -24,7 +24,7 @@ function renderMovies(movies) {
     );
 }
 
-export function Movies() {
+export function MovieOverview() {
     const [movies, setMovies] = useState(null);
 
     async function getData() {

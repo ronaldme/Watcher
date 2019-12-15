@@ -22,7 +22,7 @@ function renderShows(shows) {
     );
 }
 
-export function TvShow() {
+export function TvShowOverview() {
     const [shows, setShows] = useState(null);
 
     async function getData() {
