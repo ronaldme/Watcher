@@ -52,6 +52,9 @@ namespace Watcher.Service
         private static void AddMqServices(IServiceCollection services)
         {
             services.AddSingleton<IMqService, OverviewService>();
+            services.AddSingleton<IMqService, ManagementService>();
+            services.AddSingleton<IMqService, SubscribeService>();
+            services.AddSingleton<IMqService, UserSubscriptionService>();
         }
     }
 }

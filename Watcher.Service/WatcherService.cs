@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -18,7 +19,7 @@ namespace Watcher.Service
         private readonly AppSettings _config;
         private readonly INotifyScheduler _notifyScheduler;
         private readonly IUpdateService _updateService;
-        private readonly IMqService _overviewService;
+        private readonly IEnumerable<IMqService> _mqServices;
         private Timer _movieInterval;
         private Timer _showInterval;
         private Timer _personInterval;
@@ -27,12 +28,12 @@ namespace Watcher.Service
             IOptions<AppSettings> config,
             INotifyScheduler notifyScheduler,
             IUpdateService updateService,
-            IMqService overviewService)
+            IEnumerable<IMqService> mqServices)
         {
             _config = config.Value;
             _notifyScheduler = notifyScheduler;
             _updateService = updateService;
-            _overviewService = overviewService;
+            _mqServices = mqServices;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -41,7 +42,9 @@ namespace Watcher.Service
 
             await _notifyScheduler.Start();
             InitAndStartUpdateIntervals();
-            _overviewService.HandleRequests();
+
+            foreach (var mqService in _mqServices)
+                mqService.HandleRequests();
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
