@@ -9,7 +9,7 @@ using Watcher.Messages.Subscription;
 
 namespace Watcher.Service.Services
 {
-    public class UserSubscriptionService : IMqService
+    class UserSubscriptionService : IMqService
     {
         private readonly IBus _bus;
         

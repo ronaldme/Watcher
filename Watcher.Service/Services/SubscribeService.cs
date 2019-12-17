@@ -14,7 +14,7 @@ using Watcher.Service.API;
 
 namespace Watcher.Service.Services
 {
-    public class SubscribeService : IMqService
+    class SubscribeService : IMqService
     {
         private readonly ITheMovieDb _theMovieDb;
         private readonly IBus _bus;

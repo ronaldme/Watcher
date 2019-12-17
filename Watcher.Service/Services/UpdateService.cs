@@ -7,7 +7,7 @@ using Watcher.Service.API;
 
 namespace Watcher.Service.Services
 {
-    public class UpdateService : IUpdateService
+    class UpdateService : IUpdateService
     {
         private readonly ITheMovieDb _theMovieDb;
         private readonly ILogger<UpdateService> _logger;
