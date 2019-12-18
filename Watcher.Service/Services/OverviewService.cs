@@ -27,13 +27,13 @@ namespace Watcher.Service.Services
         public void HandleRequests()
         {
             _bus.Respond<TvShowRequest, List<ShowDto>>(shows => _theMovieDb.PopularShows());
-            _bus.Respond<TvShowSearch, List<ShowDto>>(request => _theMovieDb.SearchTvShows(request.Search));
+            _bus.Respond<TvShowSearchQuery, List<ShowDto>>(request => _theMovieDb.SearchTvShows(request.Search));
 
             _bus.Respond<MovieRequest, List<MovieDto>>(movies => _theMovieDb.PopularMovies());
-            _bus.Respond<MovieSearch, List<MovieDto>>(movies => _theMovieDb.SearchMovies(movies.Search));
+            _bus.Respond<MovieSearchQuery, List<MovieDto>>(movies => _theMovieDb.SearchMovies(movies.Search));
 
             _bus.Respond<PersonRequest, List<PersonDto>>(persons => _theMovieDb.PopularPersons());
-            _bus.Respond<PersonSearch, List<PersonDto>>(persons => _theMovieDb.SearchPersons(persons.Search));
+            _bus.Respond<PersonSearchQuery, List<PersonDto>>(persons => _theMovieDb.SearchPersons(persons.Search));
         }
     }
 }

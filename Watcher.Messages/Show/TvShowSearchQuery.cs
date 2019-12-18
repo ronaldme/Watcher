@@ -1,6 +1,6 @@
 ﻿namespace Watcher.Messages.Show
 {
-    public class TvShowSearch
+    public class TvShowSearchQuery
     {
         public string Search { get; set; }
     }

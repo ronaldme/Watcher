@@ -18,5 +18,12 @@ namespace Watcher.Web.Controllers
 
         [HttpGet]
         public List<ShowDto> Get() => _bus.Request<TvShowRequest, List<ShowDto>>(new TvShowRequest());
+
+        [Route("Search")]
+        public List<ShowDto> Search(string search)
+        {
+            var response = _bus.Request<TvShowSearchQuery, List<ShowDto>>(new TvShowSearchQuery { Search = search });
+            return response;
+        }
     }
 }

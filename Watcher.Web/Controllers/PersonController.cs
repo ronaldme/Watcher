@@ -18,5 +18,12 @@ namespace Watcher.Web.Controllers
 
         [HttpGet]
         public List<PersonDto> Get() => _bus.Request<PersonRequest, List<PersonDto>>(new PersonRequest());
+
+        [Route("Search")]
+        public List<PersonDto> Search(string search)
+        {
+            var response = _bus.Request<PersonSearchQuery, List<PersonDto>>(new PersonSearchQuery { Search = search });
+            return response;
+        }
     }
 }

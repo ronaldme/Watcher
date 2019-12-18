@@ -1,6 +1,6 @@
 ﻿namespace Watcher.Messages.Person
 {
-    public class PersonSearch
+    public class PersonSearchQuery
     {
         public string Search { get; set; }
     }

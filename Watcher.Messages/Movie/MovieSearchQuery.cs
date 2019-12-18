@@ -1,6 +1,6 @@
 ﻿namespace Watcher.Messages.Movie
 {
-    public class MovieSearch
+    public class MovieSearchQuery
     {
         public string Search { get; set; }
     }
