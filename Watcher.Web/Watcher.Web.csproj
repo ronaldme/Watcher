@@ -29,6 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="app\package-lock.json" />
+    <None Include="app\package.json" />
+    <None Include="app\public\manifest.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Watcher.Messages\Watcher.Messages.csproj" />
   </ItemGroup>
 
