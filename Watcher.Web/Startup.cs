@@ -42,7 +42,7 @@ namespace Watcher.Web
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/build";
+                configuration.RootPath = "app/build";
             });
 
             services.AddSingleton(RabbitHutch.CreateBus(Configuration.GetConnectionString("easynetq")));
@@ -81,7 +81,7 @@ namespace Watcher.Web
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "app";
 
                 if (env.IsDevelopment())
                 {
