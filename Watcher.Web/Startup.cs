@@ -1,93 +1,109 @@
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
 using EasyNetQ;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
-using Watcher.Web.Data;
-using Watcher.Web.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Watcher.Web.Helpers;
+using Watcher.Web.Services;
 
 namespace Watcher.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _configuration;
+
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            Configuration = configuration;
+            _env = env;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            // use sql server db in production and sqlite db in development
+            if (_env.IsProduction())
+                services.AddDbContext<DataContext>();
+            else
+                services.AddDbContext<DataContext, SqliteDataContext>();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddCors();
+            services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+            // configure strongly typed settings objects
+            var appSettingsSection = _configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
 
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
-
-            services.AddControllersWithViews();
-            services.AddRazorPages();
-
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
             {
-                configuration.RootPath = "app/build";
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var user = userService.GetById(userId);
+                        if (user == null)
+                        {
+                            // return unauthorized if user no longer exists
+                            context.Fail("Unauthorized");
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
             });
 
-            services.AddSingleton(RabbitHutch.CreateBus(Configuration.GetConnectionString("easynetq")));
+            // configure DI for application services
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddSingleton(RabbitHutch.CreateBus(_configuration.GetConnectionString("easynetq")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dataContext)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            // migrate any database changes on startup (includes initial db creation)
+            dataContext.Database.Migrate();
 
             app.UseRouting();
 
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseAuthentication();
-            app.UseIdentityServer();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-            });
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "app";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
