@@ -10,14 +10,14 @@ using Watcher.DAL;
 namespace Watcher.DAL.Migrations
 {
     [DbContext(typeof(WatcherDbContext))]
-    [Migration("20191201094734_InitialMigration")]
+    [Migration("20200222095718_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.1")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -134,9 +134,6 @@ namespace Watcher.DAL.Migrations
 
                     b.Property<bool>("NotifyDayLater")
                         .HasColumnType("bit");
-
-                    b.Property<string>("NotifyMyAndroidKey")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

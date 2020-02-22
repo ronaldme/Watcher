@@ -1,4 +1,5 @@
 ﻿using EasyNetQ;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,8 +27,6 @@ namespace Watcher.Service
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<WatcherService>();
-                    services.AddDbContext<WatcherDbContext>();
-
                     services.AddSingleton<INotifyScheduler, NotifyScheduler>();
                     services.AddSingleton<ITheMovieDb, TheMovieDb>();
                     
@@ -37,6 +36,7 @@ namespace Watcher.Service
                     services.AddTransient<IUpdateService, UpdateService>();
 
                     var config = hostContext.Configuration;
+                    services.AddDbContext<WatcherDbContext>(options => options.UseSqlServer(config.GetConnectionString("WatcherDbContext")));
                     services.Configure<AppSettings>(config.GetSection("AppSettings"));
                     services.Configure<ConnectionString>(config.GetSection("ConnectionStrings"));
 

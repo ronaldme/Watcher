@@ -4,7 +4,7 @@ using Watcher.DAL.Entities;
 namespace Watcher.DAL
 {
     /// <summary>
-    /// Add-Migration NAME -StartupProject Watcher.Service -Project Watcher.DAL
+    /// Add-Migration -StartupProject Watcher.Service -Project Watcher.DAL
     /// </summary>
     public class WatcherDbContext : DbContext
     {
@@ -14,12 +14,6 @@ namespace Watcher.DAL
 
         public WatcherDbContext()
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // TODO: Use ConnectionString options
-            optionsBuilder.UseSqlServer("Server=(local);Database=Watcher;User Id=guest;Password=guest;MultipleActiveResultSets=True");
         }
 
         public virtual DbSet<Person> Persons { get; set; }
@@ -64,6 +58,11 @@ namespace Watcher.DAL
                 .HasOne(bc => bc.Person)
                 .WithMany(c => c.UserPersons)
                 .HasForeignKey(bc => bc.PersonId);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server=(local);Database=Watcher;User Id=guest;Password=guest;MultipleActiveResultSets=True");
         }
     }
 }

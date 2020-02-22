@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Watcher.Common", "Watcher.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Watcher.Messages", "Watcher.Messages\Watcher.Messages.csproj", "{EB07D192-D30C-4BEC-9E73-05416E5ED470}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watcher.Web", "Watcher.Web\Watcher.Web.csproj", "{2ACED43D-2BF4-4485-B6FD-3652175D9565}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Watcher.Web", "Watcher.Web\Watcher.Web.csproj", "{2ACED43D-2BF4-4485-B6FD-3652175D9565}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

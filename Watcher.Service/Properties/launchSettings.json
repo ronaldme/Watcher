@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Watcher.Service": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -69,7 +69,6 @@ namespace Watcher.DAL.Migrations
                     Email = table.Column<string>(maxLength: 255, nullable: false),
                     GetEmailNotifications = table.Column<bool>(nullable: false),
                     NotifyAtHoursPastMidnight = table.Column<int>(nullable: false),
-                    NotifyMyAndroidKey = table.Column<string>(nullable: true),
                     NotifyDayLater = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
